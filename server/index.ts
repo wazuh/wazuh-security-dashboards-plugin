@@ -134,8 +134,7 @@ export const configSchema = schema.object({
     login: schema.object({
       title: schema.string({ defaultValue: '' }),
       subtitle: schema.string({
-        defaultValue:
-          '',
+        defaultValue: '',
       }),
       showbrandimage: schema.boolean({ defaultValue: true }),
       brandimage: schema.string({ defaultValue: '' }), // TODO: update brand image
@@ -222,8 +221,7 @@ export const configSchema = schema.object({
       login: schema.object({
         title: schema.string({ defaultValue: '' }),
         subtitle: schema.string({
-          defaultValue:
-            '',
+          defaultValue: '',
         }),
         showbrandimage: schema.boolean({ defaultValue: true }),
         brandimage: schema.string({ defaultValue: '' }),

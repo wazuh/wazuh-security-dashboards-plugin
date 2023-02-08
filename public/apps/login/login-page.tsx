@@ -254,8 +254,7 @@ export function LoginPage(props: LoginPageDeps) {
       </EuiText>
       <EuiSpacer size="s" />
       <EuiText size="s" textAlign="center">
-        {props.config.ui.basicauth.login.subtitle ||
-          ''}
+        {props.config.ui.basicauth.login.subtitle || ''}
       </EuiText>
       <EuiSpacer size="s" />
       <EuiForm component="form">
