@@ -31,8 +31,8 @@ runs:
     - uses: actions/checkout@v2
       with:
         path: OpenSearch-Dashboards
-        repository: opensearch-project/OpenSearch-Dashboards
-        ref: '2.4.1'
+        repository: wazuh/wazuh-dashboard
+        ref: '2.4.1-init-wzd'
         fetch-depth: 0
 
     - run: mkdir -p plugins
