@@ -293,8 +293,6 @@ describe('start OpenSearch Dashboards server', () => {
 
     await driver.findElement(By.xpath(signInBtnXPath)).click();
 
-    await driver.wait(until.elementsLocated(By.xpath(pageTitleXPath)), 10000);
-
     await driver.wait(
       until.elementsLocated(By.xpath('//*[@data-test-subj="sendRequestButton"]')),
       10000
