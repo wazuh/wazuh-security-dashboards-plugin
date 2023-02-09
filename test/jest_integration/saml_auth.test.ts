@@ -236,7 +236,6 @@ describe('start OpenSearch Dashboards server', () => {
     await root.shutdown();
   });
 
-
   // As we disabled the opensearch_dashboards_overview in Wazuh Dashboard, this test will never success
 
   // it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
