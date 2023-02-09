@@ -285,52 +285,56 @@ describe('start OpenSearch Dashboards server', () => {
   //   await driver.manage().deleteAllCookies();
   //   await driver.quit();
   // });
+  // --------------------- SAML Logout Tests ---------------------
+  // Multi tenancy is disabled in wzd
+  // it('Tenancy persisted after Logout in SAML', async () => {
+  //   const driver = getDriver(browser, options).build();
 
-  it('Tenancy persisted after Logout in SAML', async () => {
-    const driver = getDriver(browser, options).build();
+  //   await driver.get('http://localhost:5601/app/opensearch_dashboards_overview#/');
 
-    await driver.get('http://localhost:5601/app/dev_tools#/console');
+  //   await driver.findElement(By.xpath(signInBtnXPath)).click();
 
-    await driver.findElement(By.xpath(signInBtnXPath)).click();
+  //   await driver.wait(until.elementsLocated(By.xpath(pageTitleXPath)), 10000);
 
-    await driver.wait(
-      until.elementsLocated(By.xpath('//*[@data-test-subj="sendRequestButton"]')),
-      10000
-    );
+  //   await driver.wait(
+  //     until.elementsLocated(By.xpath('//button[@aria-label="Closes this modal window"]')),
+  //     10000
+  //   );
 
-    // Select Global Tenant Radio Button
-    const radio = await driver.findElement(By.xpath('//input[@id="global"]'));
-    await driver.executeScript('arguments[0].scrollIntoView(true);', radio);
-    await driver.executeScript('arguments[0].click();', radio);
+  //   // Select Global Tenant Radio Button
+  //   const radio = await driver.findElement(By.xpath('//input[@id="global"]'));
+  //   await driver.executeScript('arguments[0].scrollIntoView(true);', radio);
+  //   await driver.executeScript('arguments[0].click();', radio);
 
-    await driver.findElement(By.xpath('//button[@data-test-subj="confirm"]')).click();
+  //   await driver.findElement(By.xpath('//button[@data-test-subj="confirm"]')).click();
 
-    await driver.wait(until.elementsLocated(By.xpath(userIconBtnXPath)), 10000);
+  //   await driver.wait(until.elementsLocated(By.xpath(userIconBtnXPath)), 10000);
 
-    await driver.findElement(By.xpath(userIconBtnXPath)).click();
+  //   await driver.findElement(By.xpath(userIconBtnXPath)).click();
 
-    await driver.findElement(By.xpath('//*[@data-test-subj="log-out-1"]')).click();
+  //   await driver.findElement(By.xpath('//*[@data-test-subj="log-out-1"]')).click();
 
-    // RELOGIN AND CHECK TENANT
+  //   // RELOGIN AND CHECK TENANT
 
-    await driver.wait(until.elementsLocated(By.xpath(signInBtnXPath)), 10000);
+  //   await driver.wait(until.elementsLocated(By.xpath(signInBtnXPath)), 10000);
 
-    await driver.findElement(By.xpath(signInBtnXPath)).click();
+  //   await driver.findElement(By.xpath(signInBtnXPath)).click();
 
-    // await driver.wait(until.elementsLocated(By.xpath(skipWelcomeBtnXPath)), 10000);   We don't have this button in Wazuh Dashboard
-    // await driver.findElement(By.xpath(skipWelcomeBtnXPath)).click();
+  //   await driver.wait(until.elementsLocated(By.xpath(skipWelcomeBtnXPath)), 10000);
 
-    await driver.findElement(By.xpath(userIconBtnXPath)).click();
+  //   await driver.findElement(By.xpath(skipWelcomeBtnXPath)).click();
 
-    await driver.wait(until.elementsLocated(By.xpath(tenantNameLabelXPath)), 10000);
+  //   await driver.findElement(By.xpath(userIconBtnXPath)).click();
 
-    const tenantName = await driver.findElement(By.xpath(tenantNameLabelXPath)).getText();
+  //   await driver.wait(until.elementsLocated(By.xpath(tenantNameLabelXPath)), 10000);
 
-    await driver.manage().deleteAllCookies();
-    await driver.quit();
+  //   const tenantName = await driver.findElement(By.xpath(tenantNameLabelXPath)).getText();
 
-    expect(tenantName).toEqual('Global');
-  });
+  //   await driver.manage().deleteAllCookies();
+  //   await driver.quit();
+
+  //   expect(tenantName).toEqual('Global');
+  // });
 });
 
 function getDriver(browser: string, options: Options) {
