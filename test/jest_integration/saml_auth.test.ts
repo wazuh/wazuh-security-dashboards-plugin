@@ -236,17 +236,20 @@ describe('start OpenSearch Dashboards server', () => {
     await root.shutdown();
   });
 
-  it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
-    const driver = getDriver(browser, options).build();
-    await driver.get('http://localhost:5601/app/opensearch_dashboards_overview#/');
-    await driver.findElement(By.id('btn-sign-in')).click();
-    await driver.wait(until.elementsLocated(By.xpath(pageTitleXPath)), 10000);
 
-    const cookie = await driver.manage().getCookies();
-    expect(cookie.length).toEqual(2);
-    await driver.manage().deleteAllCookies();
-    await driver.quit();
-  });
+  // As we disabled the opensearch_dashboards_overview in Wazuh Dashboard, this test will never success
+
+  // it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', async () => {
+  //  const driver = getDriver(browser, options).build();
+  //   await driver.get('http://localhost:5601/app/opensearch_dashboards_overview#/');
+  //   await driver.findElement(By.id('btn-sign-in')).click();
+  //   await driver.wait(until.elementsLocated(By.xpath(pageTitleXPath)), 10000);
+
+  //   const cookie = await driver.manage().getCookies();
+  //   expect(cookie.length).toEqual(2);
+  //   await driver.manage().deleteAllCookies();
+  //   await driver.quit();
+  // });
 
   it('Login to app/dev_tools#/console when SAML is enabled', async () => {
     const driver = getDriver(browser, options).build();
@@ -264,36 +267,37 @@ describe('start OpenSearch Dashboards server', () => {
     await driver.quit();
   });
 
-  it('Login to Dashboard with Hash', async () => {
-    const urlWithHash = `http://localhost:5601/app/dashboards#/view/7adfa750-4c81-11e8-b3d7-01146121b73d?_g=(filters:!(),refreshInterval:(pause:!f,value:900000),time:(from:now-24h,to:now))&_a=(description:'Analyze%20mock%20flight%20data%20for%20OpenSearch-Air,%20Logstash%20Airways,%20OpenSearch%20Dashboards%20Airlines%20and%20BeatsWest',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,useMargins:!t),query:(language:kuery,query:''),timeRestore:!t,title:'%5BFlights%5D%20Global%20Flight%20Dashboard',viewMode:view)`;
-    const driver = getDriver(browser, options).build();
-    await driver.manage().deleteAllCookies();
-    await driver.get(urlWithHash);
-    await driver.findElement(By.xpath(signInBtnXPath)).click();
-    // TODO Use a better XPath.
-    await driver.wait(
-      until.elementsLocated(By.xpath('/html/body/div[1]/div/header/div/div[2]')),
-      20000
-    );
-    const windowHash = await driver.getCurrentUrl();
-    expect(windowHash).toEqual(urlWithHash);
-    const cookie = await driver.manage().getCookies();
-    expect(cookie.length).toEqual(2);
-    await driver.manage().deleteAllCookies();
-    await driver.quit();
-  });
+  // We can't run this test because we have no data in the dashboard by default to test.
+  // it('Login to Dashboard with Hash', async () => {
+  //   const urlWithHash = `http://localhost:5601/app/dashboards#/view/7adfa750-4c81-11e8-b3d7-01146121b73d?_g=(filters:!(),refreshInterval:(pause:!f,value:900000),time:(from:now-24h,to:now))&_a=(description:'Analyze%20mock%20flight%20data%20for%20OpenSearch-Air,%20Logstash%20Airways,%20OpenSearch%20Dashboards%20Airlines%20and%20BeatsWest',filters:!(),fullScreenMode:!f,options:(hidePanelTitles:!f,useMargins:!t),query:(language:kuery,query:''),timeRestore:!t,title:'%5BFlights%5D%20Global%20Flight%20Dashboard',viewMode:view)`;
+  //   const driver = getDriver(browser, options).build();
+  //   await driver.manage().deleteAllCookies();
+  //   await driver.get(urlWithHash);
+  //   await driver.findElement(By.xpath(signInBtnXPath)).click();
+  //   // TODO Use a better XPath.
+  //   await driver.wait(
+  //     until.elementsLocated(By.xpath('/html/body/div[1]/div/header/div/div[2]')),
+  //     20000
+  //   );
+  //   const windowHash = await driver.getCurrentUrl();
+  //   expect(windowHash).toEqual(urlWithHash);
+  //   const cookie = await driver.manage().getCookies();
+  //   expect(cookie.length).toEqual(2);
+  //   await driver.manage().deleteAllCookies();
+  //   await driver.quit();
+  // });
 
   it('Tenancy persisted after Logout in SAML', async () => {
     const driver = getDriver(browser, options).build();
 
-    await driver.get('http://localhost:5601/app/opensearch_dashboards_overview#/');
+    await driver.get('http://localhost:5601/app/dev_tools#/console');
 
     await driver.findElement(By.xpath(signInBtnXPath)).click();
 
     await driver.wait(until.elementsLocated(By.xpath(pageTitleXPath)), 10000);
 
     await driver.wait(
-      until.elementsLocated(By.xpath('//button[@aria-label="Closes this modal window"]')),
+      until.elementsLocated(By.xpath('//*[@data-test-subj="sendRequestButton"]')),
       10000
     );
 
@@ -316,9 +320,8 @@ describe('start OpenSearch Dashboards server', () => {
 
     await driver.findElement(By.xpath(signInBtnXPath)).click();
 
-    await driver.wait(until.elementsLocated(By.xpath(skipWelcomeBtnXPath)), 10000);
-
-    await driver.findElement(By.xpath(skipWelcomeBtnXPath)).click();
+    // await driver.wait(until.elementsLocated(By.xpath(skipWelcomeBtnXPath)), 10000);   We don't have this button in Wazuh Dashboard
+    // await driver.findElement(By.xpath(skipWelcomeBtnXPath)).click();
 
     await driver.findElement(By.xpath(userIconBtnXPath)).click();
 
