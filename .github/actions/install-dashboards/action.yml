@@ -32,7 +32,7 @@ runs:
       with:
         path: OpenSearch-Dashboards
         repository: wazuh/wazuh-dashboard
-        ref: '2.4.1-init-wzd'
+        ref: ${{ vars.WZD_REF }}
         fetch-depth: 0
 
     - run: mkdir -p plugins
