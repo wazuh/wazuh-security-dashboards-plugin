@@ -132,10 +132,10 @@ export const configSchema = schema.object({
     }),
     loadbalancer_url: schema.maybe(schema.string()),
     login: schema.object({
-      title: schema.string({ defaultValue: 'Log in to OpenSearch Dashboards' }),
+      title: schema.string({ defaultValue: '' }),
       subtitle: schema.string({
         defaultValue:
-          'If you have forgotten your username or password, contact your system administrator.',
+          '',
       }),
       showbrandimage: schema.boolean({ defaultValue: true }),
       brandimage: schema.string({ defaultValue: '' }), // TODO: update brand image
@@ -220,10 +220,10 @@ export const configSchema = schema.object({
       // the login config here is the same as old config `_security.basicauth.login`
       // Since we are now rendering login page to browser app, so move these config to browser side.
       login: schema.object({
-        title: schema.string({ defaultValue: 'Log in to OpenSearch Dashboards' }),
+        title: schema.string({ defaultValue: '' }),
         subtitle: schema.string({
           defaultValue:
-            'If you have forgotten your username or password, contact your system administrator.',
+            '',
         }),
         showbrandimage: schema.boolean({ defaultValue: true }),
         brandimage: schema.string({ defaultValue: '' }),
