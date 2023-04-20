@@ -21,7 +21,7 @@ jobs:
       - id: install-dashboards
         uses: ./.github/actions/install-dashboards
         with:
-           plugin_name: security-dashboards-plugin
+           plugin_name: wazuh-security-dashboards-plugin
 
       - name: Run lint
         run: yarn lint

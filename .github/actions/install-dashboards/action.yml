@@ -31,8 +31,8 @@ runs:
     - uses: actions/checkout@v2
       with:
         path: OpenSearch-Dashboards
-        repository: opensearch-project/OpenSearch-Dashboards
-        ref: 'main'
+        repository: wazuh/wazuh-dashboard
+        ref: ${{ vars.WZD_REF }}
         fetch-depth: 0
 
     - run: mkdir -p plugins
@@ -52,12 +52,12 @@ runs:
       working-directory: ${{ steps.determine-plugin-directory.outputs.plugin-directory }}
       shell: bash
 
-    - id: branch-switch-if-possible
-      continue-on-error: true # Defaults onto main if the branch switch doesn't work
-      if: ${{ steps.osd-version.outputs.osd-version }}
-      run: git checkout ${{ steps.osd-version.outputs.osd-version }} || git checkout ${{ steps.osd-version.outputs.osd-x-version }}x
-      working-directory: ./OpenSearch-Dashboards
-      shell: bash
+    # - id: branch-switch-if-possible
+    #   continue-on-error: true # Defaults onto main if the branch switch doesn't work
+    #   if: ${{ steps.osd-version.outputs.osd-version }}
+    #   run: git checkout ${{ steps.osd-version.outputs.osd-version }} || git checkout ${{ steps.osd-version.outputs.osd-x-version }}x
+    #   working-directory: ./OpenSearch-Dashboards
+    #   shell: bash
 
     - id: tool-versions
       run: |
