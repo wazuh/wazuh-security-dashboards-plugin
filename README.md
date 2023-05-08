@@ -1,6 +1,6 @@
 [![Unit tests](https://github.com/opensearch-project/security-dashboards-plugin/workflows/Unit%20Tests/badge.svg?branch=main)](https://github.com/opensearch-project/security-dashboards-plugin/actions)[![Integration tests](https://github.com/opensearch-project/security-dashboards-plugin/workflows/Integration%20Tests/badge.svg?branch=main)](https://github.com/opensearch-project/security-dashboards-plugin/actions)[![codecov](https://codecov.io/gh/opensearch-project/security-dashboards-plugin/branch/main/graphs/badge.svg)](https://github.com/opensearch-project/security-dashboards-plugin)
 
-<img src="https://opensearch.org/assets/brand/SVG/Logo/opensearch_logo_default.svg" height="64px"/>
+<img src="https://opensearch.org/assets/brand/SVG/Logo/opensearch_logo_default.svg" height="64px"/> 
 
 # OpenSearch Dashboards Security Plugin
 
