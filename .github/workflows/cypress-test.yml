@@ -58,7 +58,7 @@ jobs:
 
       - name: Create plugins dir
         run: |
-          cd ./OpenSearch-Dashboards
+          cd ./wazuh-dashboard
           mkdir -p plugins
 
       - name: Checkout OpenSearch Dashboard Security plugin
