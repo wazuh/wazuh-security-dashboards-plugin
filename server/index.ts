@@ -133,10 +133,7 @@ export const configSchema = schema.object({
     loadbalancer_url: schema.maybe(schema.string()),
     login: schema.object({
       title: schema.string({ defaultValue: '' }),
-      subtitle: schema.string({
-        defaultValue:
-          '',
-      }),
+      subtitle: schema.string({ defaultValue: '' }),
       showbrandimage: schema.boolean({ defaultValue: true }),
       brandimage: schema.string({ defaultValue: '' }), // TODO: update brand image
       buttonstyle: schema.string({ defaultValue: '' }),
@@ -221,10 +218,7 @@ export const configSchema = schema.object({
       // Since we are now rendering login page to browser app, so move these config to browser side.
       login: schema.object({
         title: schema.string({ defaultValue: '' }),
-        subtitle: schema.string({
-          defaultValue:
-            '',
-        }),
+        subtitle: schema.string({ defaultValue: '' }),
         showbrandimage: schema.boolean({ defaultValue: true }),
         brandimage: schema.string({ defaultValue: '' }),
         buttonstyle: schema.string({ defaultValue: '' }),
