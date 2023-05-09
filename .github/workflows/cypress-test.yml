@@ -64,7 +64,7 @@ jobs:
       - name: Checkout OpenSearch Dashboard Security plugin
         uses: actions/checkout@v2
         with:
-          path: OpenSearch-Dashboards/plugins/security-dashboards-plugin
+          path: wazuh-dashboard/plugins/security-dashboards-plugin
           ref: ${{ github.ref }}
 
       - name: Check OpenSearch Running
@@ -74,8 +74,8 @@ jobs:
       - name: Get node and yarn versions
         id: versions
         run: |
-          echo "::set-output name=node_version::$(cat ./OpenSearch-Dashboards/.node-version)"
-          echo "::set-output name=yarn_version::$(jq -r '.engines.yarn' ./OpenSearch-Dashboards/package.json)"
+          echo "::set-output name=node_version::$(cat ./wazuh-dashboard/.node-version)"
+          echo "::set-output name=yarn_version::$(jq -r '.engines.yarn' ./wazuh-dashboard/package.json)"
 
       - name: Setup node
         uses: actions/setup-node@v1
@@ -96,7 +96,7 @@ jobs:
       - name: Bootstrap OpenSearch Dashboards
         continue-on-error: false
         run: |
-          cd ./OpenSearch-Dashboards
+          cd ./wazuh-dashboard
           yarn osd bootstrap
           echo 'server.host: "0.0.0.0"' >> ./config/opensearch_dashboards.yml
           echo 'opensearch.hosts: ["https://localhost:9200"]' >> ./config/opensearch_dashboards.yml
