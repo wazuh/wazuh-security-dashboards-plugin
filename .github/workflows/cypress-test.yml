@@ -64,7 +64,7 @@ jobs:
       - name: Checkout OpenSearch Dashboard Security plugin
         uses: actions/checkout@v2
         with:
-          path: wazuh-dashboard/plugins/security-dashboards-plugin
+          path: wazuh-dashboard/plugins/wazuh-security-dashboards-plugin
           ref: ${{ github.ref }}
 
       - name: Check OpenSearch Running
