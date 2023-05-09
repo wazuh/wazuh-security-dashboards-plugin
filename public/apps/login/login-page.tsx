@@ -239,6 +239,7 @@ export function LoginPage(props: LoginPageDeps) {
   };
 
   // TODO: Get brand image from server config
+  // Don't force custom logo to have 100% width. It should be handled in the svg properties if needed. (Removed fullWidth in the image)
   return (
     <EuiListGroup className="login-wrapper">
       {props.config.ui.basicauth.login.showbrandimage && (
@@ -250,7 +251,7 @@ export function LoginPage(props: LoginPageDeps) {
       </EuiText>
       <EuiSpacer size="s" />
       <EuiText size="s" textAlign="center">
-        {props.config.ui.basicauth.login.subtitle ||''}
+        {props.config.ui.basicauth.login.subtitle || ''}
       </EuiText>
       <EuiSpacer size="s" />
       <EuiForm component="form">
