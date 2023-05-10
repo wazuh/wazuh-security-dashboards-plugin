@@ -8,7 +8,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest , windows-latest, macos-latest ]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -22,7 +22,8 @@ jobs:
       - id: install-dashboards
         uses: ./.github/actions/install-dashboards
         with:
-           plugin_name: security-dashboards-plugin
+          plugin_name: wazuh-security-dashboards-plugin
+          app_reference: ${{ vars.WZD_REF }}
 
       - name: Run lint
         run: yarn lint
