@@ -253,7 +253,6 @@ describe('start OpenSearch Dashboards server', () => {
     await driver.quit();
   });
 
-
   it('Login to app/dev_tools#/console when SAML is enabled', async () => {
     const driver = getDriver(browser, options).build();
     await driver.get('http://localhost:5601/app/dev_tools#/console');
