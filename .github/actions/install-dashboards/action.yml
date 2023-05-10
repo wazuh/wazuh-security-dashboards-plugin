@@ -5,6 +5,9 @@ inputs:
   plugin_name:
     description: 'The the name of the plugin to use, such as security-dashboards-plugin'
     required: true
+  app_reference:
+    description: 'The reference to the app to use, such as main, v1.13, etc.'
+    required: true
 
 outputs:
   dashboards-directory:
@@ -29,8 +32,8 @@ runs:
     - uses: actions/checkout@v2
       with:
         path: OpenSearch-Dashboards
-        repository: opensearch-project/OpenSearch-Dashboards
-        ref: 'main'
+        repository: wazuh/wazuh-dashboard
+        ref: ${{ inputs.app_reference }}
         fetch-depth: 0
 
     - uses: actions/checkout@v2
@@ -44,12 +47,12 @@ runs:
       working-directory: ${{ steps.determine-plugin-directory.outputs.plugin-directory }}
       shell: bash
 
-    - id: branch-switch-if-possible
-      continue-on-error: true # Defaults onto main if the branch switch doesn't work
-      if: ${{ steps.osd-version.outputs.osd-version }}
-      run: git checkout ${{ steps.osd-version.outputs.osd-version }} || git checkout ${{ steps.osd-version.outputs.osd-x-version }}x
-      working-directory: ./OpenSearch-Dashboards
-      shell: bash
+    # - id: branch-switch-if-possible
+    #   continue-on-error: true # Defaults onto main if the branch switch doesn't work
+    #   if: ${{ steps.osd-version.outputs.osd-version }}
+    #   run: git checkout ${{ steps.osd-version.outputs.osd-version }} || git checkout ${{ steps.osd-version.outputs.osd-x-version }}x
+    #   working-directory: ./OpenSearch-Dashboards
+    #   shell: bash
 
     - id: tool-versions
       run: |
