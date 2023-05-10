@@ -6,7 +6,6 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="http://localhost:5601/images/test.png"
   />
   <EuiSpacer
@@ -159,7 +158,6 @@ exports[`Login page renders renders with config value: string 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="http://localhost:5601/images/test.png"
   />
   <EuiSpacer
@@ -262,7 +260,6 @@ exports[`Login page renders renders with config value: string array 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="http://localhost:5601/images/test.png"
   />
   <EuiSpacer
@@ -365,7 +362,6 @@ exports[`Login page renders renders with default value: string 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="test-file-stub"
   />
   <EuiSpacer
@@ -464,7 +460,6 @@ exports[`Login page renders renders with default value: string array 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="test-file-stub"
   />
   <EuiSpacer
