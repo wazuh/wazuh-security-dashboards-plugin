@@ -6,7 +6,6 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="http://localhost:5601/images/test.png"
   />
   <EuiSpacer
@@ -159,7 +158,6 @@ exports[`Login page renders renders with config value: string 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="http://localhost:5601/images/test.png"
   />
   <EuiSpacer
@@ -262,7 +260,6 @@ exports[`Login page renders renders with config value: string array 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="http://localhost:5601/images/test.png"
   />
   <EuiSpacer
@@ -365,7 +362,6 @@ exports[`Login page renders renders with default value: string 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="test-file-stub"
   />
   <EuiSpacer
@@ -374,18 +370,14 @@ exports[`Login page renders renders with default value: string 1`] = `
   <EuiText
     size="m"
     textAlign="center"
-  >
-    Log in to OpenSearch Dashboards
-  </EuiText>
+  />
   <EuiSpacer
     size="s"
   />
   <EuiText
     size="s"
     textAlign="center"
-  >
-    If you have forgotten your username or password, contact your system administrator.
-  </EuiText>
+  />
   <EuiSpacer
     size="s"
   />
@@ -468,7 +460,6 @@ exports[`Login page renders renders with default value: string array 1`] = `
 >
   <EuiImage
     alt=""
-    size="fullWidth"
     url="test-file-stub"
   />
   <EuiSpacer
@@ -477,18 +468,14 @@ exports[`Login page renders renders with default value: string array 1`] = `
   <EuiText
     size="m"
     textAlign="center"
-  >
-    Log in to OpenSearch Dashboards
-  </EuiText>
+  />
   <EuiSpacer
     size="s"
   />
   <EuiText
     size="s"
     textAlign="center"
-  >
-    If you have forgotten your username or password, contact your system administrator.
-  </EuiText>
+  />
   <EuiSpacer
     size="s"
   />
