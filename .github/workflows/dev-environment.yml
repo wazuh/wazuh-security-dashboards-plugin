@@ -61,7 +61,6 @@ jobs:
         run: |
           # Read the platform version from the package.json file
           echo "Reading the platform version from the package.json...";
-          # Support plugins whose version is defined under pluginPlatform or Kibana properties
           platform_version=$(jq -r '.opensearchDashboards.version | select(. != null)' wazuh-security-plugin/package.json);
           echo "Plugin platform version: $platform_version";
 
