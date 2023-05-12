@@ -6,7 +6,7 @@
 
 Wazuh Security Dashboards Plugin is a fork of the OpenSearch Dashboards Security Plugin which incorporate changes to make it easier to use for Wazuh users. Our aim is to contribute back any work not tied specifically to Wazuh.
 
-This plugin for OpenSearch Dashboards adds a configuration management UI for the OpenSearch Security features, as well as authentication, session management and multi-tenancy support to your secured cluster.
+This plugin for Wazuh Dashboard adds a configuration management UI for the Wazuh Security features, as well as authentication, session management and multi-tenancy support to your secured cluster.
 
 - [Features](#features)
 - [Installation](#installation)
