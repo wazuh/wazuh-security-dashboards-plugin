@@ -40,7 +40,7 @@ For more information, see [project website](https://wazuh.com/) and [documentati
 
 ## Security
 
-If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](https://github.com/wazuh/wazuh-kibana-app/issues/new/choose). Please do **not** create a public GitHub issue.
+If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/new/choose). Please do **not** create a public GitHub issue.
 
 ## License
 
