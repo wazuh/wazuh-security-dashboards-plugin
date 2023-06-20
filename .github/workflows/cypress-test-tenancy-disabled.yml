@@ -55,6 +55,7 @@ jobs:
         uses: ./.github/actions/install-dashboards
         with:
           plugin_name: security-dashboards-plugin
+          app_reference: ${{ vars.WZD_REF }}
 
       - name: Configure and Run OpenSearch Dashboards with Cypress Test Cases
         run: |

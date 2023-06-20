@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v3
-
+        
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -68,7 +68,8 @@ jobs:
       - id: install-dashboards
         uses: ./.github/actions/install-dashboards
         with:
-          plugin_name: security-dashboards-plugin
+          plugin_name: wazuh-security-dashboards-plugin
+          app_reference: ${{ vars.WZD_REF }}
 
       - name: Start Dashboards in background
         run: node scripts/build_opensearch_dashboards_platform_plugins.js
