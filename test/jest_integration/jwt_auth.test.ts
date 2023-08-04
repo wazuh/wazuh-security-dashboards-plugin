@@ -295,7 +295,7 @@ describe('start OpenSearch Dashboards server', () => {
     await driver.quit();
   });
   // Wazuh: Skip test because this issue https://github.com/opensearch-project/security-dashboards-plugin/issues/1540
-  it('Login to app/dev_tools#/console when JWT is enabled with invalid token', async () => {
+  it.skip('Login to app/dev_tools#/console when JWT is enabled with invalid token', async () => {
     const payload = {
       sub: 'jwt_test',
       roles: 'admin,kibanauser',
