@@ -1,7 +1,7 @@
 ---
 name: Compatibility request
 about: Suggest supporting a new version of Security Dashboards Plugin
-title: 'Compatibility with OpenSearch (version)'
+title: 'Compatibility with Security Dashboards Plugin (version)'
 labels: compatibility, level/task, type/research
 assignees: ''
 
