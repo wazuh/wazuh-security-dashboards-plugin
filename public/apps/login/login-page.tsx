@@ -252,19 +252,19 @@ export function LoginPage(props: LoginPageDeps) {
     formBody = formBody.concat(formBodyOp);
     return formBody;
   };
-
   // TODO: Get brand image from server config
   // Don't force custom logo to have 100% width. It should be handled in the svg properties if needed. (Removed fullWidth in the image)
   return (
     <EuiListGroup className="login-wrapper">
       {props.config.ui.basicauth.login.showbrandimage && (
+        // Wazuh logo is defaultBrandImage
         <EuiImage
           size="fullWidth"
           alt=""
           url={
             props.config.ui.basicauth.login.brandimage || 
-            props.chrome.logos.OpenSearch.url || 
-            defaultBrandImage}
+            defaultBrandImage 
+          }
         />
       )}
       <EuiSpacer size="s" />
