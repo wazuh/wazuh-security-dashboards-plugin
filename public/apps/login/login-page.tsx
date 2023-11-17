@@ -262,9 +262,9 @@ export function LoginPage(props: LoginPageDeps) {
           size="fullWidth"
           alt=""
           url={
-            props.config.ui.basicauth.login.brandimage || 
-            props.chrome.logos.OpenSearch.url || 
-            defaultBrandImage}
+            props.config.ui.basicauth.login.brandimage ||
+            defaultBrandImage
+          }
         />
       )}
       <EuiSpacer size="s" />
