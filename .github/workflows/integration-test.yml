@@ -83,7 +83,8 @@ jobs:
       - id: install-dashboards
         uses: derek-ho/setup-opensearch-dashboards@v1
         with:
-          plugin_name: security-dashboards-plugin
+          plugin_name: wazuh-security-dashboards-plugin
+          app_reference: ${{ vars.WZD_REF }}
 
       - name: Start Dashboards in background
         run: node scripts/build_opensearch_dashboards_platform_plugins.js

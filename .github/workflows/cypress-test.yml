@@ -1,6 +1,6 @@
 name: Cypress Tests
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 env:
   TEST_BROWSER_HEADLESS: 1
@@ -21,7 +21,7 @@ jobs:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
 
-    steps:       
+    steps:
       - name: Set up JDK
         uses: actions/setup-java@v1
         with:
@@ -50,7 +50,7 @@ jobs:
         uses: derek-ho/start-opensearch@v2
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
-          plugins: "file:$(pwd)/${{ env.PLUGIN_NAME }}.zip"
+          plugins: 'file:$(pwd)/${{ env.PLUGIN_NAME }}.zip'
           security-enabled: true
           admin-password: ${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }}
 
@@ -75,6 +75,7 @@ jobs:
         uses: derek-ho/setup-opensearch-dashboards@v1
         with:
           plugin_name: security-dashboards-plugin
+          app_reference: ${{ vars.WZD_REF }}
           opensearch_dashboards_yml: cypress-opensearch-dashboards-config.yml
 
       - name: Configure and Run OpenSearch Dashboards with Cypress Test Cases
