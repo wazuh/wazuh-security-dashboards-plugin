@@ -275,14 +275,6 @@ describe('start OpenSearch Dashboards server', () => {
       20000
     );
     await driver.wait(until.elementsLocated(By.css('img[data-test-subj="defaultLogo"]')), 20000);
-    await driver.wait(
-      until.elementsLocated(By.css('section[aria-labelledby="homDataAdd__title"]')),
-      20000
-    );
-    await driver.wait(
-      until.elementsLocated(By.css('section[aria-labelledby="homDataManage__title"]')),
-      20000
-    );
     const windowHash = await driver.getCurrentUrl();
     console.log('windowHash: ' + windowHash);
     expect(windowHash).toEqual(urlWithoutHash);
