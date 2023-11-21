@@ -105,7 +105,7 @@ export async function setupTopNavButton(coreStart: CoreStart, config: ClientConf
       }
     }
 
-    setShouldShowTenantPopup(shouldShowTenantPopup);
+    setShouldShowTenantPopup(false);
 
     coreStart.chrome.navControls.registerRight({
       // Pin to rightmost, since newsfeed plugin is using 1000, here needs a number > 1000
