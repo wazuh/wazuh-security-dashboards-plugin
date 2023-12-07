@@ -49,6 +49,7 @@ jobs:
       - name: Step 01 - Download the plugin's source code
         uses: actions/checkout@v3
         with:
+          repository: wazuh/wazuh-security-dashboards-plugin
           ref: ${{ inputs.reference }}
           path: wazuh-security-plugin
 
@@ -74,12 +75,16 @@ jobs:
               yarn config set registry https://registry.yarnpkg.com;
               cd /home/node/kbn/plugins/wazuh-security-plugin && yarn && ${{ inputs.command }};
             '
+      - name: Get the plugin version
+        run: |
+          echo "version=$(jq -r '.wazuh.version' $(pwd)/wazuh-security-plugin/package.json)" >> $GITHUB_ENV
+          echo "revision=$(jq -r '.wazuh.revision' $(pwd)/wazuh-security-plugin/package.json)" >> $GITHUB_ENV
 
       - name: Step 04 - Upload artifact to GitHub
         if: ${{ inputs.artifact_name && inputs.artifact_path }}
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.artifact_name }}
+          name: ${{ inputs.artifact_name }}_${{ env.version }}-${{ env.revision }}_${{ inputs.reference }}.zip
           path: ${{ inputs.artifact_path }}
 
       - name: Step 05 - Upload coverage results to GitHub
