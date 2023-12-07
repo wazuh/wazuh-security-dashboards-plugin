@@ -6,6 +6,13 @@
 name: Manual build
 
 on:
+  workflow_call:
+    inputs:
+      reference:
+        required: true
+        type: string
+        description: Source code reference (branch, tag or commit SHA)
+        default: 4.9.0
   workflow_dispatch:
     inputs:
       reference:
@@ -20,8 +27,8 @@ jobs:
     name: Build app package
     uses: ./.github/workflows/dev-environment.yml
     with:
-      reference: ${{ github.event.inputs.reference }}
+      reference: ${{ inputs.reference }}
       command: 'yarn build'
-      artifact_name: 'wazuh-security-dashboards-plugin-${{ github.event.inputs.reference }}.zip'
+      artifact_name: 'wazuh-security-dashboards-plugin'
       artifact_path: './wazuh-security-plugin/build'
     secrets: inherit
