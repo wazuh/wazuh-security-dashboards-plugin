@@ -72,7 +72,7 @@ jobs:
           echo 'opensearch_security.cookie.secure: false' >> ./config/opensearch_dashboards.yml
           nohup yarn start --no-base-path --no-watch &
           sleep 500
-          git clone https://github.com/opensearch-project/opensearch-dashboards-functional-test.git
+          git clone https://github.com/opensearch-project/opensearch-dashboards-functional-test.git -b ${{ env.OPENSEARCH_VERSION }}
           cd opensearch-dashboards-functional-test
           npm install cypress --save-dev
           yarn cypress:run-with-security --browser chrome --spec "cypress/integration/plugins/security-dashboards-plugin/inaccessible_tenancy_features.js"
