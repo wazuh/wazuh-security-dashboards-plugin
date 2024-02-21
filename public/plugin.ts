@@ -100,7 +100,7 @@ export class SecurityPlugin
       core.application.register({
         id: PLUGIN_NAME,
         title: 'Security',
-        order: 9050,
+        order: 9030,
         mount: async (params: AppMountParameters) => {
           const { renderApp } = await import('./apps/configuration/configuration-app');
           const [coreStart, depsStart] = await core.getStartServices();
@@ -121,7 +121,7 @@ export class SecurityPlugin
         deps.managementOverview.register({
           id: PLUGIN_NAME,
           title: 'Security',
-          order: 9050,
+          order: 9030,
           description: i18n.translate('security.securityDescription', {
             defaultMessage:
               'Configure how users access data in OpenSearch with authentication, access control and audit logging.',
