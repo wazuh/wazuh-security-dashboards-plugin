@@ -8,6 +8,9 @@ inputs:
   app_reference:
     description: 'The reference to the app to use, such as main, v1.13, etc.'
     required: true
+  app_reference:
+    description: 'The reference to the app to use, such as main, v1.13, etc.'
+    required: true
 
 outputs:
   dashboards-directory:

@@ -93,4 +93,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: ./wazuh-security-plugin/target/test-coverage/coverage-summary.json
-          title: "Code coverage (Jest)"
+          title: 'Code coverage (Jest)'
