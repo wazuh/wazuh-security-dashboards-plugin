@@ -28,7 +28,7 @@ jobs:
           java-version: 11
 
       - name: Checkout Branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set env
         run: |

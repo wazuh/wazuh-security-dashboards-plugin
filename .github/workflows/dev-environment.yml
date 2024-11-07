@@ -47,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Step 01 - Download the plugin's source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: wazuh/wazuh-security-dashboards-plugin
           ref: ${{ inputs.reference }}
