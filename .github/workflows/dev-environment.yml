@@ -75,8 +75,9 @@ jobs:
               yarn config set registry https://registry.yarnpkg.com;
               cd /home/node/kbn/plugins/wazuh-security-plugin && yarn && ${{ inputs.command }};
             '
-      - name: Get the plugin version
+      - name: Get the plugin version and and format reference name
         run: |
+          echo "githubReference=$(echo ${{ inputs.reference }} | sed 's/\//-/g')" >> $GITHUB_ENV
           echo "version=$(jq -r '.wazuh.version' $(pwd)/wazuh-security-plugin/package.json)" >> $GITHUB_ENV
           echo "revision=$(jq -r '.wazuh.revision' $(pwd)/wazuh-security-plugin/package.json)" >> $GITHUB_ENV
 
@@ -84,7 +85,7 @@ jobs:
         if: ${{ inputs.artifact_name && inputs.artifact_path }}
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ inputs.artifact_name }}_${{ env.version }}-${{ env.revision }}_${{ inputs.reference }}.zip
+          name: ${{ inputs.artifact_name }}_${{ env.version }}-${{ env.revision }}_${{ env.githubReference }}.zip
           path: ${{ inputs.artifact_path }}
 
       - name: Step 05 - Upload coverage results to GitHub
@@ -93,4 +94,4 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           path: ./wazuh-security-plugin/target/test-coverage/coverage-summary.json
-          title: "Code coverage (Jest)"
+          title: 'Code coverage (Jest)'
