@@ -7,13 +7,8 @@
     "templateVersion": "2.16.0"
   },
   "wazuh": {
-<<<<<<< HEAD
     "version": "4.10.1",
     "revision": "00"
-=======
-    "version": "4.10.0",
-    "revision": "06"
->>>>>>> a05a8dedd2ca5e085813ed094703a3d0db21191f
   },
   "license": "Apache-2.0",
   "homepage": "https://github.com/opensearch-project/security-dashboards-plugin",
