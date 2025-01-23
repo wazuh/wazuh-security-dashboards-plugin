@@ -118,8 +118,7 @@ export class SamlAuthRoutes {
           if (cookie) {
             requestId = cookie.saml?.requestId || '';
             nextUrl =
-              cookie.saml?.nextUrl ||
-              `${this.coreSetup.http.basePath.serverBasePath}/app/wz-home`;
+              cookie.saml?.nextUrl || `${this.coreSetup.http.basePath.serverBasePath}/app/wz-home`;
             redirectHash = cookie.saml?.redirectHash || false;
           }
           if (!requestId) {
