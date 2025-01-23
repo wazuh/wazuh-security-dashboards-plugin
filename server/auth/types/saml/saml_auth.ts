@@ -61,7 +61,7 @@ export class SamlAuthentication extends AuthenticationType {
   private generateNextUrl(request: OpenSearchDashboardsRequest): string {
     let path =
       this.coreSetup.http.basePath.serverBasePath +
-      (request.url.pathname || '/app/opensearch-dashboards');
+      (request.url.pathname || '/app/wz-home');
     if (request.url.search) {
       path += request.url.search;
     }
