@@ -27,13 +27,11 @@ runs:
         -Dartifact=org.opensearch.plugin:${{ inputs.plugin-name }}:${{ inputs.plugin-version }}-SNAPSHOT:zip \
         -Dtransitive=false \
         -Ddest=${{ inputs.download-location }}.zip
+        cp /home/runner/.m2/repository/org/opensearch/plugin/opensearch-security/2.16.0.0-SNAPSHOT/opensearch-security-2.16.0.0-SNAPSHOT.zip opensearch-security.zip
       shell: bash
     - run: |
         pwd
         echo "Current directory list"
         ls
-        echo "Maven directory list"
-        ls ~/.m2/repository/org
-        find / -type f -name "*opensearch-security*"
       shell: bash
       
