@@ -26,7 +26,7 @@ runs:
         -DremoteRepositories=https://aws.oss.sonatype.org/content/repositories/snapshots/ \
         -Dartifact=org.opensearch.plugin:${{ inputs.plugin-name }}:${{ inputs.plugin-version }}-SNAPSHOT:zip \
         -Dtransitive=false \
-        -Ddest=$(pwd)/${{ inputs.download-location }}.zip
+        cp ~/.m2/repository/org/opensearch/plugin/opensearch-security/2.16.0.0-SNAPSHOT/opensearch-security-2.16.0.0-SNAPSHOT.zip opensearch-security.zip
       shell: bash
     - run: |
         pwd
