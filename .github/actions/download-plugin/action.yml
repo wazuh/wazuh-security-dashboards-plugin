@@ -32,8 +32,6 @@ runs:
         pwd
         echo "Current directory list"
         ls
-        echo "inputs.download-location directory list"
-        ls ${{ inputs.download-location }}
         echo "Maven directory list"
         ls ~/.m2/repository
       shell: bash
