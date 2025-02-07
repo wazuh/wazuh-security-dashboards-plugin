@@ -30,11 +30,11 @@ runs:
       shell: bash
     - run: |
         pwd
-        echo ("Current directory list")
+        echo "Current directory list"
         ls
-        echo ("inputs.download-location directory list")
+        echo "inputs.download-location directory list"
         ls ${{ inputs.download-location }}
-        echo ("Maven directory list")
+        echo "Maven directory list"
         ls ~/.m2/repository
       shell: bash
       
