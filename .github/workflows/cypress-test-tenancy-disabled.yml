@@ -85,6 +85,4 @@ jobs:
           git clone https://github.com/opensearch-project/opensearch-dashboards-functional-test.git -b ${{ env.OPENSEARCH_VERSION }}
           cd opensearch-dashboards-functional-test
           npm install cypress --save-dev
-          find cypress -type f -name "inaccessible_tenancy_features.js"
-          ls cypress/integration/plugins/security
-          yarn cypress:run-with-security --browser chrome --spec "cypress/integration/plugins/security/inaccessible_tenancy_features.js"
+          yarn cypress:run-with-security --browser chrome --spec "cypress/integration/plugins/security-dashboards-plugin/inaccessible_tenancy_features.js"
