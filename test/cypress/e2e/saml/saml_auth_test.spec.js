@@ -54,9 +54,10 @@ describe('Log in via SAML', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
-      failOnStatusCode: false,
-    });
+    cy.origin('http://localhost:5601', () => {
+      cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
+        failOnStatusCode: false,
+      });
 
     samlLogin();
 
@@ -68,9 +69,10 @@ describe('Log in via SAML', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.visit(`http://localhost:5601${basePath}/app/dev_tools#/console`, {
-      failOnStatusCode: false,
-    });
+    cy.origin('http://localhost:5601', () => {
+      cy.visit(`http://localhost:5601${basePath}/app/dev_tools#/console`, {
+        failOnStatusCode: false,
+      });
 
     samlLogin();
 
