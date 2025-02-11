@@ -98,13 +98,6 @@ runs:
         done
       shell: bash
 
-    - name : Cat dashboard.log
-      run: |
-        cd ./OpenSearch-Dashboards
-        echo "cat dashboard.log"
-        cat ./dashboard.log
-      shell: bash
-
     - name: Run Cypress Tests with retry
       uses: Wandalen/wretry.action@v3
       with:
