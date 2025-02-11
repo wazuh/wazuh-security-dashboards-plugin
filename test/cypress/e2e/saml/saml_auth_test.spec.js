@@ -59,10 +59,11 @@ describe('Log in via SAML', () => {
         failOnStatusCode: false,
       });
 
-    samlLogin();
+      samlLogin();
 
-    cy.get('#osdOverviewPageHeader__title').should('be.visible');
-    cy.getCookie('security_authentication').should('exist');
+      cy.get('#osdOverviewPageHeader__title').should('be.visible');
+      cy.getCookie('security_authentication').should('exist');
+    });
   });
 
   it('Login to app/dev_tools#/console when SAML is enabled', () => {
@@ -74,10 +75,11 @@ describe('Log in via SAML', () => {
         failOnStatusCode: false,
       });
 
-    samlLogin();
+      samlLogin();
 
-    cy.get('a.euiBreadcrumb--last').contains('Dev Tools');
-    cy.getCookie('security_authentication').should('exist');
+      cy.get('a.euiBreadcrumb--last').contains('Dev Tools');
+      cy.getCookie('security_authentication').should('exist');
+    });
   });
 
   it('Login to Dashboard with Hash', () => {
