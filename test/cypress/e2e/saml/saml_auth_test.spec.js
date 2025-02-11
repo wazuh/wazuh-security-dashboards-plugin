@@ -88,47 +88,51 @@ describe('Log in via SAML', () => {
 
     const urlWithHash = `http://localhost:5601${basePath}/app/security-dashboards-plugin#/getstarted`;
 
-    cy.visit(urlWithHash, {
-      failOnStatusCode: false,
+    cy.origin('http://localhost:5601', () => {
+      cy.visit(urlWithHash, {
+        failOnStatusCode: false,
+      });
+
+      samlLogin();
+
+      cy.get('h1.euiTitle--large').contains('Get started');
+      cy.getCookie('security_authentication').should('exist');
     });
-
-    samlLogin();
-
-    cy.get('h1.euiTitle--large').contains('Get started');
-    cy.getCookie('security_authentication').should('exist');
   });
 
   it('Tenancy persisted after logout in SAML', () => {
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
-      failOnStatusCode: false,
+    cy.origin('http://localhost:5601', () => {
+      cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
+        failOnStatusCode: false,
+      });
+
+      samlLogin();
+      cy.get('#user-icon-btn').should('be.visible');
+      cy.get('#user-icon-btn').click();
+      cy.get('button[data-test-subj^="switch-tenants"]').click();
+
+      cy.get('#private').should('be.enabled');
+      cy.get('#private').click({ force: true });
+
+      cy.get('button[data-test-subj="confirm"]').click();
+
+      cy.get('#osdOverviewPageHeader__title').should('be.visible');
+
+      cy.get('button[id="user-icon-btn"]').click();
+
+      cy.get('button[data-test-subj^="log-out-"]').click();
+
+      samlLogin();
+
+      cy.get('#user-icon-btn').should('be.visible');
+      cy.get('#user-icon-btn').click();
+
+      cy.get('#osdOverviewPageHeader__title').should('be.visible');
+
+      cy.get('#tenantName').should('have.text', 'Private');
     });
-
-    samlLogin();
-    cy.get('#user-icon-btn').should('be.visible');
-    cy.get('#user-icon-btn').click();
-    cy.get('button[data-test-subj^="switch-tenants"]').click();
-
-    cy.get('#private').should('be.enabled');
-    cy.get('#private').click({ force: true });
-
-    cy.get('button[data-test-subj="confirm"]').click();
-
-    cy.get('#osdOverviewPageHeader__title').should('be.visible');
-
-    cy.get('button[id="user-icon-btn"]').click();
-
-    cy.get('button[data-test-subj^="log-out-"]').click();
-
-    samlLogin();
-
-    cy.get('#user-icon-btn').should('be.visible');
-    cy.get('#user-icon-btn').click();
-
-    cy.get('#osdOverviewPageHeader__title').should('be.visible');
-
-    cy.get('#tenantName').should('have.text', 'Private');
   });
 
   it('Login to Dashboard with Goto URL', () => {
@@ -138,9 +142,11 @@ describe('Log in via SAML', () => {
       // since the Shorten URL api is return's set-cookie header for admin user.
       cy.clearCookies().then(() => {
         const gotoUrl = `http://localhost:5601${basePath}/goto/${response.urlId}?security_tenant=global`;
-        cy.visit(gotoUrl);
-        samlLogin();
-        cy.getCookie('security_authentication').should('exist');
+        cy.origin('http://localhost:5601', () => {
+          cy.visit(gotoUrl);
+          samlLogin();
+          cy.getCookie('security_authentication').should('exist');
+        });
       });
     });
   });
