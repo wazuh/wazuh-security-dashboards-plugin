@@ -29,7 +29,9 @@ before(() => {
 
   // Avoid Cypress lock onto the ipv4 range, so fake `visit()` before `request()`.
   // See: https://github.com/cypress-io/cypress/issues/25397#issuecomment-1402556488
-  cy.visit(`http://localhost:5601${basePath}`);
+  cy.origin('http://localhost:7000', () => {
+    cy.visit(`http://localhost:5601${basePath}`);
+  });
 
   cy.createRoleMapping(ALL_ACCESS_ROLE, samlUserRoleMapping);
   cy.clearCookies();
@@ -58,7 +60,7 @@ describe('Log in via SAML', () => {
     } catch (error) {
       console.log(error);
     }
-    
+
     cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
       failOnStatusCode: false,
     });
