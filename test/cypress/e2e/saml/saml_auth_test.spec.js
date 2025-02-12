@@ -50,11 +50,11 @@ describe('Log in via SAML', () => {
     }
   };
 
-  it('Login to app/wz-home#/ when SAML is enabled', () => {
+  it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
+    cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
       failOnStatusCode: false,
     });
 
@@ -97,7 +97,7 @@ describe('Log in via SAML', () => {
   it('Tenancy persisted after logout in SAML', () => {
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
+    cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
       failOnStatusCode: false,
     });
 
