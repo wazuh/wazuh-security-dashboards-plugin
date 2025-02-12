@@ -29,13 +29,13 @@ before(() => {
 
   // Avoid Cypress lock onto the ipv4 range, so fake `visit()` before `request()`.
   // See: https://github.com/cypress-io/cypress/issues/25397#issuecomment-1402556488
-  cy.origin('http://localhost:7000', { args: { basePath } }, ({ basePath }) => {
-    cy.visit(`http://localhost:5601${basePath}`);
-  });
+  cy.visit(`http://localhost:5601${basePath}`);
 
-  cy.createRoleMapping(ALL_ACCESS_ROLE, samlUserRoleMapping);
-  cy.clearCookies();
-  cy.clearLocalStorage();
+  cy.origin('http://localhost:7000', () => {
+    cy.createRoleMapping(ALL_ACCESS_ROLE, samlUserRoleMapping);
+    cy.clearCookies();
+    cy.clearLocalStorage();
+  });
 });
 
 afterEach(() => {
@@ -53,32 +53,25 @@ describe('Log in via SAML', () => {
   };
 
   it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', () => {
-    cy.origin(
-      'http://localhost:7000',
-      { args: { basePath, samlLogin } },
-      ({ basePath, samlLogin }) => {
-        localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
-        localStorage.setItem('home:newThemeModal:show', 'false');
-        cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
-          failOnStatusCode: false,
-        });
+    localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
+    localStorage.setItem('home:newThemeModal:show', 'false');
 
-        samlLogin();
+    cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
+      failOnStatusCode: false,
+    });
 
-        cy.get('#osdOverviewPageHeader__title').should('be.visible');
-        cy.getCookie('security_authentication').should('exist');
-      }
-    );
+    samlLogin();
+
+    cy.get('#osdOverviewPageHeader__title').should('be.visible');
+    cy.getCookie('security_authentication').should('exist');
   });
 
   it('Login to app/dev_tools#/console when SAML is enabled', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.origin('http://localhost:7000', { args: { basePath } }, ({ basePath }) => {
-      cy.visit(`http://localhost:5601${basePath}/app/dev_tools#/console`, {
-        failOnStatusCode: false,
-      });
+    cy.visit(`http://localhost:5601${basePath}/app/dev_tools#/console`, {
+      failOnStatusCode: false,
     });
 
     samlLogin();
@@ -93,10 +86,8 @@ describe('Log in via SAML', () => {
 
     const urlWithHash = `http://localhost:5601${basePath}/app/security-dashboards-plugin#/getstarted`;
 
-    cy.origin('http://localhost:7000', () => {
-      cy.visit(urlWithHash, {
-        failOnStatusCode: false,
-      });
+    cy.visit(urlWithHash, {
+      failOnStatusCode: false,
     });
 
     samlLogin();
@@ -108,10 +99,8 @@ describe('Log in via SAML', () => {
   it('Tenancy persisted after logout in SAML', () => {
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.origin('http://localhost:7000', { args: { basePath } }, ({ basePath }) => {
-      cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
-        failOnStatusCode: false,
-      });
+    cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
+      failOnStatusCode: false,
     });
 
     samlLogin();
@@ -146,10 +135,7 @@ describe('Log in via SAML', () => {
       // since the Shorten URL api is return's set-cookie header for admin user.
       cy.clearCookies().then(() => {
         const gotoUrl = `http://localhost:5601${basePath}/goto/${response.urlId}?security_tenant=global`;
-        cy.origin('http://localhost:7000', () => {
-          cy.visit(gotoUrl);
-        });
-
+        cy.visit(gotoUrl);
         samlLogin();
         cy.getCookie('security_authentication').should('exist');
       });
