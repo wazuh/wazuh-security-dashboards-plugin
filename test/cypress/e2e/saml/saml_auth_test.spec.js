@@ -53,19 +53,17 @@ describe('Log in via SAML', () => {
   };
 
   it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', () => {
-    localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
-    localStorage.setItem('home:newThemeModal:show', 'false');
-
     cy.origin('http://localhost:7000', { args: { basePath } }, ({ basePath }) => {
+      localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
+      localStorage.setItem('home:newThemeModal:show', 'false');
       cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
         failOnStatusCode: false,
       });
+      samlLogin();
+
+      cy.get('#osdOverviewPageHeader__title').should('be.visible');
+      cy.getCookie('security_authentication').should('exist');
     });
-
-    samlLogin();
-
-    cy.get('#osdOverviewPageHeader__title').should('be.visible');
-    cy.getCookie('security_authentication').should('exist');
   });
 
   it('Login to app/dev_tools#/console when SAML is enabled', () => {
