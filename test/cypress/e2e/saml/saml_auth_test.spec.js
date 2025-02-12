@@ -105,7 +105,6 @@ describe('Log in via SAML', () => {
   it('Tenancy persisted after logout in SAML', () => {
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-
     cy.origin('http://localhost:7000', { args: { basePath } }, ({ basePath }) => {
       cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
         failOnStatusCode: false,
@@ -147,7 +146,7 @@ describe('Log in via SAML', () => {
         cy.origin('http://localhost:7000', () => {
           cy.visit(gotoUrl);
         });
-        
+
         samlLogin();
         cy.getCookie('security_authentication').should('exist');
       });
