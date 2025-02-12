@@ -53,14 +53,18 @@ describe('Log in via SAML', () => {
   it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
-
+    try {
+      console.log(cy.url());
+    } catch (error) {
+      console.log(error);
+    }
+    
     cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
       failOnStatusCode: false,
     });
+    console.log(cy.url());
 
-    cy.origin('http://localhost:7000', { args: { samlLogin } }, ({ samlLogin }) => {
-      samlLogin();
-    });
+    samlLogin();
 
     cy.get('#osdOverviewPageHeader__title').should('be.visible');
     cy.getCookie('security_authentication').should('exist');
@@ -74,9 +78,7 @@ describe('Log in via SAML', () => {
       failOnStatusCode: false,
     });
 
-    cy.origin('http://localhost:7000', { args: { samlLogin } }, ({ samlLogin }) => {
-      samlLogin();
-    });
+    samlLogin();
 
     cy.get('a.euiBreadcrumb--last').contains('Dev Tools');
     cy.getCookie('security_authentication').should('exist');
@@ -92,9 +94,7 @@ describe('Log in via SAML', () => {
       failOnStatusCode: false,
     });
 
-    cy.origin('http://localhost:7000', { args: { samlLogin } }, ({ samlLogin }) => {
-      samlLogin();
-    });
+    samlLogin();
 
     cy.get('h1.euiTitle--large').contains('Get started');
     cy.getCookie('security_authentication').should('exist');
@@ -111,7 +111,6 @@ describe('Log in via SAML', () => {
     cy.get('#user-icon-btn').should('be.visible');
     cy.get('#user-icon-btn').click();
     cy.get('button[data-test-subj^="switch-tenants"]').click();
-
     cy.get('#private').should('be.enabled');
     cy.get('#private').click({ force: true });
 
@@ -123,9 +122,7 @@ describe('Log in via SAML', () => {
 
     cy.get('button[data-test-subj^="log-out-"]').click();
 
-    cy.origin('http://localhost:7000', { args: { samlLogin } }, ({ samlLogin }) => {
-      samlLogin();
-    });
+    samlLogin();
 
     cy.get('#user-icon-btn').should('be.visible');
     cy.get('#user-icon-btn').click();
@@ -143,9 +140,7 @@ describe('Log in via SAML', () => {
       cy.clearCookies().then(() => {
         const gotoUrl = `http://localhost:5601${basePath}/goto/${response.urlId}?security_tenant=global`;
         cy.visit(gotoUrl);
-        cy.origin('http://localhost:7000', { args: { samlLogin } }, ({ samlLogin }) => {
-          samlLogin();
-        });
+        samlLogin();
         cy.getCookie('security_authentication').should('exist');
       });
     });
