@@ -31,11 +31,9 @@ before(() => {
   // See: https://github.com/cypress-io/cypress/issues/25397#issuecomment-1402556488
   cy.visit(`http://localhost:5601${basePath}`);
 
-  cy.origin('http://localhost:7000', () => {
-    cy.createRoleMapping(ALL_ACCESS_ROLE, samlUserRoleMapping);
-    cy.clearCookies();
-    cy.clearLocalStorage();
-  });
+  cy.createRoleMapping(ALL_ACCESS_ROLE, samlUserRoleMapping);
+  cy.clearCookies();
+  cy.clearLocalStorage();
 });
 
 afterEach(() => {
