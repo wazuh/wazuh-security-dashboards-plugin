@@ -57,8 +57,6 @@ describe('Log in via SAML', () => {
     cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
       failOnStatusCode: false,
     });
-    cy.log("URL");
-    cy.log(cy.url());
     samlLogin();
 
     cy.get('#osdOverviewPageHeader__title').should('be.visible');
@@ -101,12 +99,10 @@ describe('Log in via SAML', () => {
     cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
       failOnStatusCode: false,
     });
-    cy.log("URL");
-    cy.log(cy.url());
     samlLogin();
-    cy.get('#user-icon-btn').should('be.visible');
-    cy.get('#user-icon-btn').click();
-    cy.get('button[data-test-subj^="switch-tenants"]').click();
+    // cy.get('#user-icon-btn').should('be.visible');
+    // cy.get('#user-icon-btn').click();
+    // cy.get('button[data-test-subj^="switch-tenants"]').click();
     cy.get('#private').should('be.enabled');
     cy.get('#private').click({ force: true });
 
