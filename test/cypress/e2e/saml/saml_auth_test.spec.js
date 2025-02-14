@@ -100,7 +100,8 @@ describe('Log in via SAML', () => {
     cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
       failOnStatusCode: false,
     });
-
+    cy.log("URL");
+    cy.log(cy.url());
     samlLogin();
     cy.get('#user-icon-btn').should('be.visible');
     cy.get('#user-icon-btn').click();
