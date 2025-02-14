@@ -97,7 +97,7 @@ describe('Log in via SAML', () => {
   it('Tenancy persisted after logout in SAML', () => {
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
+    cy.visit(`http://localhost:5601${basePath}/app/wz-home`, {
       failOnStatusCode: false,
     });
 
