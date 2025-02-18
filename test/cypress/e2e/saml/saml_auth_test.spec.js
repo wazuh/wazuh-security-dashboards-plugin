@@ -164,7 +164,6 @@ describe('Log in via SAML', () => {
       });
     }
 
-    samlLogin();
     cy.get('#user-icon-btn').should('be.visible');
     cy.get('#user-icon-btn').click();
     cy.get('button[data-test-subj^="switch-tenants"]').click();
