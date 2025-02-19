@@ -75,7 +75,7 @@ describe('Log in via SAML', () => {
     });
   };
 
-  it('Login to app/wz-home_overview#/ when SAML is enabled', () => {
+  it('Login to app/opensearch_dashboards_overview#/ when SAML is enabled', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
 
@@ -125,7 +125,7 @@ describe('Log in via SAML', () => {
     localStorage.setItem('opendistro::security::tenant::saved', '"__user__"');
     localStorage.setItem('home:newThemeModal:show', 'false');
 
-    const urlWithHash = `http://localhost:7000${basePath}/app/security-dashboards-plugin#/getstarted`;
+    const urlWithHash = `http://localhost:5601${basePath}/app/security-dashboards-plugin#/getstarted`;
 
     if (Cypress.env('loginMethod') === 'saml_multiauth') {
       cy.visit(urlWithHash, {
@@ -150,13 +150,13 @@ describe('Log in via SAML', () => {
     localStorage.setItem('home:newThemeModal:show', 'false');
 
     if (Cypress.env('loginMethod') === 'saml_multiauth') {
-      cy.visit(`http://localhost:5601${basePath}/app/wz-home_overview`, {
+      cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
         failOnStatusCode: false,
       });
       loginWithSamlMultiauth();
     } else {
       cy.origin('http://localhost:7000', { args: { basePath } }, ({ basePath }) => {
-        cy.visit(`http://localhost:5601${basePath}/app/wz-home_overview`, {
+        cy.visit(`http://localhost:5601${basePath}/app/opensearch_dashboards_overview`, {
           failOnStatusCode: false,
         });
         cy.get('input[id=userName]').should('be.visible');
