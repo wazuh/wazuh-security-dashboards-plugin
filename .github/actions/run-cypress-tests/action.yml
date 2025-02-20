@@ -104,5 +104,5 @@ runs:
         attempt_limit: 5
         attempt_delay: 2000
         command: |
-          yarn add cypress --save-dev
+          yarn add cypress@13.5.1 --save-dev
           eval ${{ inputs.yarn_command }} 
