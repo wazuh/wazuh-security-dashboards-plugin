@@ -1,9 +1,9 @@
 # 📝 Based on: `5_builderprecompiled_base-dev-environment.yml`
 #
-# 📦 Manual Build Workflow for Wazuh Security Dashboard Plugins
+# 📦 Manual Build Workflow for Wazuh Security Dashboard Plugin
 #
 # ⚡ Overview:
-# This workflow builds and tests production-ready packages for Wazuh Security Dashboard plugins,
+# This workflow builds and tests production-ready packages for Wazuh Security Dashboard Plugin,
 # either manually or triggered by other workflows.
 #
 # 🚀 Key Features:
