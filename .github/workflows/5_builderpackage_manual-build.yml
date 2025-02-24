@@ -1,9 +1,17 @@
-# This workflow is based on the `5_builderprecompiled_base-dev-environment` workflow.
+# 📝 Based on: `5_builderprecompiled_base-dev-environment.yml`
 #
-# This workflow:
-# - 🖇️ Allows manual builds or from other workflows, specifying any valid code reference (branch/tag/commit SHA).
-# - 🛠️ Builds a production-ready package from the given Git reference.
-# - ⚡ Reuses a preconfigured build environment, simplifying maintenance.
+# 📦 Manual Build Workflow for Wazuh Security Dashboard Plugins
+#
+# ⚡ Overview:
+# This workflow builds and tests production-ready packages for Wazuh Security Dashboard plugins,
+# either manually or triggered by other workflows.
+#
+# 🚀 Key Features:
+# - 🖇️ Manual or Automated Builds: Supports manual execution or invocation from other workflows,
+#   specifying any valid code reference (branch, tag, or commit SHA).
+# - 🏗️ Production-Ready Package Generation: Builds a production-ready package from the provided code reference.
+# - 🌐 Reusable Build Environment: Reuses a preconfigured build environment, ensuring consistency and easier maintenance.
+#
 
 name: Manual build
 
