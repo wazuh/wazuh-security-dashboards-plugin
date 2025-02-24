@@ -2,7 +2,7 @@
 #
 # This workflow:
 # - 🖇️ Allows manual builds or from other workflows, specifying any valid code reference (branch/tag/commit SHA).
-# - 🛠️ Builds a production-ready package of the `wazuh-security-dashboards-plugin` from the given Git reference.
+# - 🛠️ Builds a production-ready package from the given Git reference.
 # - ⚡ Reuses a preconfigured build environment, simplifying maintenance.
 
 name: Manual build
