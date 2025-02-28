@@ -8,7 +8,7 @@
 # - Names the generated artifact according to the tag.
 # - Generates the production-ready package.
 
-name: Build
+name: Build app package (on tag creation)
 
 on:
   push:
