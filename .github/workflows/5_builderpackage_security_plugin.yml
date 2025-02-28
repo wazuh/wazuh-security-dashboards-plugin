@@ -13,7 +13,7 @@
 # - 🌐 Reusable Build Environment: Reuses a preconfigured build environment, ensuring consistency and easier maintenance.
 #
 
-name: Manual build
+name: Build app package (on demand)
 
 on:
   workflow_call:
@@ -21,7 +21,7 @@ on:
       reference:
         required: true
         type: string
-        description: Source code reference (branch, tag or commit SHA)
+        description: Git reference (branch, tag, or commit SHA) to build from.
         default: 4.10.0
   workflow_dispatch:
     inputs:
@@ -29,7 +29,7 @@ on:
         required: true
         type: string
         default: main
-        description: Source code reference (branch, tag or commit SHA)
+        description: Git reference (branch, tag, or commit SHA) to build from.
 
 jobs:
   # Build an app package from the given source code reference.
