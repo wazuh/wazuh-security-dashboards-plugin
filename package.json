@@ -6,6 +6,10 @@
     "version": "2.19.2",
     "templateVersion": "2.19.2"
   },
+  "wazuh": {
+    "version": "5.0.0",
+    "revision": "00"
+  },
   "license": "Apache-2.0",
   "homepage": "https://github.com/opensearch-project/security-dashboards-plugin",
   "scripts": {
