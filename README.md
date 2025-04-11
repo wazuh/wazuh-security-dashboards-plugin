@@ -6,7 +6,7 @@
 
 Wazuh Security Dashboards Plugin is a fork of the OpenSearch Dashboards Security Plugin which incorporate changes to make it easier to use for Wazuh users. Our aim is to contribute back any work not tied specifically to Wazuh.
 
-This plugin for Wazuh Dashboard adds a configuration management UI for the Wazuh Security features, as well as authentication, session management and multi-tenancy support to your secured cluster.
+This plugin for Wazuh dashboard adds a configuration management UI for the Wazuh Security features, as well as authentication, session management and multi-tenancy support to your secured cluster.
 
 - [Features](#features)
 - [Installation](#installation)
@@ -18,15 +18,15 @@ This plugin for Wazuh Dashboard adds a configuration management UI for the Wazuh
 
 ## Features
 
-* Wazuh Dashboard authentication for OpenSearch
-* Wazuh Dashboard session management
+* Wazuh dashboard authentication for OpenSearch
+* Wazuh dashboard session management
 * Wazuh Security configuration UI
-* Multi-tenancy support for Wazuh Dashboard
+* Multi-tenancy support for Wazuh dashboard
 * Wazuh audit logging configuration UI
 
 ## Installation
 
-The Wazuh Security Dashboards Plugin comes bundled by default as part of the Wazuh Dashboards distribution. Please refer to the [installation guide](https://documentation.wazuh.com/current/installation-guide/index.html).
+The Wazuh dashboard security plugin comes bundled by default as part of the Wazuh dashboard distribution. Please refer to the [installation guide](https://documentation.wazuh.com/current/installation-guide/index.html).
 
 ## Contributing
 
@@ -40,7 +40,7 @@ For more information, see [project website](https://wazuh.com/) and [documentati
 
 ## Security
 
-If you discover a potential security issue in this project we ask that you notify AWS/Amazon Security via our [vulnerability reporting page](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/new/choose). Please do **not** create a public GitHub issue.
+Please do **not** create a public GitHub issue and read about [how to report a security issue](SECURITY.md).
 
 ## License
 

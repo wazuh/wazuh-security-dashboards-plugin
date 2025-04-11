@@ -1,0 +1,25 @@
+# This workflow is based on the `5_builderprecompiled_base-dev-environment` workflow.
+#
+# This workflow is designed to build a production-ready package whenever a tag is created in the repository (e.g., a tag like `v1.0.0`).
+#
+# This workflow:
+# - Listens for tag creation (e.g., `v1.0.0`).
+# - Builds the application using `yarn build`.
+# - Names the generated artifact according to the tag.
+# - Generates the production-ready package.
+
+name: Build app package (on tag creation)
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  build:
+    name: Build app package (auto)
+    uses: ./.github/workflows/5_builderprecompiled_base-dev-environment.yml
+    with:
+      reference: ${{ github.ref_name }}
+      command: 'yarn build'
+      artifact_name: 'wazuh-security-dashboards-plugin-${{ github.ref_name }}'
+      artifact_path: './wazuh-security-plugin/build'

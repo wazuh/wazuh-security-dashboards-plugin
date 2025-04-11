@@ -26,7 +26,7 @@ jobs:
           installation_retrieval_payload: 22958780
 
       - name: Backport
-        uses: VachaShah/backport@v2.2.0
+        uses: VachaShah/backport@v2
         with:
           github_token: ${{ steps.github_app_token.outputs.token }}
           head_template: backport/backport-<%= number %>-to-<%= base %>

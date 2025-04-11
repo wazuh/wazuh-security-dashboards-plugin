@@ -7,7 +7,7 @@
     "templateVersion": "2.19.1"
   },
   "wazuh": {
-    "version": "4.13.0",
+    "version": "5.0.0",
     "revision": "00"
   },
   "license": "Apache-2.0",
