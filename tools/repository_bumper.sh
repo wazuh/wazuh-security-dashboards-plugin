@@ -282,6 +282,7 @@ update_manual_build_workflow() {
   local WORKFLOW_FILE="${REPO_PATH}/.github/workflows/manual-build.yml"
   if [ -f "$WORKFLOW_FILE" ]; then
     log "Processing $WORKFLOW_FILE"
+    local modified=false
     # Update version in manual build workflow
     # on:
     #   workflow_call:
@@ -292,8 +293,18 @@ update_manual_build_workflow() {
     #         description: Source code reference (branch, tag or commit SHA)
     #         default: 4.13.0
     # Update the default value for the reference input
-    sed -i "s/^\(\s*default:\s*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
-    log "Successfully updated default reference in $WORKFLOW_FILE to: $VERSION"
+    if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
+      log "Attempting to update default reference to $VERSION in $WORKFLOW_FILE"
+      # Note: This sed command assumes a specific formatting and might be fragile.
+      # It looks for the line starting with "default:" and replaces the version value
+      # Ensure to escape special characters if necessary
+      sed -i "s/^\(\s*default:\s*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
+      modified=true
+    fi
+
+    if [[ $modified == true ]]; then
+      log "Successfully updated $WORKFLOW_FILE with new default reference: $VERSION"
+    fi
   else
     log "WARNING: $WORKFLOW_FILE not found. Skipping update."
   fi
