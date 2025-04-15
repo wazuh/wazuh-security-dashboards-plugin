@@ -244,6 +244,7 @@ update_package_json() {
   local PACKAGE_JSON="${REPO_PATH}/package.json" # Define path, assuming it's the main one
   if [ -f "$PACKAGE_JSON" ]; then
     log "Processing $PACKAGE_JSON"
+    local modified=false
     # Update version and revision in package.json
     # "wazuh": {
     #   "version": "4.13.0",
@@ -251,17 +252,27 @@ update_package_json() {
     # },
     # Update version and revision in package.json using the structure above
     # Use sed with address range to target lines within the "wazuh": { ... } block
-    log "Attempting to update version to $VERSION within 'wazuh' object in $PACKAGE_JSON"
-    # Note: This sed command assumes a specific formatting and might be fragile.
-    # It looks for the block starting with a line containing "wazuh": { and ending with the next line containing only }
-    # Within that block, it replaces the value on the line starting with "version":
-    sed -i "/\"wazuh\": {/,/}/ s/^\(\s*\"version\"\s*:\s*\)\"[^\"]*\"/\1\"$VERSION\"/" "$PACKAGE_JSON"
+    # Update version in package.json
+    if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
+      log "Attempting to update version to $VERSION within 'wazuh' object in $PACKAGE_JSON"
+      # Note: This sed command assumes a specific formatting and might be fragile.
+      # It looks for the block starting with a line containing "wazuh": { and ending with the next line containing only }
+      # Within that block, it replaces the value on the line starting with "version":
+      sed -i "/\"wazuh\": {/,/}/ s/^\(\s*\"version\"\s*:\s*\)\"[^\"]*\"/\1\"$VERSION\"/" "$PACKAGE_JSON"
+      modified=true
+    fi
 
-    log "Attempting to update revision to $REVISION within 'wazuh' object in $PACKAGE_JSON"
-    # Similar sed command for the revision line within the same block
-    sed -i "/\"wazuh\": {/,/}/ s/^\(\s*\"revision\"\s*:\s*\)\"[^\"]*\"/\1\"$REVISION\"/" "$PACKAGE_JSON"
+    # Update revision in package.json
+    if [[ "$CURRENT_REVISION" != "$REVISION" ]]; then
+      log "Attempting to update revision to $REVISION within 'wazuh' object in $PACKAGE_JSON"
+      # Similar sed command for the revision line within the same block
+      sed -i "/\"wazuh\": {/,/}/ s/^\(\s*\"revision\"\s*:\s*\)\"[^\"]*\"/\1\"$REVISION\"/" "$PACKAGE_JSON"
+      modified=true
+    fi
 
-    log "Successfully updated $PACKAGE_JSON with new version: $VERSION and stage: $STAGE"
+    if [[ $modified == true ]]; then
+      log "Successfully updated $PACKAGE_JSON with new version: $VERSION and revision: $REVISION"
+    fi
   else
     log "WARNING: $PACKAGE_JSON not found. Skipping update."
   fi
