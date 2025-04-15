@@ -218,6 +218,29 @@ update_package_json() {
   fi
 }
 
+update_manual_build_workflow() {
+  local WORKFLOW_FILE="${REPO_PATH}/.github/workflows/manual-build.yml"
+  if [ -f "$WORKFLOW_FILE" ]; then
+    log "Processing $WORKFLOW_FILE"
+    # Update version in manual build workflow
+    # on:
+    #   workflow_call:
+    #     inputs:
+    #       reference:
+    #         required: true
+    #         type: string
+    #         description: Source code reference (branch, tag or commit SHA)
+    #         default: 4.13.0
+    # Update the default value for the reference input
+    sed -i "s/^\(\s*default:\s*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
+    log "Successfully updated default reference in $WORKFLOW_FILE to: $VERSION"
+  else
+    log "WARNING: $WORKFLOW_FILE not found. Skipping update."
+  fi
+  log "Updating manual build workflow..."
+
+}
+
 # --- Main Execution ---
 main() {
   # Initialize log file
@@ -249,6 +272,7 @@ main() {
 
   update_root_version_json
   update_package_json
+  update_manual_build_workflow
 
   log "File modifications completed."
   log "Repository bump completed successfully. Log file: $LOG_FILE"
