@@ -110,6 +110,24 @@ pre_update_checks() {
     exit 1
   fi
   log "Current version detected in VERSION.json: $CURRENT_VERSION"
+
+  # Attempt to extract stage from VERSION.json using sed
+  log "Attempting to extract current stage from $VERSION_FILE using sed..."
+  CURRENT_STAGE=$(sed -n 's/^\s*"stage"\s*:\s*"\([^"]*\)".*$/\1/p' "$VERSION_FILE" | head -n 1) # head -n 1 ensures only the first match is taken
+
+  # Check if sed successfully extracted a stage
+  if [ -z "$CURRENT_STAGE" ]; then
+    log "ERROR: Failed to extract 'stage' from $VERSION_FILE using sed. Check file format or key presence."
+    exit 1 # Exit if sed fails
+  fi
+  log "Successfully extracted stage using sed: $CURRENT_STAGE"
+
+  if [ "$CURRENT_STAGE" == "null" ]; then # Check specifically for "null" string if sed might output that
+    log "ERROR: Could not read current stage from $VERSION_FILE (value was 'null')"
+    exit 1
+  fi
+  log "Current stage detected in VERSION.json: $CURRENT_STAGE"
+
   log "Default revision set to: $REVISION" # Log default revision here
 }
 
