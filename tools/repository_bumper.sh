@@ -128,6 +128,23 @@ pre_update_checks() {
   fi
   log "Current stage detected in VERSION.json: $CURRENT_STAGE"
 
+  # Attempt to extract current revision from package.json using sed
+  local PACKAGE_JSON="${REPO_PATH}/package.json"
+  log "Attempting to extract current revision from $PACKAGE_JSON using sed..."
+  CURRENT_REVISION=$(sed -n '/"wazuh": {/,/}/ s/^\s*"revision"\s*:\s*"\([^"]*\)".*$/\1/p' "$PACKAGE_JSON" | head -n 1)
+
+  if [ -z "$CURRENT_REVISION" ]; then
+    log "ERROR: Failed to extract 'revision' from $PACKAGE_JSON using sed. Check file format or key presence."
+    exit 1
+  fi
+  log "Successfully extracted revision using sed: $CURRENT_REVISION"
+
+  if [ "$CURRENT_REVISION" == "null" ]; then
+    log "ERROR: Could not read current revision from $PACKAGE_JSON (value was 'null')"
+    exit 1
+  fi
+  log "Current revision detected in package.json: $CURRENT_REVISION"
+
   log "Default revision set to: $REVISION" # Log default revision here
 }
 
