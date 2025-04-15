@@ -201,9 +201,23 @@ update_root_version_json() {
   if [ -f "$VERSION_FILE" ]; then
     log "Processing $VERSION_FILE"
     # Update version and revision in VERSION.json
-    sed -i "s/^\s*\"version\"\s*:\s*\"[^\"]*\"/  \"version\": \"$VERSION\"/" "$VERSION_FILE"
-    sed -i "s/^\s*\"stage\"\s*:\s*\"[^\"]*\"/  \"stage\": \"$STAGE\"/" "$VERSION_FILE"
-    log "Successfully updated $VERSION_FILE with new version: $VERSION and stage: $STAGE"
+    local modified=false
+
+    # Update version in VERSION.json
+    if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
+      sed -i "s/^\s*\"version\"\s*:\s*\"[^\"]*\"/  \"version\": \"$VERSION\"/" "$VERSION_FILE"
+      modified=true
+    fi
+
+    # Update stage in VERSION.json
+    if [[ "$CURRENT_STAGE" != "$STAGE" ]]; then
+      sed -i "s/^\s*\"stage\"\s*:\s*\"[^\"]*\"/  \"stage\": \"$STAGE\"/" "$VERSION_FILE"
+      modified=true
+    fi
+
+    if [[ $modified == true ]]; then
+      log "Successfully updated $VERSION_FILE with new version: $VERSION and stage: $STAGE"
+    fi
   else
     log "WARNING: $VERSION_FILE not found. Skipping update."
   fi
