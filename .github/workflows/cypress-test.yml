@@ -1,9 +1,7 @@
 name: Cypress Tests
 
-on: 
-  pull_request:
-    types:
-      - ready_for_review
+on: [push, pull_request]
+
 env:
   TEST_BROWSER_HEADLESS: 1
   CI: 1
@@ -17,6 +15,7 @@ env:
 jobs:
   cypress-tests:
     name: Run Cypress tests
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:

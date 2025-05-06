@@ -1,9 +1,7 @@
 name: Snapshot based E2E SAML multi-auth tests workflow
 
-on: 
-  pull_request:
-    types:
-      - ready_for_review
+on: [ push, pull_request ]
+
 env:
   OPENSEARCH_VERSION: '3.0.0'
   CI: 1
@@ -21,7 +19,8 @@ jobs:
         os: [ ubuntu-latest ]
         basePath: [ "", "/osd" ]
     runs-on: ${{ matrix.os }}
-
+    if: github.event.pull_request.draft == false
+    
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v4
