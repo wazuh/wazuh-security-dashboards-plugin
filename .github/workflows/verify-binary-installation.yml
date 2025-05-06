@@ -1,6 +1,9 @@
 name: 'Install Dashboards with Plugin via Binary'
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types:
+      - ready_for_review
 env:
   OPENSEARCH_VERSION: '3.0.0'
   CI: 1
@@ -18,7 +21,7 @@ jobs:
         os: [ubuntu-latest]
         # TODO: add windows support when OSD core is stable on windows
     runs-on: ${{ matrix.os }}
-    steps:  
+    steps:
       - name: Checkout Branch
         uses: actions/checkout@v4
 
@@ -42,7 +45,7 @@ jobs:
         uses: derek-ho/start-opensearch@v6
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
-          plugins: "file:$(pwd)/${{ env.PLUGIN_NAME }}.zip"
+          plugins: 'file:$(pwd)/${{ env.PLUGIN_NAME }}.zip'
           security-enabled: true
           admin-password: ${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }}
 
@@ -64,7 +67,6 @@ jobs:
           opensearch_security.cookie.secure: false
           EOT
 
-
       - name: Run Dashboard with Security Dashboards Plugin
         id: setup-dashboards
         uses: derek-ho/setup-opensearch-dashboards@v3
@@ -73,15 +75,14 @@ jobs:
           built_plugin_name: security-dashboards
           install_zip: true
           opensearch_dashboards_yml: opensearch-dashboards-config.yml
-          
+
       - name: Start the binary
-        run: | 
+        run: |
           nohup ./bin/opensearch-dashboards &
         working-directory: ${{ steps.setup-dashboards.outputs.dashboards-binary-directory }}
         shell: bash
 
-      - name: Health check 
+      - name: Health check
         run: |
           timeout 300 bash -c 'while [[ "$(curl -u admin:${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }} -k http://localhost:5601/api/status | jq -r '.status.overall.state')" != "green" ]]; do sleep 5; done'
         shell: bash
-
