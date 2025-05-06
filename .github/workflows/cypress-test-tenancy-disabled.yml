@@ -1,9 +1,7 @@
 name: Cypress Tests Multitenancy Disabled
 
-on: 
-  pull_request:
-    types:
-      - ready_for_review
+on: [push, pull_request]
+
 env:
   TEST_BROWSER_HEADLESS: 1
   CI: 1
@@ -22,6 +20,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.draft == false
     steps:
       - name: Set up JDK
         uses: actions/setup-java@v4
