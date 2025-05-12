@@ -1,6 +1,8 @@
 name: Integration Tests
 
-on: [ pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   TEST_BROWSER_HEADLESS: 1
