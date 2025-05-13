@@ -247,7 +247,7 @@ update_package_json() {
     local modified=false
     # Update version and revision in package.json
     # "wazuh": {
-    #   "version": "4.13.0",
+    #   "version": "5.0.0",
     #   "revision": "00"
     # },
     # Update version and revision in package.json using the structure above
@@ -291,7 +291,7 @@ update_manual_build_workflow() {
     #         required: true
     #         type: string
     #         description: Source code reference (branch, tag or commit SHA)
-    #         default: 4.13.0
+    #         default: 5.0.0
     # Update the default value for the reference input
     if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
       log "Attempting to update default reference to $VERSION in $WORKFLOW_FILE"
