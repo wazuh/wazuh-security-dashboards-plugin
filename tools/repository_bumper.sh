@@ -290,8 +290,8 @@ update_manual_build_workflow() {
     #       reference:
     #         required: true
     #         type: string
-    #         description5.0.0: Source code reference (branch, tag or commit SHA)
-    #         default: 
+    #         description: Source code reference (branch, tag or commit SHA)
+    #         default: 5.0.0
     # Update the default value for the reference input
     if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
       log "Attempting to update default reference to $VERSION in $WORKFLOW_FILE"
