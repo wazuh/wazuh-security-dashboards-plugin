@@ -1,13 +1,13 @@
 {
   "name": "opensearch-security-dashboards",
-  "version": "2.19.1.0",
+  "version": "2.19.2.0",
   "main": "target/plugins/opensearch_security_dashboards",
   "opensearchDashboards": {
-    "version": "2.19.1",
-    "templateVersion": "2.19.1"
+    "version": "2.19.2",
+    "templateVersion": "2.19.2"
   },
   "wazuh": {
-    "version": "5.0.0",
+    "version": "6.0.0",
     "revision": "00"
   },
   "license": "Apache-2.0",
