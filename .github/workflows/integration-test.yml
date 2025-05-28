@@ -1,6 +1,8 @@
 name: Integration Tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   TEST_BROWSER_HEADLESS: 1
@@ -17,6 +19,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # Removed  windows-latest
     runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout Branch
@@ -61,7 +64,7 @@ jobs:
           plugin-name: ${{ env.PLUGIN_NAME }}
           download-location: ${{env.PLUGIN_NAME}}
           plugin-version: ${{ env.PLUGIN_VERSION }}
-      
+
       - name: Run Opensearch with A Single Plugin Remote Cluster
         uses: derek-ho/start-opensearch@v6
         with:

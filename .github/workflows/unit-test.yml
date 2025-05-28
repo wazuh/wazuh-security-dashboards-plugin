@@ -1,6 +1,8 @@
 name: Unit Tests
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
   unit-tests:
@@ -10,6 +12,7 @@ jobs:
       matrix:
         os: [ubuntu-latest] # Removed  windows-latest, macos-latest
     runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.draft == false
 
     steps:
       # - name: Enable longer filenames
