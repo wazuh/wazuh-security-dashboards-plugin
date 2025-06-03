@@ -1,6 +1,8 @@
 name: Snapshot based E2E OIDC tests workflow
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   OPENSEARCH_VERSION: '3.0.0'
@@ -13,7 +15,7 @@ env:
   # This is the SHA256 checksum of the known good kc.sh script for Keycloak version 21.0.1.
   KNOWN_CHECKSUM_OF_KEYCLOAK_SCRIPT: 'f825ea1a9ffa5ad91673737c06857ababbb69b6b8f09e0c637b4c998517f9608'
   OPENSEARCH_INITIAL_ADMIN_PASSWORD: myStrongPassword123!
-  
+
 jobs:
   tests:
     name: Run Cypress E2E OIDC tests
@@ -23,10 +25,11 @@ jobs:
         os: [ ubuntu-latest ]
         basePath: [ "", "/osd" ]
     runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout Branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Download and Check Keycloak Version
       - name: Download and Check Keyloak Version on Linux
@@ -41,7 +44,7 @@ jobs:
           DOWNLOADED_CHECKSUM=$(sha256sum kc.sh | awk '{print $1}')
           echo "Downloaded kc.sh checksum: $DOWNLOADED_CHECKSUM"
           echo "Known good kc.sh checksum: ${{ env.KNOWN_CHECKSUM_OF_KEYCLOAK_SCRIPT }}"
-          KNOWN_GOOD_CHECKSUM="${{ env.KNOWN_CHECKSUM_OF_KEYCLOAK_SCRIPT }}" 
+          KNOWN_GOOD_CHECKSUM="${{ env.KNOWN_CHECKSUM_OF_KEYCLOAK_SCRIPT }}"
           if [ "$DOWNLOADED_CHECKSUM" != "$KNOWN_GOOD_CHECKSUM" ]; then
               echo "Checksum mismatch. The kc.sh script does not match the known good version. Please check https://github.com/keycloak/keycloak and verify the updates."
               exit 1
@@ -71,7 +74,7 @@ jobs:
           echo "The client secret is: $CLIENT_SECRET"
           echo "Creating client mapper"
           ./kcadm.sh create clients/$CID/protocol-mappers/models  -r master -s 'config."id.token.claim"=true' -s 'config."multivalued"=true' -s 'config."claim.name"="roles"' -s 'config."userinfo.token.claim"=true' -s 'config."access.token.claim"=true' -s 'name=rolemapper' -s 'protocolMapper=oidc-usermodel-realm-role-mapper' -s "protocol=openid-connect"
-      
+
       # Add OpenID Configuration
       - name: Creating OpenID Configuration for Linux
         if: ${{ runner.os == 'Linux'}}
