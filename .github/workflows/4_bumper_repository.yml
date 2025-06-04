@@ -2,6 +2,7 @@ name: Repository bumper
 run-name: Bump ${{ github.ref_name }} to ${{ inputs.version }} ${{ inputs.stage }} (${{ inputs.id }})
 
 on:
+  push:
   workflow_dispatch:
     inputs:
       version:
@@ -12,10 +13,6 @@ on:
         description: 'Version stage (e.g. alpha0)'
         required: false
         type: string
-      tag:
-        description: 'Change branches references to tag-like references (e.g. v4.13.0-alpha7)'
-        required: false
-        type: boolean
       issue-link:
         description: 'Issue link in format https://github.com/wazuh/<REPO>/issues/<ISSUE-NUMBER>'
         required: true
@@ -76,19 +73,16 @@ jobs:
       - name: Determine branch name
         id: vars
         run: |
-          declare bump_dest
           declare script_params
           declare version="${{ github.event.inputs.version }}"
           declare stage="${{ github.event.inputs.stage }}"
-          declare tag="${{ github.event.inputs.tag }}"
+          declare bump_dest="${version}-${stage}"
 
           # Both version and stage provided
-          if [[ -n $version && -n $stage && "$tag" != "true" ]]; then
+          if [[ -n $version && -n $stage ]]; then
             script_params="--version ${version} --stage ${stage}"
-          elif [[ -z $version && -n $stage && "$tag" == "true" ]]; then
-            script_params="--stage ${stage} --tag"
-          elif [[ -z $version && -z $stage && "$tag" == "true" ]]; then
-            script_params="--tag"
+          elif [[ -z $version && -n $stage ]]; then
+            script_params="--stage ${stage}"
           fi
 
           issue_number=$(echo "${{ github.event.inputs.issue-link }}" | awk -F'/' '{print $NF}')
