@@ -105,6 +105,7 @@ jobs:
       - name: Commit and push changes
         run: |
           git add .
+          gh auth status -h github.com 
           git commit -m "feat: bump ${{ github.ref_name }}"
           git push origin ${{ steps.vars.outputs.branch_name }}
 
