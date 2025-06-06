@@ -1,6 +1,8 @@
 name: E2E multi datasources enabled workflow
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   CI: 1
@@ -8,7 +10,7 @@ env:
   TERM: xterm
   PLUGIN_NAME: opensearch-security
   OPENSEARCH_INITIAL_ADMIN_PASSWORD: myStrongPassword123!
-  
+
 jobs:
   tests:
     name: Run Cypress multidatasources tests
@@ -17,6 +19,7 @@ jobs:
       matrix:
         os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout Branch
@@ -64,7 +67,7 @@ jobs:
           plugin-name: ${{ env.PLUGIN_NAME }}
           plugin-version: ${{ env.PLUGIN_VERSION }}
           download-location: ${{env.PLUGIN_NAME}}
-      
+
       - name: Run Opensearch with A Single Plugin
         uses: derek-ho/start-opensearch@v7
         with:
