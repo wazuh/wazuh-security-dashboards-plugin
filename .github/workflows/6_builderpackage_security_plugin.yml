@@ -36,6 +36,7 @@ jobs:
   build:
     name: Build app package
     uses: ./.github/workflows/6_builderprecompiled_base-dev-environment.yml
+    permissions: {}
     with:
       reference: ${{ inputs.reference }}
       command: 'yarn build'
