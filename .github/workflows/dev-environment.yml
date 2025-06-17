@@ -43,10 +43,9 @@ jobs:
   # Deploy the plugin in a development environment and run a command
   # using a pre-built Docker image, hosted in Quay.io.
   deploy_and_run_command:
-    permissions: 
-      contents: read
+    permissions: {}
     name: Deploy and run command
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Step 01 - Download the plugin's source code
         uses: actions/checkout@v4
