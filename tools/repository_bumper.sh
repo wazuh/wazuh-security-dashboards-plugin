@@ -24,6 +24,21 @@ log() {
   echo "[${timestamp}] ${message}" | tee -a "$LOG_FILE"
 }
 
+# Function to handle sed -i in a portable way (macOS vs Linux)
+sed_inplace() {
+  local pattern="$1"
+  local file="$2"
+
+  # Detect OS type
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS - requires empty string for backup extension
+    sed -i '' "$pattern" "$file"
+  else
+    # Linux and other Unix systems
+    sed -i "$pattern" "$file"
+  fi
+}
+
 # Function to show usage
 usage() {
   echo "Usage: $0 --version VERSION --stage STAGE [--help]"
@@ -96,7 +111,7 @@ pre_update_checks() {
 
   # Attempt to extract version from VERSION.json using sed
   log "Attempting to extract current version from $VERSION_FILE using sed..."
-  CURRENT_VERSION=$(sed -n 's/^\s*"version"\s*:\s*"\([^"]*\)".*$/\1/p' "$VERSION_FILE" | head -n 1) # head -n 1 ensures only the first match is taken
+  CURRENT_VERSION=$(sed -n 's/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$VERSION_FILE" | head -n 1) # head -n 1 ensures only the first match is taken
 
   # Check if sed successfully extracted a version
   if [ -z "$CURRENT_VERSION" ]; then
@@ -113,7 +128,7 @@ pre_update_checks() {
 
   # Attempt to extract stage from VERSION.json using sed
   log "Attempting to extract current stage from $VERSION_FILE using sed..."
-  CURRENT_STAGE=$(sed -n 's/^\s*"stage"\s*:\s*"\([^"]*\)".*$/\1/p' "$VERSION_FILE" | head -n 1) # head -n 1 ensures only the first match is taken
+  CURRENT_STAGE=$(sed -n 's/^[[:space:]]*"stage"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$VERSION_FILE" | head -n 1) # head -n 1 ensures only the first match is taken
 
   # Check if sed successfully extracted a stage
   if [ -z "$CURRENT_STAGE" ]; then
@@ -131,7 +146,7 @@ pre_update_checks() {
   # Attempt to extract current revision from package.json using sed
   local PACKAGE_JSON="${REPO_PATH}/package.json"
   log "Attempting to extract current revision from $PACKAGE_JSON using sed..."
-  CURRENT_REVISION=$(sed -n '/"wazuh": {/,/}/ s/^\s*"revision"\s*:\s*"\([^"]*\)".*$/\1/p' "$PACKAGE_JSON" | head -n 1)
+  CURRENT_REVISION=$(sed -n '/"wazuh": {/,/}/ s/^[[:space:]]*"revision"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$PACKAGE_JSON" | head -n 1)
 
   if [ -z "$CURRENT_REVISION" ]; then
     log "ERROR: Failed to extract 'revision' from $PACKAGE_JSON using sed. Check file format or key presence."
@@ -190,7 +205,7 @@ compare_versions_and_set_revision() {
         log "New version ($VERSION) is identical to current version ($CURRENT_VERSION). Incrementing revision."
         local main_package_json="${REPO_PATH}/package.json" # Need path again
         log "Attempting to extract current revision from $main_package_json using sed (Note: This is fragile)"
-        local current_revision_val=$(sed -n 's/^\s*"revision"\s*:\s*"\([^"]*\)".*$/\1/p' "$main_package_json" | head -n 1)
+        local current_revision_val=$(sed -n 's/^[[:space:]]*"revision"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$main_package_json" | head -n 1)
         # Check if sed successfully extracted a revision
         if [ -z "$current_revision_val" ]; then
           log "ERROR: Failed to extract 'revision' from $main_package_json using sed. Check file format or key presence."
@@ -222,13 +237,13 @@ update_root_version_json() {
 
     # Update version in VERSION.json
     if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
-      sed -i "s/^\s*\"version\"\s*:\s*\"[^\"]*\"/  \"version\": \"$VERSION\"/" "$VERSION_FILE"
+      sed_inplace "s/^[[:space:]]*\"version\"[[:space:]]*:[[:space:]]*\"[^\"]*\"/  \"version\": \"$VERSION\"/" "$VERSION_FILE"
       modified=true
     fi
 
     # Update stage in VERSION.json
     if [[ "$CURRENT_STAGE" != "$STAGE" ]]; then
-      sed -i "s/^\s*\"stage\"\s*:\s*\"[^\"]*\"/  \"stage\": \"$STAGE\"/" "$VERSION_FILE"
+      sed_inplace "s/^[[:space:]]*\"stage\"[[:space:]]*:[[:space:]]*\"[^\"]*\"/  \"stage\": \"$STAGE\"/" "$VERSION_FILE"
       modified=true
     fi
 
@@ -258,7 +273,7 @@ update_package_json() {
       # Note: This sed command assumes a specific formatting and might be fragile.
       # It looks for the block starting with a line containing "wazuh": { and ending with the next line containing only }
       # Within that block, it replaces the value on the line starting with "version":
-      sed -i "/\"wazuh\": {/,/}/ s/^\(\s*\"version\"\s*:\s*\)\"[^\"]*\"/\1\"$VERSION\"/" "$PACKAGE_JSON"
+      sed_inplace "/\"wazuh\": {/,/}/ s/^\([[:space:]]*\"version\"[[:space:]]*:[[:space:]]*\)\"[^\"]*\"/\1\"$VERSION\"/" "$PACKAGE_JSON"
       modified=true
     fi
 
@@ -266,7 +281,7 @@ update_package_json() {
     if [[ "$CURRENT_REVISION" != "$REVISION" ]]; then
       log "Attempting to update revision to $REVISION within 'wazuh' object in $PACKAGE_JSON"
       # Similar sed command for the revision line within the same block
-      sed -i "/\"wazuh\": {/,/}/ s/^\(\s*\"revision\"\s*:\s*\)\"[^\"]*\"/\1\"$REVISION\"/" "$PACKAGE_JSON"
+      sed_inplace "/\"wazuh\": {/,/}/ s/^\([[:space:]]*\"revision\"[[:space:]]*:[[:space:]]*\)\"[^\"]*\"/\1\"$REVISION\"/" "$PACKAGE_JSON"
       modified=true
     fi
 
@@ -298,7 +313,7 @@ update_manual_build_workflow() {
       # Note: This sed command assumes a specific formatting and might be fragile.
       # It looks for the line starting with "default:" and replaces the version value
       # Ensure to escape special characters if necessary
-      sed -i "s/^\(\s*default:\s*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
+      sed_inplace "s/^\([[:space:]]*default:[[:space:]]*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
       modified=true
     fi
 
