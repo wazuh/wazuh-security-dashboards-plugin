@@ -47,7 +47,7 @@ runs:
 
     # OSD bootstrap
     - name: Run Dashboard with Security Dashboards Plugin
-      uses: derek-ho/setup-opensearch-dashboards@v1
+      uses: derek-ho/setup-opensearch-dashboards@v3
       with:
         plugin_name: security-dashboards-plugin
         opensearch_dashboards_yml: ${{ inputs.dashboards_config_file }}
@@ -100,7 +100,7 @@ runs:
       shell: bash
 
     - name: Run Cypress Tests with retry
-      uses: Wandalen/wretry.action@v3.3.0
+      uses: Wandalen/wretry.action@v3
       with:
         attempt_limit: 5
         attempt_delay: 2000
