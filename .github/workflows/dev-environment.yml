@@ -67,6 +67,14 @@ jobs:
           platform_version=$(jq -r '.opensearchDashboards.version | select(. != null)' wazuh-security-plugin/package.json);
           echo "Plugin platform version: $platform_version";
 
+          # Get Wazuh version and concatenate with platform version
+          wazuh_version=$(jq -r '.version' ${{ matrix.plugins.path }}/package.json);
+          echo "Wazuh version: $wazuh_version";
+          
+          # Concatenate versions in format: <Opensearch version>-<Wazuh version>
+          platform_version="${platform_version}-${wazuh_version}";
+          echo "Combined platform version: $platform_version";
+
           # Up the environment and run the command
           docker run -t --rm \
             -e OPENSEARCH_DASHBOARDS_VERSION=${platform_version} \
