@@ -68,7 +68,7 @@ jobs:
           echo "Plugin platform version: $platform_version";
 
           # Get Wazuh version and concatenate with platform version
-          wazuh_version=$(jq -r '.version' ${{ matrix.plugins.path }}/package.json);
+          wazuh_version=$(jq -r '.wazuh.version' wazuh-security-plugin/package.json);
           echo "Wazuh version: $wazuh_version";
           
           # Concatenate versions in format: <Opensearch version>-<Wazuh version>
