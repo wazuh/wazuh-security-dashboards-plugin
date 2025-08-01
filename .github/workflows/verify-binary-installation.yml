@@ -1,6 +1,8 @@
 name: 'Install Dashboards with Plugin via Binary'
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 env:
   OPENSEARCH_VERSION: '3.0.0'
   CI: 1
@@ -12,6 +14,7 @@ env:
 jobs:
   verify-binary-installation:
     name: Run binary installation
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
@@ -20,7 +23,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:  
       - name: Checkout Branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set env
         run: |
@@ -39,7 +42,7 @@ jobs:
           download-location: ${{ env.PLUGIN_NAME }}
 
       - name: Run Opensearch with security
-        uses: derek-ho/start-opensearch@v2
+        uses: derek-ho/start-opensearch@v6
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
           plugins: "file:$(pwd)/${{ env.PLUGIN_NAME }}.zip"
@@ -67,7 +70,7 @@ jobs:
 
       - name: Run Dashboard with Security Dashboards Plugin
         id: setup-dashboards
-        uses: derek-ho/setup-opensearch-dashboards@v2
+        uses: derek-ho/setup-opensearch-dashboards@v3
         with:
           plugin_name: security-dashboards-plugin
           built_plugin_name: security-dashboards
