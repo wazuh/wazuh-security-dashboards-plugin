@@ -18,13 +18,12 @@ env:
 jobs:
   cypress-tests:
     name: Run Cypress tests
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    if: github.event.pull_request.draft == false
-
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v4

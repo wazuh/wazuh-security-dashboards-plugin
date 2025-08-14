@@ -7,6 +7,7 @@ on:
 jobs:
   unit-tests:
     name: Run unit tests
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:

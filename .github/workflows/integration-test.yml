@@ -13,13 +13,12 @@ env:
 jobs:
   tests:
     name: Run integration tests
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest] # Removed  windows-latest
     runs-on: ${{ matrix.os }}
-    if: github.event.pull_request.draft == false
-
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v4
@@ -70,7 +69,7 @@ jobs:
         uses: derek-ho/start-opensearch@v7
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
-          plugins: "file:$(pwd)/opensearch-security-${{ env.OPENSEARCH_VERSION }}.zip"
+          plugins: 'file:$(pwd)/opensearch-security-${{ env.OPENSEARCH_VERSION }}.zip'
           security-enabled: true
           admin-password: ${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }}
           security_config_file: ${{ inputs.security_config_file }}

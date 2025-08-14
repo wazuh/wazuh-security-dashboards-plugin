@@ -13,6 +13,7 @@ env:
 jobs:
   verify-binary-installation:
     name: Run binary installation
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
