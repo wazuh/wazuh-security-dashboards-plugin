@@ -17,8 +17,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        basePath: [ "", "/osd" ]
+        os: [ubuntu-latest]
+        basePath: ['', '/osd']
     runs-on: ${{ matrix.os }}
     if: github.event.pull_request.draft == false
 
