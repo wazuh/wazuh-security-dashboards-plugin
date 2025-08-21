@@ -1,4 +1,4 @@
-# 📝 Based on: `6_builderprecompiled_base-dev-environment.yml`
+# 📝 Based on: `5_builderprecompiled_base-dev-environment.yml`
 #
 # 📦 Manual Build Workflow for Wazuh Security Dashboard Plugin
 #
@@ -13,7 +13,7 @@
 # - 🌐 Reusable Build Environment: Reuses a preconfigured build environment, ensuring consistency and easier maintenance.
 #
 
-name: (6.x) Build app package (on demand)
+name: (5.x) Build app package (on demand)
 
 on:
   workflow_call:
@@ -21,21 +21,23 @@ on:
       reference:
         required: true
         type: string
-        description: Git reference (branch, tag, or commit SHA) to build from.
-        default: main
+        description: Source code reference (branch, tag or commit SHA)
+        default: 5.0.0
   workflow_dispatch:
     inputs:
       reference:
         required: true
         type: string
         default: main
-        description: Git reference (branch, tag, or commit SHA) to build from.
+        description: Source code reference (branch, tag or commit SHA)
 
 jobs:
   # Build an app package from the given source code reference.
   build:
     name: Build app package
-    uses: ./.github/workflows/6_builderprecompiled_base-dev-environment.yml
+    uses: ./.github/workflows/5_builderprecompiled_base-dev-environment.yml
+    permissions:
+      pull-requests: write
     with:
       reference: ${{ inputs.reference }}
       command: 'yarn build'
