@@ -12,7 +12,7 @@
 #
 # 🔗 Designed for: Easy integration and reuse by other workflows.
 
-name: Base workflow - Environment
+name: (4.x) Base workflow - Environment
 
 on:
   workflow_call:
@@ -20,7 +20,7 @@ on:
       reference:
         required: true
         type: string
-        default: master
+        default: 4.10.4
         description: Source code reference (branch, tag or commit SHA).
       command:
         required: true
