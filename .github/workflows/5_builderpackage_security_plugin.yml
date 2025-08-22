@@ -22,7 +22,7 @@ on:
         required: true
         type: string
         description: Source code reference (branch, tag or commit SHA)
-        default: 5.0.0
+        default: main
   workflow_dispatch:
     inputs:
       reference:

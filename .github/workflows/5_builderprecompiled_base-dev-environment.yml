@@ -12,7 +12,7 @@
 #
 # 🔗 Designed for: Easy integration and reuse by other workflows.
 
-name: Base workflow - Environment
+name: (5.x) Base workflow - Environment
 
 on:
   workflow_call:
