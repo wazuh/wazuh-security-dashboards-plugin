@@ -1,6 +1,8 @@
 name: 'Install Dashboards with Plugin via Binary'
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 env:
   CI: 1
   # avoid warnings like "tput: No value for $TERM and no -T specified"
@@ -11,13 +13,15 @@ env:
 jobs:
   verify-binary-installation:
     name: Run binary installation
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
         # TODO: add windows support when OSD core is stable on windows
     runs-on: ${{ matrix.os }}
-    steps:  
+    if: github.event.pull_request.draft == false
+    steps:
       - name: Checkout Branch
         uses: actions/checkout@v4
 
@@ -73,14 +77,14 @@ jobs:
           built_plugin_name: security-dashboards
           install_zip: true
           opensearch_dashboards_yml: opensearch-dashboards-config.yml
-          
+
       - name: Start the binary
-        run: | 
+        run: |
           nohup ./bin/opensearch-dashboards &
         working-directory: ${{ steps.setup-dashboards.outputs.dashboards-binary-directory }}
         shell: bash
 
-      - name: Health check 
+      - name: Health check
         run: |
           timeout 300 bash -c 'while [[ "$(curl -u admin:${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }} -k http://localhost:5601/api/status | jq -r '.status.overall.state')" != "green" ]]; do sleep 5; done'
         shell: bash

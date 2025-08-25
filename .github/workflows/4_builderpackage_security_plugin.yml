@@ -1,0 +1,45 @@
+# 📝 Based on: `4_builderprecompiled_base-dev-environment.yml`
+#
+# 📦 Manual Build Workflow for Wazuh Security Dashboard Plugin
+#
+# ⚡ Overview:
+# This workflow builds and tests production-ready packages for Wazuh Security Dashboard Plugin,
+# either manually or triggered by other workflows.
+#
+# 🚀 Key Features:
+# - 🖇️ Manual or Automated Builds: Supports manual execution or invocation from other workflows,
+#   specifying any valid code reference (branch, tag, or commit SHA).
+# - 🏗️ Production-Ready Package Generation: Builds a production-ready package from the provided code reference.
+# - 🌐 Reusable Build Environment: Reuses a preconfigured build environment, ensuring consistency and easier maintenance.
+#
+
+name: (4.x) Build app package (on demand)
+on:
+  workflow_call:
+    inputs:
+      reference:
+        required: true
+        type: string
+        description: Source code reference (branch, tag or commit SHA)
+        default: 4.14.0
+  workflow_dispatch:
+    inputs:
+      reference:
+        required: true
+        type: string
+        default: 4.14.0
+        description: Source code reference (branch, tag or commit SHA)
+
+jobs:
+  # Build an app package from the given source code reference.
+  build:
+    name: Build app package
+    uses: ./.github/workflows/4_builderprecompiled_base-dev-environment.yml
+    permissions:
+      pull-requests: write
+    with:
+      reference: ${{ inputs.reference }}
+      command: 'yarn build'
+      artifact_name: 'wazuh-security-dashboards-plugin'
+      artifact_path: './wazuh-security-plugin/build'
+    secrets: inherit
