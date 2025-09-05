@@ -22,13 +22,13 @@ on:
         required: true
         type: string
         description: Source code reference (branch, tag or commit SHA)
-        default: 4.14.0
+        default: 4.14.1
   workflow_dispatch:
     inputs:
       reference:
         required: true
         type: string
-        default: 4.14.0
+        default: 4.14.1
         description: Source code reference (branch, tag or commit SHA)
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
   build:
     name: Build app package
     uses: ./.github/workflows/4_builderprecompiled_base-dev-environment.yml
-    permissions: 
+    permissions:
       pull-requests: write
     with:
       reference: ${{ inputs.reference }}
