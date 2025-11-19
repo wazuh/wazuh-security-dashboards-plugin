@@ -1,10 +1,10 @@
 {
   "name": "opensearch-security-dashboards",
-  "version": "2.19.3.0",
+  "version": "2.19.4.0",
   "main": "target/plugins/opensearch_security_dashboards",
   "opensearchDashboards": {
-    "version": "2.19.3",
-    "templateVersion": "2.19.3"
+    "version": "2.19.4",
+    "templateVersion": "2.19.4"
   },
   "wazuh": {
     "version": "4.14.2",
@@ -63,6 +63,10 @@
     "micromatch": "^4.0.8",
     "cross-spawn": "7.0.5",
     "xml-crypto": "^2.1.6",
-    "@babel/runtime": "^7.27.0"
+    "@babel/runtime": "^7.27.0",
+    "pbkdf2": "^3.1.3",
+    "crypto-browserify": "^3.12.1",
+    "cipher-base": "^1.0.7",
+    "sha.js": "^2.4.5"
   }
 }
