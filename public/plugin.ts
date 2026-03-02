@@ -161,7 +161,7 @@ export class SecurityPlugin
       core.application.register({
         id: PLUGIN_NAME,
         title: 'Security',
-        order: 9050,
+        order: 9030,
         workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
         navLinkStatus: core.chrome.navGroup.getNavGroupEnabled()
           ? AppNavLinkStatus.hidden
@@ -349,7 +349,7 @@ export class SecurityPlugin
         deps.managementOverview.register({
           id: PLUGIN_NAME,
           title: 'Security',
-          order: 9050,
+          order: 9030,
           description: i18n.translate('security.securityDescription', {
             defaultMessage:
               'Configure how users access data in OpenSearch with authentication, access control and audit logging.',
