@@ -341,67 +341,26 @@ update_manual_build_workflow() {
 
 update_branch_reference_defaults() {
   if [[ "$skip_urls" == "yes" ]]; then
-    log "Main branch mode enabled: branch references remain pointing to main."
-    return
+    log "skip_urls is yes (--set-as-main): leaving workflow branch defaults unchanged"
+    return 0
   fi
-
-  log "Freeze mode enabled: replacing branch references main -> ${VERSION}."
 
   local bump_string="$VERSION"
-  local workflow_file=""
-  local tmp_file=""
-
-  workflow_file="${REPO_PATH}/.github/workflows/manual-build.yml"
-  if [ -f "$workflow_file" ]; then
-    tmp_file=$(mktemp)
-    cp "$workflow_file" "$tmp_file"
-    sed_inplace "s/^\([[:space:]]*default:[[:space:]]*['\"]\?\)main\(['\"]\?[[:space:]]*\)$/\1${bump_string}\2/" "$workflow_file"
-    if cmp -s "$workflow_file" "$tmp_file"; then
-      log "No branch default 'main' match found in $workflow_file"
-    else
-      log "Updated branch references in $workflow_file"
+  local files=(
+    "${REPO_PATH}/.github/workflows/manual-build.yml"
+    "${REPO_PATH}/.github/workflows/dev-environment.yml"
+    "${REPO_PATH}/.github/workflows/5_builderpackage_security_plugin.yml"
+    "${REPO_PATH}/.github/workflows/5_builderprecompiled_base-dev-environment.yml"
+  )
+  local f
+  for f in "${files[@]}"; do
+    if [ ! -f "$f" ]; then
+      log "WARNING: $f not found. Skipping main→${bump_string} default update."
+      continue
     fi
-    rm -f "$tmp_file"
-  fi
-
-  workflow_file="${REPO_PATH}/.github/workflows/dev-environment.yml"
-  if [ -f "$workflow_file" ]; then
-    tmp_file=$(mktemp)
-    cp "$workflow_file" "$tmp_file"
-    sed_inplace "s/^\([[:space:]]*default:[[:space:]]*['\"]\?\)main\(['\"]\?[[:space:]]*\)$/\1${bump_string}\2/" "$workflow_file"
-    if cmp -s "$workflow_file" "$tmp_file"; then
-      log "No branch default 'main' match found in $workflow_file"
-    else
-      log "Updated branch references in $workflow_file"
-    fi
-    rm -f "$tmp_file"
-  fi
-
-  workflow_file="${REPO_PATH}/.github/workflows/5_builderprecompiled_base-dev-environment.yml"
-  if [ -f "$workflow_file" ]; then
-    tmp_file=$(mktemp)
-    cp "$workflow_file" "$tmp_file"
-    sed_inplace "s/^\([[:space:]]*default:[[:space:]]*['\"]\?\)main\(['\"]\?[[:space:]]*\)$/\1${bump_string}\2/" "$workflow_file"
-    if cmp -s "$workflow_file" "$tmp_file"; then
-      log "No branch default 'main' match found in $workflow_file"
-    else
-      log "Updated branch references in $workflow_file"
-    fi
-    rm -f "$tmp_file"
-  fi
-
-  workflow_file="${REPO_PATH}/.github/workflows/5_builderpackage_security_plugin.yml"
-  if [ -f "$workflow_file" ]; then
-    tmp_file=$(mktemp)
-    cp "$workflow_file" "$tmp_file"
-    sed_inplace "s/^\([[:space:]]*default:[[:space:]]*['\"]\?\)main\(['\"]\?[[:space:]]*\)$/\1${bump_string}\2/" "$workflow_file"
-    if cmp -s "$workflow_file" "$tmp_file"; then
-      log "No branch default 'main' match found in $workflow_file"
-    else
-      log "Updated branch references in $workflow_file"
-    fi
-    rm -f "$tmp_file"
-  fi
+    log "Replacing default: main with default: ${bump_string} in $f (where applicable)"
+    sed_inplace "s/^\([[:space:]]*default:[[:space:]]*\)main\([[:space:]]*\)$/\1${bump_string}\2/" "$f"
+  done
 }
 
 # --- Main Execution ---
