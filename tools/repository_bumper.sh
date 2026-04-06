@@ -14,7 +14,8 @@ VERSION_FILE="${REPO_PATH}/VERSION.json"
 VERSION=""
 REVISION="00"
 CURRENT_VERSION=""
-
+set_as_main=""
+skip_urls="no"
 # --- Helper Functions ---
 
 # Function to log messages
@@ -41,11 +42,12 @@ sed_inplace() {
 
 # Function to show usage
 usage() {
-  echo "Usage: $0 --version VERSION --stage STAGE [--help]"
+  echo "Usage: $0 --version VERSION --stage STAGE [--set-as-main] [--help]"
   echo ""
   echo "Parameters:"
   echo "  --version VERSION   Specify the version (e.g., 4.6.0)"
   echo "  --stage STAGE       Specify the stage (e.g., alpha0, beta1, rc2, etc.)"
+  echo "  --set-as-main       Keep branch references pointing to main"
   echo "  --help              Display this help message"
   echo ""
   echo "Example:"
@@ -67,6 +69,10 @@ parse_arguments() {
       STAGE="$2"
       shift 2
       ;;
+    --set-as-main)
+      set_as_main="yes"
+      shift 1
+      ;;
     --help)
       usage
       exit 0
@@ -78,6 +84,12 @@ parse_arguments() {
       ;;
     esac
   done
+
+  if [[ -n "$set_as_main" ]]; then
+    skip_urls="yes"
+  else
+    skip_urls="no"
+  fi
 }
 
 # Function to validate input parameters
@@ -327,6 +339,30 @@ update_manual_build_workflow() {
 
 }
 
+update_branch_reference_defaults() {
+  if [[ "$skip_urls" == "yes" ]]; then
+    log "skip_urls is yes (--set-as-main): leaving workflow branch defaults unchanged"
+    return 0
+  fi
+
+  local bump_string="$VERSION"
+  local files=(
+    "${REPO_PATH}/.github/workflows/manual-build.yml"
+    "${REPO_PATH}/.github/workflows/dev-environment.yml"
+    "${REPO_PATH}/.github/workflows/5_builderpackage_security_plugin.yml"
+    "${REPO_PATH}/.github/workflows/5_builderprecompiled_base-dev-environment.yml"
+  )
+  local f
+  for f in "${files[@]}"; do
+    if [ ! -f "$f" ]; then
+      log "WARNING: $f not found. Skipping main→${bump_string} default update."
+      continue
+    fi
+    log "Replacing default: main with default: ${bump_string} in $f (where applicable)"
+    sed_inplace "s/^\([[:space:]]*default:[[:space:]]*\)main\([[:space:]]*\)$/\1${bump_string}\2/" "$f"
+  done
+}
+
 # --- Main Execution ---
 main() {
   # Initialize log file
@@ -353,12 +389,19 @@ main() {
   # Compare versions and determine revision
   compare_versions_and_set_revision
 
+  if [[ "$skip_urls" == "yes" ]]; then
+    log "Main branch mode enabled: version values will be updated and branch references will remain pointing to main."
+  else
+    log "Freeze mode enabled: version values and branch references will be updated."
+  fi
+
   # Start file modifications
   log "Starting file modifications..."
 
   update_root_version_json
   update_package_json
   update_manual_build_workflow
+  update_branch_reference_defaults
 
   log "File modifications completed."
   log "Repository bump completed successfully. Log file: $LOG_FILE"

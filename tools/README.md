@@ -7,7 +7,7 @@ This script automates the process of updating the version and stage in the Wazuh
 ### Usage
 
 ```bash
-./repository_bumper.sh --version VERSION --stage STAGE [--help]
+./repository_bumper.sh --version VERSION --stage STAGE [--set-as-main] [--help]
 ```
 
 #### Parameters
@@ -18,6 +18,9 @@ This script automates the process of updating the version and stage in the Wazuh
 - `--stage STAGE`
   Specifies the stage (e.g., `alpha0`, `beta1`, `rc2`, etc.).
 
+- `--set-as-main`
+  Enables main branch mode. The script updates version values but keeps branch references pointing to `main`.
+
 - `--help`
   Shows help and exits.
 
@@ -26,6 +29,7 @@ This script automates the process of updating the version and stage in the Wazuh
 ```bash
 ./repository_bumper.sh --version 4.6.0 --stage alpha0
 ./repository_bumper.sh --version 4.6.0 --stage beta1
+./repository_bumper.sh --version 5.0.0 --stage beta1 --set-as-main
 ```
 
 ### What does the script do?
@@ -39,7 +43,10 @@ This script automates the process of updating the version and stage in the Wazuh
    - `VERSION.json`: Changes the `version` and `stage` fields.
    - `package.json`: Changes the `version` and `revision` fields inside the `wazuh` object.
    - `.github/workflows/manual-build.yml`: Updates the default value of the `reference` input if applicable.
-5. **Logs all actions** to a log file in the `tools` directory.
+5. **Handles branch reference replacements**:
+   - If `--set-as-main` is used, `skip_urls` is set to `yes` and branch references to `main` are preserved.
+   - Otherwise, `skip_urls` is set to `no` and branch reference defaults set to `main` are replaced with the target version in supported workflow files.
+6. **Logs all actions** to a log file in the `tools` directory.
 
 ### Notes
 
@@ -52,6 +59,9 @@ This script automates the process of updating the version and stage in the Wazuh
 - `VERSION.json`
 - `package.json`
 - `.github/workflows/manual-build.yml`
+- `.github/workflows/dev-environment.yml`
+- `.github/workflows/5_builderprecompiled_base-dev-environment.yml`
+- `.github/workflows/5_builderpackage_security_plugin.yml`
 
 ### Log
 
