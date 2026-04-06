@@ -167,6 +167,10 @@ jobs:
         run: |
           echo "Bump complete."
           echo "Branch: ${{ steps.vars.outputs.branch_name }}"
-          echo "PR: ${{ steps.create_pr.outputs.pull_request_url || 'N/A (no changes)' }}"
+          if [[ "${{ steps.check_changes.outputs.has_changes }}" == "true" ]]; then
+             echo "PR: ${{ steps.create_pr.outputs.pull_request_url }}"
+          else
+             echo "No file changes from bumper (no PR created)."
+          fi
           echo "Bumper scripts logs:"
           cat ${BUMP_LOG_PATH}/repository_bumper*log
