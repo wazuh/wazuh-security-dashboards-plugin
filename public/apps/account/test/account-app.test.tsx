@@ -105,14 +105,14 @@ describe('Account app', () => {
     });
   });
 
-  it('Should show tenant selection popup when neither securitytenant in url nor saved tenant', (done) => {
+  it('Should not show tenant selection popup', (done) => {
     (getSavedTenant as jest.Mock).mockReturnValueOnce(null);
 
     setupTopNavButton(mockCoreStart, mockConfig as any);
 
     process.nextTick(() => {
-      expect(getSavedTenant).toHaveBeenCalledTimes(1);
-      expect(setShouldShowTenantPopup).toHaveBeenCalledWith(true);
+      expect(getSavedTenant).toBeCalledTimes(1);
+      expect(setShouldShowTenantPopup).toBeCalledWith(false);
       done();
     });
   });
