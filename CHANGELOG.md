@@ -1,23 +1,19 @@
-# CHANGELOG
-All notable changes to this project are documented in this file.
+# Change Log
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to the [Semantic Versioning](https://semver.org/spec/v2.0.0.html). See the [CONTRIBUTING guide](./CONTRIBUTING.md#Changelog) for instructions on how to add changelog entries.
+All notable changes to the Wazuh ML Commons project will be documented in this file.
 
-## [Unreleased 3.x]
+## Wazuh dashboard v5.0.0 - OpenSearch Dashboards 3.6.0 - Revision 01
 
-### Features
+### Added
 
-### Enhancements
 
-### Bug Fixes
+### Changed
 
-### Refactoring
 
-### Maintenance
-- Remove transport_enabled column from the authentication sequence table ([#2363](https://github.com/opensearch-project/security-dashboards-plugin/pull/2363))
-- React 18 Upgrade ([#2371](https://github.com/opensearch-project/security-dashboards-plugin/issues/2371))
-- Force resolution of basic-ftp to 5.2.0 ([#2374](https://github.com/opensearch-project/security-dashboards-plugin/issues/2374))
 
-### Documentation
+### Removed
 
-[Unreleased 3.x]: https://github.com/opensearch-project/security-dashboards-plugin/compare/3.5...main
+
+
+### Fixed
+
