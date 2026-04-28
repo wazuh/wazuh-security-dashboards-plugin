@@ -10,6 +10,7 @@ SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_PATH=$(git rev-parse --show-toplevel 2>/dev/null)
 DATE_TIME=$(date "+%Y-%m-%d_%H-%M-%S-%3N")
 LOG_FILE="${SCRIPT_PATH}/repository_bumper_${DATE_TIME}.log"
+PACKAGE_JSON="${REPO_PATH}/package.json"
 VERSION_FILE="${REPO_PATH}/VERSION.json"
 VERSION=""
 REVISION="00"
@@ -27,16 +28,35 @@ log() {
 
 # Function to handle sed -i in a portable way (macOS vs Linux)
 sed_inplace() {
-  local pattern="$1"
-  local file="$2"
+  local options=""
+  local pattern=""
+  local file=""
 
-  # Detect OS type
+  # Parse arguments to handle options like -E
+  while [[ $# -gt 0 ]]; do
+    case $1 in
+      -E|-r)
+        options="$options $1"
+        shift
+        ;;
+      *)
+        if [ -z "$pattern" ]; then
+          pattern="$1"
+        elif [ -z "$file" ]; then
+          file="$1"
+        fi
+        shift
+        ;;
+    esac
+  done
+
+  # Detect OS and use appropriate sed syntax
   if [[ "$OSTYPE" == "darwin"* ]]; then
-    # macOS - requires empty string for backup extension
-    sed -i '' "$pattern" "$file"
+    # macOS (BSD sed) requires empty string after -i
+    sed -i '' $options "$pattern" "$file"
   else
-    # Linux and other Unix systems
-    sed -i "$pattern" "$file"
+    # Linux (GNU sed) doesn't require anything after -i
+    sed -i $options "$pattern" "$file"
   fi
 }
 
@@ -156,7 +176,6 @@ pre_update_checks() {
   log "Current stage detected in VERSION.json: $CURRENT_STAGE"
 
   # Attempt to extract current revision from package.json using sed
-  local PACKAGE_JSON="${REPO_PATH}/package.json"
   log "Attempting to extract current revision from $PACKAGE_JSON using sed..."
   CURRENT_REVISION=$(sed -n '/"wazuh": {/,/}/ s/^[[:space:]]*"revision"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$PACKAGE_JSON" | head -n 1)
 
@@ -268,7 +287,6 @@ update_root_version_json() {
 }
 
 update_package_json() {
-  local PACKAGE_JSON="${REPO_PATH}/package.json" # Define path, assuming it's the main one
   if [ -f "$PACKAGE_JSON" ]; then
     log "Processing $PACKAGE_JSON"
     local modified=false
@@ -363,6 +381,62 @@ update_branch_reference_defaults() {
   done
 }
 
+# Function to update CHANGELOG.md
+update_changelog() {
+  log "Updating CHANGELOG.md..."
+  local changelog_file="${REPO_PATH}/CHANGELOG.md"
+
+  # Extract OpenSearch Dashboards version from package.json
+  # Attempt to extract OpenSearch Dashboards version using sed (WARNING: Fragile!)
+  # This assumes "pluginPlatform": { ... "version": "x.y.z" ... } structure
+  # It looks for the block starting with "pluginPlatform": { and ending with }
+  # Within that block, it finds the line starting with "version": "..." and extracts the value.
+  # This is significantly less reliable than using jq.
+  log "Attempting to extract .version from $PACKAGE_JSON using sed (Note: This is fragile)"
+  # Extract OpenSearch Dashboards version from package.json (first occurrence of "version")
+  OPENSEARCH_VERSION=$(sed -n '/"opensearchDashboards": {/,/}/ s/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$PACKAGE_JSON" | head -n 1)
+  if [ -z "$OPENSEARCH_VERSION" ] || [ "$OPENSEARCH_VERSION" == "null" ]; then
+    log "ERROR: Could not extract pluginPlatform.version from $PACKAGE_JSON for changelog"
+    exit 1
+  fi
+  log "Detected OpenSearch Dashboards version for changelog: $OPENSEARCH_VERSION"
+
+  # Construct the new changelog entry
+  # Note: Using printf for better handling of newlines and potential special characters
+  # Use the calculated REVISION variable here
+  # Prepare the header to search for
+  local changelog_header="## Wazuh dashboard v${VERSION} - OpenSearch Dashboards ${OPENSEARCH_VERSION} - Revision "
+  local changelog_header_regex="^${changelog_header}[0-9]+"
+
+  # Check if an entry for this version and OpenSearch version already exists
+  if grep -qE "$changelog_header_regex" "$changelog_file"; then
+    if [ -n "$STAGE" ]; then
+      log "Changelog entry for this version and OpenSearch Dashboards version exists. Updating revision only."
+      # Use sed to update only the revision number in the header
+       sed_inplace -E "s|(${changelog_header_regex})|${changelog_header}${REVISION}|" "$changelog_file" &&
+        log "CHANGELOG.md revision updated successfully." || {
+        log "ERROR: Failed to update revision in $changelog_file"
+        exit 1
+      }
+    fi
+  else
+    log "No existing changelog entry for this version and OpenSearch Dashboards version. Inserting new entry."
+
+   # Create the new entry directly in the changelog using sed
+    local temp_file=$(mktemp)
+    head -n 4 "$changelog_file" >"$temp_file"
+    printf "## Wazuh dashboard v%s - OpenSearch Dashboards %s - Revision %s\n\n### Added\n\n- Support for Wazuh %s\n\n" "$VERSION" "$OPENSEARCH_VERSION" "$REVISION" "$VERSION" >>"$temp_file"
+    tail -n +5 "$changelog_file" >>"$temp_file"
+
+    mv "$temp_file" "$changelog_file" || {
+      log "ERROR: Failed to update $changelog_file"
+      rm -f "$temp_file" # Clean up temp file on error
+      exit 1
+    }
+    log "CHANGELOG.md updated successfully."
+  fi
+}
+
 # --- Main Execution ---
 main() {
   # Initialize log file
@@ -401,6 +475,7 @@ main() {
   update_root_version_json
   update_package_json
   update_manual_build_workflow
+  update_changelog
   update_branch_reference_defaults
 
   log "File modifications completed."
