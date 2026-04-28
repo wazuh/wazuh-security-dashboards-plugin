@@ -40,6 +40,7 @@ This script automates the process of updating the version and stage in the Wazuh
    - If the version changes (major, minor, or patch), it resets the revision to `00`.
    - If the version is the same, it increments the revision.
 4. **Updates the files**:
+   - `CHANGELOG.md`: Changes the version and revision in the version header.
    - `VERSION.json`: Changes the `version` and `stage` fields.
    - `package.json`: Changes the `version` and `revision` fields inside the `wazuh` object.
    - `.github/workflows/manual-build.yml`: Updates the default value of the `reference` input if applicable.
@@ -56,6 +57,7 @@ This script automates the process of updating the version and stage in the Wazuh
 
 ### Affected files
 
+- `CHANGELOG.md`
 - `VERSION.json`
 - `package.json`
 - `.github/workflows/manual-build.yml`
