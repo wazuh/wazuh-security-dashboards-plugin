@@ -2,7 +2,7 @@
 
 All notable changes to the Wazuh dashboard security plugin project will be documented in this file.
 
-## Wazuh dashboard v10.9.9 - OpenSearch Dashboards 3.6.0 - Revision 00
+## Wazuh dashboard v10.9.9 - OpenSearch Dashboards 3.6.0 - Revision 01
 
 ### Added
 
