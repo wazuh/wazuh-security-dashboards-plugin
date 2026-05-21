@@ -14,6 +14,11 @@ on:
         default: ''
         required: false
         type: string
+      tag:
+        description: 'Change branches references to tag-like references (e.g. v4.12.0-alpha7)'
+        default: false
+        required: false
+        type: boolean
       issue-link:
         description: 'Issue link in format https://github.com/wazuh/<REPO>/issues/<ISSUE-NUMBER>'
         required: true
@@ -85,17 +90,26 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
           STAGE: ${{ inputs.stage }}
+          TAG: ${{ inputs.tag }}
           SET_AS_MAIN: ${{ inputs.set_as_main }}
         run: |
+          script_params=""
           version=${{ env.VERSION }}
           stage=${{ env.STAGE }}
-
+          tag=${{ env.TAG }}
+          set_as_main=${{ env.SET_AS_MAIN }}
+          
           # Both version and stage provided
-          script_params=""
-          if [[ -n "$version" && -n "$stage" ]]; then
+          if [[ -n "$version" && -n "$stage" && "$tag" != "true" ]]; then
             script_params="--version ${version} --stage ${stage}"
-          elif [[ -z "$version" && -n "$stage" ]]; then
-            script_params="--stage ${stage}"
+          elif [[ -z "$version" && -n "$stage" && "$tag" == "true" ]]; then
+            script_params="--stage ${stage} --tag"
+          elif [[ -z "$version" && -z "$stage" && "$tag" == "true" ]]; then
+            script_params="--tag"
+          fi
+
+          if [[ "$set_as_main" == "true" ]]; then
+            script_params="${script_params} --set-as-main"
           fi
 
           issue_number=$(echo "${{ inputs.issue-link }}" | awk -F'/' '{print $NF}')
@@ -107,9 +121,7 @@ jobs:
             echo "pr_title=Bump ${{ github.ref_name }} branch" >> $GITHUB_OUTPUT
           fi
           echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
-          echo "version=${version}" >> $GITHUB_OUTPUT
-          echo "stage=${stage}" >> $GITHUB_OUTPUT
-          echo "set_as_main=${{ env.SET_AS_MAIN }}" >> $GITHUB_OUTPUT
+          echo "script_params=${script_params}" >> $GITHUB_OUTPUT
 
       - name: Create and switch to bump branch
         run: |
@@ -119,24 +131,7 @@ jobs:
         if: inputs.revert != true
         run: |
           echo "Running bump script"
-          script_params=()
-          version="${{ steps.vars.outputs.version }}"
-          stage="${{ steps.vars.outputs.stage }}"
-          set_as_main="${{ steps.vars.outputs.set_as_main }}"
-
-          if [[ -n "$version" ]]; then
-            script_params+=("--version" "$version")
-          fi
-
-          if [[ -n "$stage" ]]; then
-            script_params+=("--stage" "$stage")
-          fi
-
-          if [[ "$set_as_main" == "true" ]]; then
-            script_params+=("--set-as-main")
-          fi
-
-          bash "${{ env.BUMP_SCRIPT_PATH }}" "${script_params[@]}"
+          bash ${{ env.BUMP_SCRIPT_PATH }} ${{ steps.vars.outputs.script_params }}
 
       - name: Check for changes
         id: check_changes
@@ -148,6 +143,8 @@ jobs:
             echo "has_changes=false" >> $GITHUB_OUTPUT
           else
             echo "has_changes=true" >> $GITHUB_OUTPUT
+            echo "Changes detected"
+            git status --porcelain
           fi
 
       - name: Commit changes (Bump)
