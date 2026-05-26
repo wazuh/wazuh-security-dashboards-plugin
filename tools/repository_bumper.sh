@@ -14,6 +14,7 @@ PACKAGE_JSON="${REPO_PATH}/package.json"
 VERSION_FILE="${REPO_PATH}/VERSION.json"
 VERSION=""
 REVISION="00"
+TAG=false
 CURRENT_VERSION=""
 set_as_main=""
 skip_urls="no"
@@ -93,6 +94,10 @@ parse_arguments() {
       set_as_main="yes"
       shift 1
       ;;
+    --tag)
+      TAG=true
+      shift
+      ;;
     --help)
       usage
       exit 0
@@ -114,21 +119,24 @@ parse_arguments() {
 
 # Function to validate input parameters
 validate_input() {
-  if [ -z "$VERSION" ]; then
-    log "ERROR: Version parameter is required"
+  if [ -z "$VERSION" ] && [ "$TAG" != true ]; then
+    log "ERROR: --version is required unless --tag is set"
     usage
     exit 1
   fi
-  if [ -z "$STAGE" ]; then
-    log "ERROR: Stage parameter is required"
+
+  if [ -z "$STAGE" ] && [ "$TAG" != true ]; then
+    log "ERROR: --stage is required unless --tag is set"
     usage
     exit 1
   fi
-  if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+
+  if [ -n "$VERSION" ] && ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     log "ERROR: Version must be in the format x.y.z (e.g., 4.6.0)"
     exit 1
   fi
-  if ! [[ $STAGE =~ ^[a-zA-Z]+[0-9]+$ ]]; then
+
+  if [ -n "$STAGE" ] && ! [[ $STAGE =~ ^[a-zA-Z]+[0-9]+$ ]]; then
     log "ERROR: Stage must be alphanumeric (e.g., alpha0, beta1, rc2)"
     exit 1
   fi
@@ -323,47 +331,13 @@ update_package_json() {
   fi
 }
 
-update_manual_build_workflow() {
-  local WORKFLOW_FILE="${REPO_PATH}/.github/workflows/manual-build.yml"
-  if [ -f "$WORKFLOW_FILE" ]; then
-    log "Processing $WORKFLOW_FILE"
-    local modified=false
-    # Update version in manual build workflow
-    # on:
-    #   workflow_call:
-    #     inputs:
-    #       reference:
-    #         required: true
-    #         type: string
-    #         description: Source code reference (branch, tag or commit SHA)
-    #         default: 5.0.0
-    # Update the default value for the reference input
-    if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
-      log "Attempting to update default reference to $VERSION in $WORKFLOW_FILE"
-      # Note: This sed command assumes a specific formatting and might be fragile.
-      # It looks for the line starting with "default:" and replaces the version value
-      # Ensure to escape special characters if necessary
-      sed_inplace "s/^\([[:space:]]*default:[[:space:]]*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
-      modified=true
-    fi
-
-    if [[ $modified == true ]]; then
-      log "Successfully updated $WORKFLOW_FILE with new default reference: $VERSION"
-    fi
-  else
-    log "WARNING: $WORKFLOW_FILE not found. Skipping update."
-  fi
-  log "Updating manual build workflow..."
-
-}
-
 update_branch_reference_defaults() {
   if [[ "$skip_urls" == "yes" ]]; then
     log "skip_urls is yes (--set-as-main): leaving workflow branch defaults unchanged"
     return 0
   fi
 
-  local bump_string="$VERSION"
+  local bump_string="$GIT_REF_REPLACEMENT"
   local files=(
     "${REPO_PATH}/.github/workflows/manual-build.yml"
     "${REPO_PATH}/.github/workflows/dev-environment.yml"
@@ -437,6 +411,20 @@ update_changelog() {
   fi
 }
 
+get_git_ref_replacement(){
+  local replacement
+  if [ "$TAG" = true ]; then
+    replacement="v${VERSION}"
+    if [ -n "$STAGE" ]; then
+      replacement+="-${STAGE}"
+    fi
+  else
+    replacement="${VERSION}"
+  fi
+
+  GIT_REF_REPLACEMENT="$replacement"
+}
+
 # --- Main Execution ---
 main() {
   # Initialize log file
@@ -459,6 +447,9 @@ main() {
 
   # Perform pre-update checks
   pre_update_checks
+  if [ -z "$VERSION" ]; then
+    VERSION=$CURRENT_VERSION # If no version provided, use current version
+  fi
 
   # Compare versions and determine revision
   compare_versions_and_set_revision
@@ -469,12 +460,13 @@ main() {
     log "Freeze mode enabled: version values and branch references will be updated."
   fi
 
+  get_git_ref_replacement
+
   # Start file modifications
   log "Starting file modifications..."
 
   update_root_version_json
   update_package_json
-  update_manual_build_workflow
   update_changelog
   update_branch_reference_defaults
 
