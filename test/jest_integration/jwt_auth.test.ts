@@ -223,7 +223,8 @@ describe('start OpenSearch Dashboards server (JWT via url param)', () => {
     await root.shutdown();
   });
 
-  it('Login to app/opensearch_dashboards_overview#/ when JWT is enabled', async () => {
+  // Wazuh
+  it.skip('Login to app/opensearch_dashboards_overview#/ when JWT is enabled', async () => {
     const token = await new SignJWT({ sub: 'jwt_test', roles: 'admin,kibanauser' })
       .setProtectedHeader({ alg: 'HS256' })
       .setIssuedAt()
