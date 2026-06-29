@@ -43,4 +43,5 @@ jobs:
       command: 'yarn build'
       artifact_name: 'wazuh-security-dashboards-plugin'
       artifact_path: './wazuh-security-plugin/build'
+      workflow_run: '4_builderpackage_security_plugin'
     secrets: inherit
