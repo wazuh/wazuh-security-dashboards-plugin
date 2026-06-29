@@ -23,6 +23,11 @@ on:
         type: string
         description: Source code reference (branch, tag or commit SHA)
         default: 4.14.1
+      workflow_name:
+        required: true
+        type: string
+        description: Name of the workflow that will be used to upload the artifact to S3.
+        default: ''
   workflow_dispatch:
     inputs:
       reference:
@@ -43,5 +48,5 @@ jobs:
       command: 'yarn build'
       artifact_name: 'wazuh-security-dashboards-plugin'
       artifact_path: './wazuh-security-plugin/build'
-      workflow_run: '4_builderpackage_security_plugin'
+      workflow_run: ${{ inputs.workflow_name || '4_builderpackage_security_plugin' }}
     secrets: inherit
