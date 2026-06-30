@@ -46,6 +46,7 @@ jobs:
     uses: ./.github/workflows/4_builderprecompiled_base-dev-environment.yml
     permissions:
       pull-requests: write
+      id-token: write
     with:
       reference: ${{ inputs.reference }}
       command: 'yarn build'
