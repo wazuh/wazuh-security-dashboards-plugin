@@ -53,7 +53,7 @@ on:
         required: false
 
 env:
-  CI_DEV_INTERNAL_BUCKET: s3://xdrsiem-ci-dev-internal
+  CI_DEV_INTERNAL_BUCKET: ${{ secrets.CI_DEV_INTERNAL_BUCKET }}
 
 jobs:
   # Deploy the plugin in a development environment and run a command
