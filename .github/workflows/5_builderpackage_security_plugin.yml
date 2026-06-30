@@ -23,6 +23,11 @@ on:
         type: string
         description: Source code reference (branch, tag or commit SHA)
         default: 5.0.0
+      execution_repository:
+        required: true
+        type: string
+        description: 'Repository and workflow run to upload the artifact to (format: repo/workflow).'
+        default: ''
   workflow_dispatch:
     inputs:
       reference:
@@ -31,6 +36,9 @@ on:
         default: 5.0.0
         description: Source code reference (branch, tag or commit SHA)
 
+env:
+  EXECUTION_REPOSITORY: ${{ inputs.execution_repository || 'wazuh-security-dashboards-plugin/4_builderpackage_security_plugin' }}
+
 jobs:
   # Build an app package from the given source code reference.
   build:
@@ -38,9 +46,11 @@ jobs:
     uses: ./.github/workflows/5_builderprecompiled_base-dev-environment.yml
     permissions:
       pull-requests: write
+      id-token: write
     with:
       reference: ${{ inputs.reference }}
       command: 'yarn build'
       artifact_name: 'wazuh-security-dashboards-plugin'
       artifact_path: './wazuh-security-plugin/build'
+      execution_repository: ${{ inputs.execution_repository || 'wazuh-security-dashboards-plugin/4_builderpackage_security_plugin' }}
     secrets: inherit
