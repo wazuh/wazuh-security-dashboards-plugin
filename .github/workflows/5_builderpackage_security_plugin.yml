@@ -36,9 +36,6 @@ on:
         default: 5.0.0
         description: Source code reference (branch, tag or commit SHA)
 
-env:
-  EXECUTION_REPOSITORY: ${{ inputs.execution_repository || 'wazuh-security-dashboards-plugin/4_builderpackage_security_plugin' }}
-
 jobs:
   # Build an app package from the given source code reference.
   build:
@@ -52,5 +49,5 @@ jobs:
       command: 'yarn build'
       artifact_name: 'wazuh-security-dashboards-plugin'
       artifact_path: './wazuh-security-plugin/build'
-      execution_repository: ${{ inputs.execution_repository || 'wazuh-security-dashboards-plugin/4_builderpackage_security_plugin' }}
+      execution_repository: ${{ inputs.execution_repository || 'wazuh-security-dashboards-plugin/5_builderpackage_security_plugin' }}
     secrets: inherit
