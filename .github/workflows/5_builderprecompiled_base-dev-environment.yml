@@ -46,6 +46,14 @@ on:
         type: boolean
         default: false
         required: false
+      execution_repository:
+        type: string
+        default: ''
+        description: 'Repository and workflow run to upload the artifact to (format: repo/workflow).'
+        required: false
+
+env:
+  CI_DEV_INTERNAL_BUCKET: ${{ secrets.CI_DEV_INTERNAL_BUCKET }}
 
 jobs:
   # Deploy the plugin in a development environment and run a command
@@ -53,10 +61,11 @@ jobs:
   deploy_and_run_command:
     permissions:
       pull-requests: write
+      id-token: write
     name: Deploy and run command
     runs-on: codebuild-github-actions-codebuild-runner-dashboard-amd-${{ github.run_id }}-${{ github.run_attempt }}
     steps:
-      - name: Step 01 - Download the plugin's source code
+      - name: Download the plugin's source code
         uses: actions/checkout@v4
         with:
           repository: wazuh/wazuh-security-dashboards-plugin
@@ -65,10 +74,10 @@ jobs:
 
       # Fix source code ownership so the internal user of the Docker
       # container is also owner.
-      - name: Step 02 - Change code ownership
+      - name: Change code ownership
         run: sudo chown 1000:1000 -R wazuh-security-plugin;
 
-      - name: Step 03 - Set up the environment and run the command
+      - name: Set up the environment and run the command
         run: |
           # Read the platform version from the package.json file
           echo "Reading the platform version from the package.json...";
@@ -99,15 +108,23 @@ jobs:
           echo "version=$(jq -r '.wazuh.version' $(pwd)/wazuh-security-plugin/package.json)" >> $GITHUB_ENV
           echo "revision=$(jq -r '.wazuh.revision' $(pwd)/wazuh-security-plugin/package.json)" >> $GITHUB_ENV
 
-      - name: Step 04 - Upload artifact to GitHub
+      - name: Configure AWS credentials
         if: ${{ inputs.artifact_name && inputs.artifact_path }}
-        uses: actions/upload-artifact@v4
+        uses: aws-actions/configure-aws-credentials@v6
         with:
-          name: ${{ inputs.artifact_name }}_${{ env.version }}-${{ env.revision }}_${{ env.githubReference }}.zip
-          path: ${{ inputs.artifact_path }}
-          overwrite: true
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Step 05 - Upload coverage results to GitHub
+      - name: Upload artifact to S3
+        if: ${{ inputs.artifact_name && inputs.artifact_path }}
+        run: |
+          artifact_zip="${{ inputs.artifact_name }}_${{ env.version }}-${{ env.revision }}_${{ env.githubReference }}.zip"
+          s3_path="${{ env.CI_DEV_INTERNAL_BUCKET }}/${{ inputs.execution_repository }}/${{ github.run_id }}/${artifact_zip}"
+          packagePath=$(find "${GITHUB_WORKSPACE}/${{ inputs.artifact_path }}" -type f)
+          aws s3 cp "${packagePath}" "${s3_path}"
+          echo "::notice::Artifact uploaded to ${s3_path}"
+
+      - name: Upload coverage results to GitHub
         if: ${{ inputs.notify_jest_coverage_summary && github.event_name == 'pull_request' }}
         uses: AthleticNet/comment-test-coverage@1.2.2
         with:
