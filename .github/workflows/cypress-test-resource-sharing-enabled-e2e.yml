@@ -7,7 +7,7 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
-# Test concurrency
+
 env:
   CI: 1
   # avoid warnings like "tput: No value for $TERM and no -T specified"
@@ -22,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
     runs-on: ${{ matrix.os }}
 
     steps:
@@ -83,11 +83,12 @@ jobs:
 
           echo "SAMPLE_PLUGIN_ZIP=$GITHUB_WORKSPACE/sample-resource-plugin.zip" >> "$GITHUB_ENV"
 
+
       - name: Run Opensearch with security + sample resource plugin
         uses: derek-ho/start-opensearch@v9
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
-          plugins: 'file:$(pwd)/opensearch-security.zip,file:${{ env.SAMPLE_PLUGIN_ZIP }}'
+          plugins: "file:$(pwd)/opensearch-security.zip,file:${{ env.SAMPLE_PLUGIN_ZIP }}"
           security-enabled: true
           admin-password: ${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }}
           jdk-version: 21
@@ -129,9 +130,9 @@ jobs:
           EOT
         shell: bash
 
-      - name: Replace opensearch_dashboards.yml
+      - name: Replace opensearch_dashboards.yml 
         run: |
-          mv resource_sharing_config.yml $GITHUB_WORKSPACE/OpenSearch-Dashboards/config/opensearch_dashboards.yml
+            mv resource_sharing_config.yml $GITHUB_WORKSPACE/OpenSearch-Dashboards/config/opensearch_dashboards.yml
         shell: bash
 
       - name: Run OpenSearch Dashboards
@@ -174,6 +175,7 @@ jobs:
           tail -n 200 dashboard.log || true
           exit 1
 
+
       - name: Run Cypress Tests with retry
         uses: Wandalen/wretry.action@v3.8.0
         with:
@@ -182,4 +184,5 @@ jobs:
           command: |
             cd ./OpenSearch-Dashboards/plugins/security-dashboards-plugin
             yarn add cypress --save-dev
-            eval 'CYPRESS_VERIFY_TIMEOUT=60000 yarn cypress:run --browser chrome --headless --env LOGIN_AS_ADMIN=true --spec "test/cypress/e2e/resource-sharing/resource_access_management.spec.ts"'
+            eval 'CYPRESS_VERIFY_TIMEOUT=60000 yarn cypress:run --browser chrome --headless --env LOGIN_AS_ADMIN=true --spec "test/cypress/e2e/resource-sharing/resource_access_management.spec.ts"' 
+
