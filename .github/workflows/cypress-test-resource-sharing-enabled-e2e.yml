@@ -1,7 +1,6 @@
 name: E2E Resource Access Management Cypress Tests
 
 on:
-  push:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
