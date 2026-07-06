@@ -10,7 +10,7 @@
 # - 🖇️ Manual or Automated Builds: Supports manual execution or invocation from other workflows,
 #   specifying any valid code reference (branch, tag, or commit SHA).
 # - 🏗️ Production-Ready Package Generation: Builds a production-ready package from the provided code reference.
-# - 🌐 Reusable Build Environment: Reuses a preconfigured build environment, ensuring consistency and easier maintenance. commit to test
+# - 🌐 Reusable Build Environment: Reuses a preconfigured build environment, ensuring consistency and easier maintenance.
 #
 
 name: (4.x) Build app package (on demand)
