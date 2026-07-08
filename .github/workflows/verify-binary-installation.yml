@@ -3,6 +3,11 @@ name: 'Install Dashboards with Plugin via Binary'
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
   CI: 1
   # avoid warnings like "tput: No value for $TERM and no -T specified"
@@ -20,7 +25,6 @@ jobs:
         os: [ubuntu-latest]
         # TODO: add windows support when OSD core is stable on windows
     runs-on: ${{ matrix.os }}
-    if: github.event.pull_request.draft == false
     steps:
       - name: Checkout Branch
         uses: actions/checkout@v6
