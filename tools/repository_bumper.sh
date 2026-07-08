@@ -307,6 +307,9 @@ main() {
 
   # Perform pre-update checks
   pre_update_checks
+  if [ -z "$VERSION" ]; then
+    VERSION=$CURRENT_VERSION # If no version provided, use current version
+  fi
 
   # Compare versions and determine revision
   compare_versions_and_set_revision
