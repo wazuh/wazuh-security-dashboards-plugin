@@ -13,6 +13,7 @@ LOG_FILE="${SCRIPT_PATH}/repository_bumper_${DATE_TIME}.log"
 VERSION_FILE="${REPO_PATH}/VERSION.json"
 VERSION=""
 REVISION="00"
+TAG=false
 CURRENT_VERSION=""
 
 # --- Helper Functions ---
@@ -26,11 +27,12 @@ log() {
 
 # Function to show usage
 usage() {
-  echo "Usage: $0 --version VERSION --stage STAGE [--help]"
+  echo "Usage: $0 --version VERSION --stage STAGE [--tag] [--help]"
   echo ""
   echo "Parameters:"
   echo "  --version VERSION   Specify the version (e.g., 4.6.0)"
   echo "  --stage STAGE       Specify the stage (e.g., alpha0, beta1, rc2, etc.)"
+  echo "  --tag               Create a tag for the specified version and stage"
   echo "  --help              Display this help message"
   echo ""
   echo "Example:"
@@ -52,6 +54,10 @@ parse_arguments() {
       STAGE="$2"
       shift 2
       ;;
+    --tag)
+      TAG=true
+      shift
+      ;;
     --help)
       usage
       exit 0
@@ -67,21 +73,21 @@ parse_arguments() {
 
 # Function to validate input parameters
 validate_input() {
-  if [ -z "$VERSION" ]; then
-    log "ERROR: Version parameter is required"
+  if [ -z "$VERSION" ] && [ "$TAG" != true ]; then
+    log "ERROR: --version is required unless --tag is set"
     usage
     exit 1
   fi
-  if [ -z "$STAGE" ]; then
-    log "ERROR: Stage parameter is required"
+  if [ -z "$STAGE" ] && [ "$TAG" != true ]; then
+    log "ERROR: --stage is required unless --tag is set"
     usage
     exit 1
   fi
-  if ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  if [ -n "$VERSION" ] && ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     log "ERROR: Version must be in the format x.y.z (e.g., 4.6.0)"
     exit 1
   fi
-  if ! [[ $STAGE =~ ^[a-zA-Z]+[0-9]+$ ]]; then
+  if [ -n "$STAGE" ] && ! [[ $STAGE =~ ^[a-zA-Z]+[0-9]+$ ]]; then
     log "ERROR: Stage must be alphanumeric (e.g., alpha0, beta1, rc2)"
     exit 1
   fi
@@ -278,39 +284,6 @@ update_package_json() {
   fi
 }
 
-update_manual_build_workflow() {
-  local WORKFLOW_FILE="${REPO_PATH}/.github/workflows/manual-build.yml"
-  if [ -f "$WORKFLOW_FILE" ]; then
-    log "Processing $WORKFLOW_FILE"
-    local modified=false
-    # Update version in manual build workflow
-    # on:
-    #   workflow_call:
-    #     inputs:
-    #       reference:
-    #         required: true
-    #         type: string
-    #         description: Source code reference (branch, tag or commit SHA)
-    #         default: 4.14.0
-    # Update the default value for the reference input
-    if [[ "$CURRENT_VERSION" != "$VERSION" ]]; then
-      log "Attempting to update default reference to $VERSION in $WORKFLOW_FILE"
-      # Note: This sed command assumes a specific formatting and might be fragile.
-      # It looks for the line starting with "default:" and replaces the version value
-      # Ensure to escape special characters if necessary
-      sed -i "s/^\(\s*default:\s*\)$CURRENT_VERSION/\1$VERSION/" "$WORKFLOW_FILE"
-      modified=true
-    fi
-
-    if [[ $modified == true ]]; then
-      log "Successfully updated $WORKFLOW_FILE with new default reference: $VERSION"
-    fi
-  else
-    log "WARNING: $WORKFLOW_FILE not found. Skipping update."
-  fi
-  log "Updating manual build workflow..."
-
-}
 
 # --- Main Execution ---
 main() {
@@ -343,7 +316,6 @@ main() {
 
   update_root_version_json
   update_package_json
-  update_manual_build_workflow
 
   log "File modifications completed."
   log "Repository bump completed successfully. Log file: $LOG_FILE"
