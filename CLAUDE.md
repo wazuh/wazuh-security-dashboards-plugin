@@ -130,7 +130,7 @@ cd ../wazuh-dashboard-plugins/docker/osd-dev
 - `--server-local <tag>` — Wazuh server-local image tag (here `0601`).
 - `--indexer-local <tag>` — packaged indexer image tag.
 - `-r <repo>` — mount an external plugin repo (repeatable). Shorthand resolves the
-  repo by name under the sibling parent dir (e.g. `/home/asus/wazuh/`); or use
+  repo by name under the sibling parent dir (the parent of this checkout); or use
   `-r name=/abs/path`. Point to the repository **ROOT**, not a subfolder.
   `--all-forks` auto-discovers and mounts all sibling forks.
 
