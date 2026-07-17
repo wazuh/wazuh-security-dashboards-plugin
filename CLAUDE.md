@@ -178,8 +178,9 @@ Shared Wazuh Dashboard conventions:
 - **Sign commits** (DCO `--signoff`). Imperative, capitalized subject.
 - Open PRs as **Draft** (CI skips drafts); run lint + tests locally, then "Ready
   for review". Squash merge for single-purpose PRs.
-- UI changes require a screenshot/video in the PR (the template is
-  [`.github/PULL_REQUEST_TEMPLATE.md`](.github/PULL_REQUEST_TEMPLATE.md)).
+- UI changes require a screenshot/video in the PR (`### Results and Evidence`
+  section of the [PR template](.github/PULL_REQUEST_TEMPLATE.md)); manual
+  verification steps go in `### How to Test`.
 - **Changelog:** maintain [`CHANGELOG.md`](CHANGELOG.md) by hand for user-facing
   changes; entries **link to the issue, not the PR**. No entry for
   `internal-devel-requests` issues or tooling/docs/test-only PRs.
