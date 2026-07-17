@@ -16,7 +16,7 @@ Copy this checklist and track progress:
 - [ ] 1. Classify intent → choose issue template (ask only if ambiguous)
 - [ ] 2. Issue-first check: search existing issues for duplicates
 - [ ] 3. Fill the chosen .github/ISSUE_TEMPLATE/*.md verbatim
-- [ ] 4. Keep the template's default labels; add a triage label only if named
+- [ ] 4. Apply the real Wazuh label for the intent (`type/bug` / `type/enhancement` / `level/task`) + `untriaged`; ignore stale frontmatter labels
 - [ ] 5. Emit the ready-to-file body + report (default stop; gh issue create only if asked)
 ```
 
@@ -52,13 +52,8 @@ fill it verbatim; do not inline template bodies in this skill.
 
 > **repo-specific (wazuh-security-dashboards-plugin):** `bug_report.md`'s `bug`
 > label and `feature_request.md`'s `enhancement` label do not exist in this
-> repo — the real label set only has `type/bug` and `type/enhancement` (spot-
-> checked with `gh label list --repo wazuh/wazuh-security-dashboards-plugin`
-> on 2026-07-17; re-run before relying on it, label sets drift). GitHub
-> silently drops an unknown label when creating an issue from a template
-> instead of auto-creating it, so those two templates in practice only apply
-> `untriaged`; offer to add the real `type/bug` / `type/enhancement` label by
-> hand if the user wants the type reflected. `compatibility_request.md`'s three
+> repo — stale, see step 4 for the real labels to apply.
+> `compatibility_request.md`'s three
 > labels (`request/operational`, `level/task`, `type/maintenance`) and
 > `task_template.md`'s `level/task` label all exist and apply cleanly.
 > [`.github/workflows/add-untriaged.yml`](../../../.github/workflows/add-untriaged.yml)
@@ -71,8 +66,21 @@ fill it verbatim; do not inline template bodies in this skill.
 
 ### 4. Labels
 
-Keep the template's default labels as-is; add an extra triage label only if
-the user explicitly names one. Do not invent labels or an approval workflow.
+Several issue templates in this repo were inherited from the upstream
+OpenSearch Dashboards fork and still declare stale labels in their
+frontmatter (bare `bug`, `enhancement`) that don't exist as real labels here
+— GitHub silently drops any label that doesn't exist instead of erroring, so
+filing the template as-is can result in no type label at all. Standardize on
+the real Wazuh label set instead of trusting the frontmatter verbatim:
+
+| Intent | Real label to apply |
+|--------|--------|
+| Bug / defect | `type/bug` |
+| Feature / enhancement | `type/enhancement` |
+| Engineering task / chore | `level/task` |
+| Every issue | `untriaged` — applied automatically on open/reopen/transfer by `.github/workflows/add-untriaged.yml`, no manual action needed |
+
+Do not invent labels beyond this set, and do not invent an approval workflow.
 
 ### 5. Emit the ready-to-file body + report
 
