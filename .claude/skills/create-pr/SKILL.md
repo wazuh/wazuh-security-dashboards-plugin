@@ -25,7 +25,7 @@ you to create/open/submit it.
 - **English everywhere.** Describe the _why_, not just the _what_.
 - **Issues arrive as URLs** and may live in a different repo. Read them with
   `gh issue view <url>` and classify the source (see below) — it changes both
-  "Issues Resolved" and the CHANGELOG.
+  the PR's `## Description` and the CHANGELOG.
 
 ## Issue source: public vs internal
 
@@ -33,11 +33,12 @@ Detect the source repo from the issue URL:
 
 - **Internal** — the URL/repo contains `internal-devel-request` (e.g.
   `https://github.com/wazuh/internal-devel-requests/issues/5526`):
-  - PR "Issues Resolved": **leave empty** — never expose the internal link.
+  - PR `## Description`: **do not reference the issue** — never expose the
+    internal link.
   - CHANGELOG: **no entry** for internal-devel-requests issues.
 - **Public** — any other repo (e.g.
   `https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/123`):
-  - PR "Issues Resolved": `closes #<n>` (same repo) or `closes <issue-url>`
+  - PR `## Description`: `Closes #<n>` (same repo) or `Closes <issue-url>`
     (another public repo).
   - CHANGELOG: add an entry linking to the **issue** (see step 4).
 
@@ -112,47 +113,17 @@ When unsure (and the issue is public), add an entry.
 
 ### 5. Fill the PR body
 
-Fill the repository PR template **verbatim** (keep every heading and checklist
-item exactly).
+Read [`.github/PULL_REQUEST_TEMPLATE.md`](../../../.github/PULL_REQUEST_TEMPLATE.md)
+and fill it **verbatim** (keep every heading and checklist item exactly) — do
+not inline or restate its sections here; that file is the single source of
+truth. Screenshots/videos (REQUIRED for any UI change) go under
+`### Results and Evidence`; test notes go under `### Tests Introduced` /
+`### How to Test`.
 
-> **repo-specific (wazuh-security-dashboards-plugin):** this mirrors
-> [`.github/PULL_REQUEST_TEMPLATE.md`](../../../.github/PULL_REQUEST_TEMPLATE.md).
-> Read it first and keep this block in sync if the repo template changes. Put the
-> screenshot/video (REQUIRED for any UI change) under `### Description`, and put
-> unit/integration/manual test notes under the dedicated `### Testing` section.
-
-```markdown
-### Description
-[Describe what this change achieves]
-
-### Category
-[Enhancement, New feature, Bug fix, Test fix, Refactoring, Maintenance, Documentation]
-
-### Why these changes are required?
-
-
-### What is the old behavior before changes and new behavior after changes?
-
-
-### Issues Resolved
-[List any issues this PR will resolve (Is this a backport? If so, please add backport PR # and/or commits #)]
-
-### Testing
-[Please provide details of testing done: unit testing, integration testing and manual testing]
-
-### Check List
-- [ ] New functionality includes testing
-- [ ] New functionality has been documented
-- [ ] Commits are signed per the DCO using --signoff
-
-By submitting this pull request, I confirm that my contribution is made under the terms of the Apache 2.0 license.
-For more information on following Developer Certificate of Origin and signing off your commits, please check [here](https://github.com/opensearch-project/OpenSearch/blob/main/CONTRIBUTING.md#developer-certificate-of-origin).
-```
-
-Fill each section with real content; check the boxes that genuinely apply. For
-**Issues Resolved**: public issue → closing keyword (`closes`, `fixes`, `fix`)
-with `#<n>` or the full issue URL; **internal-devel-requests issue → leave the
-section empty** (see "Issue source" above).
+Fill each section with real content; check the boxes that genuinely apply. In
+`## Description`: public issue → closing keyword (`Closes`, `Fixes`, `Fix`)
+with `#<n>` or the full issue URL; **internal-devel-requests issue → do not
+reference it** (see "Issue source" above).
 
 **Default deliverable — pre-flight report.** Unless the user asked you to create the
 PR, stop here and output the filled body plus this report for the human to act on:
@@ -171,15 +142,14 @@ PR pre-flight
 
 ### 6. Create as Draft — only when explicitly asked
 
+Save the filled body (step 5) to a local file — a filled copy of
+`.github/PULL_REQUEST_TEMPLATE.md` — and pass it with `--body-file`:
+
 ```bash
 gh pr create --draft \
   --base <version-branch> \
   --title "<Imperative, capitalized subject>" \
-  --body "$(cat <<'EOF'
-### Description
-...
-EOF
-)"
+  --body-file <path-to-filled-copy-of-.github/PULL_REQUEST_TEMPLATE.md>
 ```
 
 ### 7. Mark Ready for review — only when explicitly asked

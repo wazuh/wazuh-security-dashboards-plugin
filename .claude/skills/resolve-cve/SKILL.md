@@ -97,9 +97,10 @@ Then invoke **create-pr** in its default prepare-and-hand-off mode. It applies t
 shared rules automatically:
 
 - Base = the version branch the work started from (not always `main`).
-- CVE issues usually live in **`internal-devel-requests`** → "Issues Resolved"
-  left empty and **no CHANGELOG entry**. If the CVE issue is public, use `closes`
-  and add a CHANGELOG entry (under `Fixed`/`Changed`) linking the **issue**.
+- CVE issues usually live in **`internal-devel-requests`** → `## Description`
+  has no issue reference and **no CHANGELOG entry**. If the CVE issue is public,
+  use `Closes` in `## Description` and add a CHANGELOG entry (under
+  `Fixed`/`Changed`) linking the **issue**.
 - Commits DCO-signed.
 
 Suggested PR title: `Fix <CVE-id>: bump <package> to <safe-version>`.
