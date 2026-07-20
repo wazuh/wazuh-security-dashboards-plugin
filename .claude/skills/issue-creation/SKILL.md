@@ -25,12 +25,12 @@ Copy this checklist and track progress:
 Map the user's intent to a template. Ask the user only when genuinely
 ambiguous between two rows.
 
-| Intent | Template | Labels (from template frontmatter) |
-|--------|----------|--------|
-| Something is broken / unexpected behavior | `bug_report.md` | `bug, untriaged` |
-| New capability / improvement request | `feature_request.md` | `enhancement, untriaged` |
-| Track UI compatibility with an upcoming OpenSearch version | `compatibility_request.md` | `request/operational, level/task, type/maintenance` |
-| Engineering task / improvement (not a bug, feature, or compatibility request) | `task_template.md` | `level/task` |
+| Intent                                                                        | Template                   | Labels (from template frontmatter)                  |
+| ----------------------------------------------------------------------------- | -------------------------- | --------------------------------------------------- |
+| Something is broken / unexpected behavior                                     | `bug_report.md`            | `bug, untriaged`                                    |
+| New capability / improvement request                                          | `feature_request.md`       | `enhancement, untriaged`                            |
+| Track UI compatibility with an upcoming OpenSearch version                    | `compatibility_request.md` | `request/operational, level/task, type/maintenance` |
+| Engineering task / improvement (not a bug, feature, or compatibility request) | `task_template.md`         | `level/task`                                        |
 
 ### 2. Issue-first duplicate check
 
@@ -73,12 +73,12 @@ frontmatter (bare `bug`, `enhancement`) that don't exist as real labels here
 filing the template as-is can result in no type label at all. Standardize on
 the real Wazuh label set instead of trusting the frontmatter verbatim:
 
-| Intent | Real label to apply |
-|--------|--------|
-| Bug / defect | `type/bug` |
-| Feature / enhancement | `type/enhancement` |
-| Engineering task / chore | `level/task` |
-| Every issue | `untriaged` — applied automatically on open/reopen/transfer by `.github/workflows/add-untriaged.yml`, no manual action needed |
+| Intent                   | Real label to apply                                                                                                           |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| Bug / defect             | `type/bug`                                                                                                                    |
+| Feature / enhancement    | `type/enhancement`                                                                                                            |
+| Engineering task / chore | `level/task`                                                                                                                  |
+| Every issue              | `untriaged` — applied automatically on open/reopen/transfer by `.github/workflows/add-untriaged.yml`, no manual action needed |
 
 Do not invent labels beyond this set, and do not invent an approval workflow.
 
