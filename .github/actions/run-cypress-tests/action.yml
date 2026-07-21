@@ -22,6 +22,7 @@ runs:
     - name: Set up JDK
       uses: actions/setup-java@b6e674f4b717d7b0ae3baee0fbe79f498905dfde # v1
       with:
+        distribution: 'temurin'
         java-version: 11
 
     - name: Set env

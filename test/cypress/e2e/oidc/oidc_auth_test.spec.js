@@ -136,9 +136,12 @@ describe('Log in via OIDC', () => {
     });
 
     localStorage.setItem('home:newThemeModal:show', 'false');
+    cy.get('#user-icon-btn').should('be.visible');
+    cy.get('#user-icon-btn').click();
+    cy.get('button[data-test-subj^="switch-tenants"]').click();
 
     cy.get('#private').should('be.enabled');
-    cy.get('#private').click({ force: true });
+    cy.get('#private').click();
 
     cy.get('button[data-test-subj="confirm"]').click();
 
