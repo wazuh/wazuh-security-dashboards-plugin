@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
   KEYCLOAK_VERSION: '21.0.1'
   TEST_KEYCLOAK_CLIENT_SECRET: 'oacHfNaXyy81r2uHq1A9RY4ASryre4rZ'
@@ -22,10 +26,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        basePath: [ "", "/osd" ]
+        os: [ubuntu-latest]
+        basePath: ['', '/osd']
     runs-on: ${{ matrix.os }}
-    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout Branch

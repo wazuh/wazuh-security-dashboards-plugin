@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
   unit-tests:
     name: Run unit tests
@@ -13,7 +17,6 @@ jobs:
       matrix:
         os: [ubuntu-latest] # Removed  windows-latest, macos-latest
     runs-on: ${{ matrix.os }}
-    if: github.event.pull_request.draft == false
 
     steps:
       # - name: Enable longer filenames

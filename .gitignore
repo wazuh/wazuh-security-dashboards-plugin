@@ -11,3 +11,10 @@ kibana-coverage/
 .idea/
 test/cypress/screenshots
 test/cypress/downloads
+
+# Claude Code: version the shared settings + skills, ignore personal overrides
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Scratch dir for AI skill reports (CVE analysis/resolution, etc.)
+tmp/

@@ -63,12 +63,13 @@ sed_inplace() {
 
 # Function to show usage
 usage() {
-  echo "Usage: $0 --version VERSION --stage STAGE [--set-as-main] [--help]"
+  echo "Usage: $0 --version VERSION --stage STAGE [--tag] [--set-as-main] [--help]"
   echo ""
   echo "Parameters:"
   echo "  --version VERSION   Specify the version (e.g., 4.6.0)"
   echo "  --stage STAGE       Specify the stage (e.g., alpha0, beta1, rc2, etc.)"
   echo "  --set-as-main       Keep branch references pointing to main"
+  echo "  --tag               Create a tag for the specified version and stage"
   echo "  --help              Display this help message"
   echo ""
   echo "Example:"
@@ -124,18 +125,15 @@ validate_input() {
     usage
     exit 1
   fi
-
   if [ -z "$STAGE" ] && [ "$TAG" != true ]; then
     log "ERROR: --stage is required unless --tag is set"
     usage
     exit 1
   fi
-
   if [ -n "$VERSION" ] && ! [[ $VERSION =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
     log "ERROR: Version must be in the format x.y.z (e.g., 4.6.0)"
     exit 1
   fi
-
   if [ -n "$STAGE" ] && ! [[ $STAGE =~ ^[a-zA-Z]+[0-9]+$ ]]; then
     log "ERROR: Stage must be alphanumeric (e.g., alpha0, beta1, rc2)"
     exit 1
@@ -364,56 +362,22 @@ update_branch_reference_defaults() {
 # Function to update CHANGELOG.md
 update_changelog() {
   log "Updating CHANGELOG.md..."
-  local changelog_file="${REPO_PATH}/CHANGELOG.md"
+  local changelog_script="${SCRIPT_PATH}/changelog_bump.sh"
+  local args=("$VERSION" "$CURRENT_VERSION")
 
-  # Extract OpenSearch Dashboards version from package.json
-  # Attempt to extract OpenSearch Dashboards version using sed (WARNING: Fragile!)
-  # This assumes "pluginPlatform": { ... "version": "x.y.z" ... } structure
-  # It looks for the block starting with "pluginPlatform": { and ending with }
-  # Within that block, it finds the line starting with "version": "..." and extracts the value.
-  # This is significantly less reliable than using jq.
-  log "Attempting to extract .version from $PACKAGE_JSON using sed (Note: This is fragile)"
-  # Extract OpenSearch Dashboards version from package.json (first occurrence of "version")
-  OPENSEARCH_VERSION=$(sed -n '/"opensearchDashboards": {/,/}/ s/^[[:space:]]*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*$/\1/p' "$PACKAGE_JSON" | head -n 1)
-  if [ -z "$OPENSEARCH_VERSION" ] || [ "$OPENSEARCH_VERSION" == "null" ]; then
-    log "ERROR: Could not extract pluginPlatform.version from $PACKAGE_JSON for changelog"
+  if [ ! -f "$changelog_script" ]; then
+    log "ERROR: changelog_bump.sh not found at $changelog_script"
     exit 1
   fi
-  log "Detected OpenSearch Dashboards version for changelog: $OPENSEARCH_VERSION"
 
-  # Construct the new changelog entry
-  # Note: Using printf for better handling of newlines and potential special characters
-  # Use the calculated REVISION variable here
-  # Prepare the header to search for
-  local changelog_header="## Wazuh dashboard v${VERSION} - OpenSearch Dashboards ${OPENSEARCH_VERSION} - Revision "
-  local changelog_header_regex="^${changelog_header}[0-9]+"
+  if [ "$TAG" = true ]; then
+    args+=("--tag")
+  fi
 
-  # Check if an entry for this version and OpenSearch version already exists
-  if grep -qE "$changelog_header_regex" "$changelog_file"; then
-    if [ -n "$STAGE" ]; then
-      log "Changelog entry for this version and OpenSearch Dashboards version exists. Updating revision only."
-      # Use sed to update only the revision number in the header
-       sed_inplace -E "s|(${changelog_header_regex})|${changelog_header}${REVISION}|" "$changelog_file" &&
-        log "CHANGELOG.md revision updated successfully." || {
-        log "ERROR: Failed to update revision in $changelog_file"
-        exit 1
-      }
-    fi
-  else
-    log "No existing changelog entry for this version and OpenSearch Dashboards version. Inserting new entry."
-
-   # Create the new entry directly in the changelog using sed
-    local temp_file=$(mktemp)
-    head -n 4 "$changelog_file" >"$temp_file"
-    printf "## Wazuh dashboard v%s - OpenSearch Dashboards %s - Revision %s\n\n### Added\n\n- Support for Wazuh %s\n\n" "$VERSION" "$OPENSEARCH_VERSION" "$REVISION" "$VERSION" >>"$temp_file"
-    tail -n +5 "$changelog_file" >>"$temp_file"
-
-    mv "$temp_file" "$changelog_file" || {
-      log "ERROR: Failed to update $changelog_file"
-      rm -f "$temp_file" # Clean up temp file on error
-      exit 1
-    }
-    log "CHANGELOG.md updated successfully."
+  bash "$changelog_script" "${args[@]}" 2>&1 | tee -a "$LOG_FILE"
+  if [ "${PIPESTATUS[0]}" -ne 0 ]; then
+    log "ERROR: Failed to update CHANGELOG.md"
+    exit 1
   fi
 }
 
