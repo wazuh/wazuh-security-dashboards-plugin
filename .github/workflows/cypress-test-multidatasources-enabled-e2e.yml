@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 env:
   CI: 1
   # avoid warnings like "tput: No value for $TERM and no -T specified"
@@ -111,4 +115,4 @@ jobs:
         with:
           dashboards_config_file: opensearch_dashboards_multidatasources.yml
           yarn_command: 'CYPRESS_VERIFY_TIMEOUT=60000 yarn cypress:run --browser chrome --headless --env LOGIN_AS_ADMIN=true --spec "test/cypress/e2e/multi-datasources/multi_datasources_enabled.spec.js"'
-          resource_sharing_enabled: "true"
+          resource_sharing_enabled: 'true'
