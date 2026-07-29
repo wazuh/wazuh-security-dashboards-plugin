@@ -32,7 +32,7 @@ on:
         required: false
         type: string
       set_as_main:
-        description: "Enable main branch mode: bump version values only, keep branch references pointing to main"
+        description: 'Enable main branch mode: bump version values only, keep branch references pointing to main'
         required: false
         type: boolean
         default: false
@@ -102,7 +102,7 @@ jobs:
           stage=${{ env.STAGE }}
           tag=${{ env.TAG }}
           set_as_main=${{ env.SET_AS_MAIN }}
-          
+
           # Both version and stage provided
           if [[ -n "$version" && -n "$stage" && "$tag" != "true" ]]; then
             script_params="--version ${version} --stage ${stage}"
@@ -223,7 +223,7 @@ jobs:
       - name: Merge pull request
         if: (inputs.revert != true && steps.check_changes.outputs.has_changes == 'true') || (inputs.revert == true && steps.revert_step.outputs.has_changes == 'true')
         run: |
-          gh pr merge "${{ steps.create_pr.outputs.pull_request_url }}" --merge --admin
+          gh pr merge "${{ steps.create_pr.outputs.pull_request_url }}" --squash --admin
 
       - name: Show logs
         if: inputs.revert != true
