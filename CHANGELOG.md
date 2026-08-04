@@ -4,7 +4,7 @@
 
 | Issue | Comment |
 | ----- | ------- |
-
+| [#37](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/37) | Support for Wazuh 5.0.0 |
 
 ## Prior versions
 
