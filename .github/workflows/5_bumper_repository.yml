@@ -228,11 +228,11 @@ jobs:
         run: |
           gh pr merge "${{ steps.create_pr.outputs.pull_request_url }}" --squash --admin
 
-      - name: "Result: original bump pull request not found"
+      - name: 'Result: original bump pull request not found'
         if: inputs.revert == true && steps.revert_step.outputs.pr_found == 'false'
         run: echo "There is no original bump pull request to revert, nothing to do."
 
-      - name: "Result: no changes to commit"
+      - name: 'Result: no changes to commit'
         if: >-
           (inputs.revert != true && steps.check_changes.outputs.has_changes == 'false') ||
           (inputs.revert == true && steps.revert_step.outputs.pr_found == 'true' &&
