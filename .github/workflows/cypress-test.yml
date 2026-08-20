@@ -1,6 +1,8 @@
 name: Cypress Tests
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 
 env:
   YARN_IGNORE_ENGINES: true
@@ -16,16 +18,18 @@ env:
 jobs:
   cypress-tests:
     name: Run Cypress tests
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
 
-    steps:       
+    steps:
       - name: Set up JDK
         uses: actions/setup-java@b6e674f4b717d7b0ae3baee0fbe79f498905dfde # v1
         with:
+          distribution: 'temurin'
           java-version: 11
 
       - name: Checkout Branch
@@ -51,7 +55,7 @@ jobs:
         uses: opensearch-project/opensearch-build/.github/actions/start-opensearch@643b632712710159088d5f0798de7e91c1f2b8f7
         with:
           opensearch-version: ${{ env.OPENSEARCH_VERSION }}
-          plugins: "file:$(pwd)/${{ env.PLUGIN_NAME }}.zip"
+          plugins: 'file:$(pwd)/${{ env.PLUGIN_NAME }}.zip'
           security-enabled: true
           admin-password: ${{ env.OPENSEARCH_INITIAL_ADMIN_PASSWORD }}
 
@@ -76,6 +80,7 @@ jobs:
         uses: opensearch-project/opensearch-build/.github/actions/setup-opensearch-dashboards@643b632712710159088d5f0798de7e91c1f2b8f7
         with:
           plugin_name: security-dashboards-plugin
+          app_reference: ${{ vars.WZD_REF }}
           opensearch_dashboards_yml: cypress-opensearch-dashboards-config.yml
 
       - name: Configure and Run OpenSearch Dashboards with Cypress Test Cases
@@ -83,7 +88,7 @@ jobs:
           cd ./OpenSearch-Dashboards
           nohup yarn start --no-base-path --no-watch &
           sleep 500
-          git clone https://github.com/opensearch-project/opensearch-dashboards-functional-test.git
+          git clone https://github.com/opensearch-project/opensearch-dashboards-functional-test.git -b ${{ env.OPENSEARCH_VERSION }}
           cd opensearch-dashboards-functional-test
           npm install cypress --save-dev
           yarn cypress:run-with-security-and-aggregation-view --browser chrome --spec "cypress/integration/plugins/security-dashboards-plugin/aggregation_view.js"
