@@ -23,8 +23,9 @@ import {
 } from './security_cookie';
 import { SecurityPluginConfigType } from '..';
 
-const configWith = (secure?: boolean) =>
-  (({ cookie: { secure } } as unknown) as SecurityPluginConfigType);
+// A narrow literal, cast once. `as unknown as T` is avoided on purpose: the two
+// Prettier versions used by the pipeline format that construct differently.
+const configWith = (secure?: boolean) => ({ cookie: { secure } } as SecurityPluginConfigType);
 
 describe('isCookieSecure', () => {
   beforeEach(() => {
