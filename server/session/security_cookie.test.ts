@@ -24,7 +24,7 @@ import {
 import { SecurityPluginConfigType } from '..';
 
 const configWith = (secure?: boolean) =>
-  ({ cookie: { secure } } as unknown as SecurityPluginConfigType);
+  (({ cookie: { secure } } as unknown) as SecurityPluginConfigType);
 
 describe('isCookieSecure', () => {
   beforeEach(() => {

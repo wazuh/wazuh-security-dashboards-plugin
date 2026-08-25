@@ -121,10 +121,9 @@ export class SecurityPlugin implements Plugin<SecurityPluginSetup, SecurityPlugi
     // storage factory and before any auth type reads the flag.
     setDerivedCookieSecure(core.http.getServerInfo().protocol === 'https');
 
-    const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> =
-      await core.http.createCookieSessionStorageFactory<SecuritySessionCookie>(
-        getSecurityCookieOptions(config)
-      );
+    const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> = await core.http.createCookieSessionStorageFactory<
+      SecuritySessionCookie
+    >(getSecurityCookieOptions(config));
 
     // put logger into route handler context, so that we don't need to pass througth parameters
     core.http.registerRouteHandlerContext('security_plugin', (context, request) => {
@@ -199,8 +198,8 @@ export class SecurityPlugin implements Plugin<SecurityPluginSetup, SecurityPlugi
     this.savedObjectClientWrapper.config = config;
 
     if (config.multitenancy?.enabled) {
-      const globalConfig$: Observable<SharedGlobalConfig> =
-        this.initializerContext.config.legacy.globalConfig$;
+      const globalConfig$: Observable<SharedGlobalConfig> = this.initializerContext.config.legacy
+        .globalConfig$;
       const globalConfig: SharedGlobalConfig = await globalConfig$.pipe(first()).toPromise();
       const opensearchDashboardsIndex = globalConfig.opensearchDashboards.index;
       const typeRegistry: ISavedObjectTypeRegistry = core.savedObjects.getTypeRegistry();
