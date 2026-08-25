@@ -1,5 +1,11 @@
 ## [v5.0.0]
 
+### Fixed
+
+| Issue                                                         | Comment                                                          |
+| ------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [#1520](https://github.com/wazuh/wazuh-dashboard/issues/1520) | Derive the session cookie `Secure` flag from the server protocol |
+
 ### Added
 
 | Issue                                                                      | Comment                 |
