@@ -31,7 +31,11 @@ import { defineRoutes } from './routes';
 import { SecurityPluginConfigType } from '.';
 import opensearchSecurityConfigurationPlugin from './backend/opensearch_security_configuration_plugin';
 import opensearchSecurityPlugin from './backend/opensearch_security_plugin';
-import { SecuritySessionCookie, getSecurityCookieOptions } from './session/security_cookie';
+import {
+  SecuritySessionCookie,
+  getSecurityCookieOptions,
+  setDerivedCookieSecure, // Wazuh
+} from './session/security_cookie';
 import { SecurityClient } from './backend/opensearch_security_client';
 import {
   SavedObjectsSerializer,
@@ -110,6 +114,12 @@ export class SecurityPlugin implements Plugin<SecurityPluginSetup, SecurityPlugi
     }
 
     this.securityClient = new SecurityClient(esClient);
+
+    // Wazuh: derive the cookie Secure flag from the listener protocol, so an
+    // HTTPS deployment does not depend on an administrator setting
+    // opensearch_security.cookie.secure by hand. Must run before the session
+    // storage factory and before any auth type reads the flag.
+    setDerivedCookieSecure(core.http.getServerInfo().protocol === 'https');
 
     const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> = await core.http.createCookieSessionStorageFactory<
       SecuritySessionCookie
