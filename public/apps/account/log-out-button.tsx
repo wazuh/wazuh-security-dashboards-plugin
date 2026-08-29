@@ -15,10 +15,15 @@
 
 import React from 'react';
 import { EuiButtonEmpty } from '@elastic/eui';
+import { i18n } from '@osd/i18n';
 import { HttpStart } from 'opensearch-dashboards/public';
 import { externalLogout, logout } from './utils';
 import { AuthType, OPENID_AUTH_LOGOUT, SAML_AUTH_LOGOUT } from '../../../common';
 import { setShouldShowTenantPopup } from '../../utils/storage-utils';
+
+const logOutLabel = i18n.translate('security.account.logOut', {
+  defaultMessage: 'Log out',
+});
 
 export function LogoutButton(props: {
   authType: string;
@@ -36,7 +41,7 @@ export function LogoutButton(props: {
           size="xs"
           onClick={() => externalLogout(props.http, OPENID_AUTH_LOGOUT)}
         >
-          Log out
+          {logOutLabel}
         </EuiButtonEmpty>
       </div>
     );
@@ -50,7 +55,7 @@ export function LogoutButton(props: {
           size="xs"
           onClick={() => externalLogout(props.http, SAML_AUTH_LOGOUT)}
         >
-          Log out
+          {logOutLabel}
         </EuiButtonEmpty>
       </div>
     );
@@ -67,7 +72,7 @@ export function LogoutButton(props: {
           size="xs"
           onClick={() => logout(props.http, props.logoutUrl)}
         >
-          Log out
+          {logOutLabel}
         </EuiButtonEmpty>
       </div>
     );

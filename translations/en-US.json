@@ -1,0 +1,166 @@
+{
+  "formats": {
+    "number": {
+      "currency": {
+        "style": "currency"
+      },
+      "percent": {
+        "style": "percent"
+      }
+    },
+    "date": {
+      "short": {
+        "month": "numeric",
+        "day": "numeric",
+        "year": "2-digit"
+      },
+      "medium": {
+        "month": "short",
+        "day": "numeric",
+        "year": "numeric"
+      },
+      "long": {
+        "month": "long",
+        "day": "numeric",
+        "year": "numeric"
+      },
+      "full": {
+        "weekday": "long",
+        "month": "long",
+        "day": "numeric",
+        "year": "numeric"
+      }
+    },
+    "time": {
+      "short": {
+        "hour": "numeric",
+        "minute": "numeric"
+      },
+      "medium": {
+        "hour": "numeric",
+        "minute": "numeric",
+        "second": "numeric"
+      },
+      "long": {
+        "hour": "numeric",
+        "minute": "numeric",
+        "second": "numeric",
+        "timeZoneName": "short"
+      },
+      "full": {
+        "hour": "numeric",
+        "minute": "numeric",
+        "second": "numeric",
+        "timeZoneName": "short"
+      }
+    },
+    "relative": {
+      "years": {
+        "units": "year"
+      },
+      "months": {
+        "units": "month"
+      },
+      "days": {
+        "units": "day"
+      },
+      "hours": {
+        "units": "hour"
+      },
+      "minutes": {
+        "units": "minute"
+      },
+      "seconds": {
+        "units": "second"
+      }
+    }
+  },
+  "messages": {
+    "security.login.invalidCredentials": "Invalid username or password. Please try again.",
+    "security.login.passwordPlaceholder": "Password",
+    "security.login.submitButton": "Log in",
+    "security.login.unsupportedAuthType": "Authentication Type: {authType} is not supported for multiple authentication.",
+    "security.login.usernamePlaceholder": "Username",
+    "security.account.logOut": "Log out",
+    "security.account.resetPassword": "Reset password",
+    "security.account.switchTenants": "Switch tenants",
+    "security.account.viewRolesAndIdentities": "View roles and identities",
+    "security.app.securityTitle": "Security",
+    "security.app.getStartedTitle": "Get started with access control",
+    "security.app.authenticationAndAuthorizationTitle": "Authentication and authorization",
+    "security.app.rolesTitle": "Roles",
+    "security.app.internalUsersTitle": "Internal users",
+    "security.app.permissionsTitle": "Permissions",
+    "security.app.tenantsTitle": "Tenants",
+    "security.app.auditLogsTitle": "Audit logs",
+    "security.app.resourceAccessManagementTitle": "Resource Access Management",
+    "security.authenticationAndAuthorization.description": "Set up authentication and authorization sequences.",
+    "security.roles.description": "Create a set of permissions with specific privileges.",
+    "security.internalUsers.description": "Define users to control access to your data.",
+    "security.permissions.description": "Controls access to individual actions and action groups.",
+    "security.auditLogs.description": "Configure audit logging for system access activities.",
+    "security.resourceAccessManagement.description": "Share and manage access to individual resources (detectors, forecasters, etc.).",
+    "security.securityDescription": "Configure how users access data in OpenSearch with authentication, access control and audit logging.",
+    "security.app.dataAccessAndUsersCategory": "Data access and users",
+    "security.account.reset.title": "Reset password for \"{username}\"",
+    "security.account.reset.invalidCurrentPassword": "Invalid current password. {detail}",
+    "security.account.reset.failed": "Failed to reset password.",
+    "security.account.reset.currentPassword": "Current password",
+    "security.account.reset.currentPasswordHelp": "Verify your account by entering your current password.",
+    "security.account.reset.newPassword": "New password",
+    "security.account.reset.reenterPassword": "Re-enter new password",
+    "security.account.reset.reenterPasswordHelp": "The password must be identical to what you entered above.",
+    "security.account.reset.cancel": "Cancel",
+    "security.account.reset.submit": "Reset",
+    "security.account.roles.title": "Roles ({count})",
+    "security.account.roles.description": "Roles you are currently mapped to by your administrator.",
+    "security.account.backendRoles.title": "Backend roles ({count})",
+    "security.account.backendRoles.description": "Backend roles you are currently mapped to by your administrator.",
+    "security.account.tenant.enableGlobal": "Contact the administrator to enable global tenant.",
+    "security.account.tenant.accessGlobal": "Contact the administrator to get access to global tenant.",
+    "security.account.tenant.enablePrivate": "Contact the administrator to enable private tenant.",
+    "security.account.tenant.accessPrivate": "Contact the administrator to get access to private tenant.",
+    "security.account.tenant.privateReadOnly": "Your account has read-only privileges only, using the private tenant is not possible.",
+    "security.account.tenant.global": "Global",
+    "security.account.tenant.globalDescription": "The global tenant is shared between every OpenSearch Dashboards user.",
+    "security.account.tenant.private": "Private",
+    "security.account.tenant.privateDescription": "The private tenant is exclusive to each user and can't be shared. You might use the private tenant for exploratory work.",
+    "security.account.tenant.chooseCustom": "Choose from custom",
+    "security.account.tenant.noTarget": "No target tenant is specified!",
+    "security.account.tenant.switchFailed": "Failed to switch tenant.",
+    "security.account.tenant.selectCustom": "Select a custom tenant",
+    "security.account.tenant.enableMultiTenancy": "Contact the administrator to enable multi tenancy.",
+    "security.account.tenant.selectTitle": "Select your tenant",
+    "security.account.tenant.intro": "Tenants are useful for safely sharing your work with other OpenSearch Dashboards users. You can switch your tenant anytime by clicking the user avatar on top right.",
+    "security.account.tenant.cancel": "Cancel",
+    "security.account.tenant.confirm": "Confirm",
+    "audit.logs.introduction": "Audit logs let you track user access to your OpenSearch cluster and are useful for compliance purposes.",
+    "audit.logs.storageInstruction": "Configure the output location and storage types in {opensearchCode}. The default storage location is {internalOpenSearchCode}, which stores the logs in an index on this cluster.",
+    "security.getStarted.addBackends.title": "Add backends",
+    "security.getStarted.addBackends.body": "Add authentication {authc} and authorization {authz} information to {configFile}. The {authc} section contains the backends to check user credentials against. The {authz} section contains any backends to fetch backend roles from. The most common example of a backend role is an LDAP group.",
+    "security.getStarted.addBackends.configDocs": "Config.yml documentation",
+    "security.getStarted.addBackends.reviewAuth": "Review authentication and authorization",
+    "security.getStarted.createRoles.title": "Create roles",
+    "security.getStarted.createRoles.body": "Roles are reusable collections of permissions. The default roles are a great starting point, but you might need to create custom roles that meet your exact needs.",
+    "security.getStarted.createRoles.explore": "Explore existing roles",
+    "security.getStarted.createRoles.create": "Create new role",
+    "security.getStarted.mapUsers.title": "Map users",
+    "security.getStarted.mapUsers.body": "After a user successfully authenticates, the security plugin retrieves that user's roles. You can map roles directly to users, but you can also map them to backend roles.",
+    "security.getStarted.mapUsers.map": "Map users to a role",
+    "security.getStarted.mapUsers.createUser": "Create internal user",
+    "security.getStarted.openInNewWindow": "Open in new window",
+    "security.getStarted.pageTitle": "Get started",
+    "security.getStarted.intro": "The OpenSearch security plugin lets you define the API calls that users can make and the data they can access. The most basic configuration consists of these steps.",
+    "security.getStarted.auditLogs.title": "Optional: Configure audit logs",
+    "security.getStarted.auditLogs.review": "Review Audit Log Configuration",
+    "security.getStarted.purgeCache.title": "Optional: Purge cache",
+    "security.getStarted.purgeCache.body": "By default, the security plugin caches authenticated users, along with their roles and permissions. This option will purge cached users, roles and permissions.",
+    "security.getStarted.purgeCache.success": "Cache purge successful {cluster}",
+    "security.getStarted.purgeCache.failed": "purge cache {cluster}",
+    "security.getStarted.purgeCache.button": "Purge cache",
+    "security.getStarted.multiTenancy.title": "Optional: Multi-tenancy",
+    "security.getStarted.multiTenancy.body": "By default tenancy is activated in Dashboards. Tenants in OpenSearch Dashboards are spaces for saving index patterns, visualizations, dashboards, and other OpenSearch Dashboards objects.",
+    "security.getStarted.multiTenancy.manage": "Manage Multi-tenancy",
+    "security.getStarted.multiTenancy.configure": "Configure Multi-tenancy"
+  }
+}
