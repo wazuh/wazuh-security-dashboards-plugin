@@ -31,6 +31,7 @@ import {
 import {
   SecuritySessionCookie,
   clearOldVersionCookieValue,
+  isCookieSecure, // Wazuh
 } from '../../../session/security_cookie';
 import { SamlAuthRoutes } from './routes';
 import { AuthenticationType } from '../authentication_type';
@@ -100,7 +101,7 @@ export class SamlAuthentication extends AuthenticationType {
 
     const extraCookiePrefix = this.config.saml.extra_storage.cookie_prefix;
     const extraCookieSettings: ServerStateCookieOptions = {
-      isSecure: this.config.cookie.secure,
+      isSecure: isCookieSecure(this.config), // Wazuh
       isSameSite: this.config.cookie.isSameSite,
       password: this.config.cookie.password,
       domain: this.config.cookie.domain,
