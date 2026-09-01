@@ -26,7 +26,10 @@ import {
 } from 'opensearch-dashboards/server';
 import { ServerStateCookieOptions } from '@hapi/hapi';
 import { SecurityPluginConfigType } from '../../..';
-import { SecuritySessionCookie } from '../../../session/security_cookie';
+import {
+  SecuritySessionCookie,
+  isCookieSecure, // Wazuh
+} from '../../../session/security_cookie';
 import { AuthenticationType } from '../authentication_type';
 import { JwtAuthRoutes } from './routes';
 import {
@@ -70,7 +73,7 @@ export class JwtAuthentication extends AuthenticationType {
 
     const { cookiePrefix, additionalCookies } = this.getExtraAuthStorageOptions();
     const extraCookieSettings: ServerStateCookieOptions = {
-      isSecure: this.config.cookie.secure,
+      isSecure: isCookieSecure(this.config), // Wazuh
       isSameSite: this.config.cookie.isSameSite,
       password: this.config.cookie.password,
       domain: this.config.cookie.domain,

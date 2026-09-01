@@ -59,7 +59,12 @@ export const configSchema = schema.object({
     exclude: schema.arrayOf(schema.string(), { defaultValue: [] }),
   }),
   cookie: schema.object({
-    secure: schema.boolean({ defaultValue: false }),
+    // Wazuh: upstream defaults this to `false`, which ships a session cookie
+    // without the Secure flag even on an HTTPS-only deployment. Leaving it
+    // unset lets `isCookieSecure()` derive the value from the server protocol.
+    // An explicit true/false in opensearch_dashboards.yml still wins, which is
+    // required when a reverse proxy terminates TLS in front of the dashboard.
+    secure: schema.maybe(schema.boolean()),
     name: schema.string({ defaultValue: 'security_authentication' }),
     password: schema.string({ defaultValue: 'security_cookie_default_password', minLength: 32 }),
     ttl: schema.number({ defaultValue: 15 * 60 * 1000 }),
