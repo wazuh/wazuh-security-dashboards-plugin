@@ -34,6 +34,7 @@ import { SecurityPluginConfigType } from '../../..';
 import {
   clearOldVersionCookieValue,
   SecuritySessionCookie,
+  isCookieSecure, // Wazuh
 } from '../../../session/security_cookie';
 import { OpenIdAuthRoutes } from './routes';
 import { AuthenticationType } from '../authentication_type';
@@ -208,7 +209,7 @@ export class OpenIdAuthentication extends AuthenticationType {
 
     const extraCookiePrefix = this.config.openid!.extra_storage.cookie_prefix;
     const extraCookieSettings: ServerStateCookieOptions = {
-      isSecure: this.config.cookie.secure,
+      isSecure: isCookieSecure(this.config), // Wazuh
       isSameSite: this.config.cookie.isSameSite,
       password: this.config.cookie.password,
       domain: this.config.cookie.domain,

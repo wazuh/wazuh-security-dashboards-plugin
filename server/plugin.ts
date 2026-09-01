@@ -31,7 +31,11 @@ import { defineRoutes } from './routes';
 import { SecurityPluginConfigType } from '.';
 import opensearchSecurityConfigurationPlugin from './backend/opensearch_security_configuration_plugin';
 import opensearchSecurityPlugin from './backend/opensearch_security_plugin';
-import { SecuritySessionCookie, getSecurityCookieOptions } from './session/security_cookie';
+import {
+  SecuritySessionCookie,
+  getSecurityCookieOptions,
+  setDerivedCookieSecure, // Wazuh
+} from './session/security_cookie';
 import { SecurityClient } from './backend/opensearch_security_client';
 import {
   SavedObjectsSerializer,
@@ -111,9 +115,16 @@ export class SecurityPlugin implements Plugin<SecurityPluginSetup, SecurityPlugi
 
     this.securityClient = new SecurityClient(esClient);
 
-    const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> = await core.http.createCookieSessionStorageFactory<
-      SecuritySessionCookie
-    >(getSecurityCookieOptions(config));
+    // Wazuh: derive the cookie Secure flag from the listener protocol, so an
+    // HTTPS deployment does not depend on an administrator setting
+    // opensearch_security.cookie.secure by hand. Must run before the session
+    // storage factory and before any auth type reads the flag.
+    setDerivedCookieSecure(core.http.getServerInfo().protocol === 'https');
+
+    const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> =
+      await core.http.createCookieSessionStorageFactory<SecuritySessionCookie>(
+        getSecurityCookieOptions(config)
+      );
 
     // put logger into route handler context, so that we don't need to pass througth parameters
     core.http.registerRouteHandlerContext('security_plugin', (context, request) => {
@@ -188,8 +199,8 @@ export class SecurityPlugin implements Plugin<SecurityPluginSetup, SecurityPlugi
     this.savedObjectClientWrapper.config = config;
 
     if (config.multitenancy?.enabled) {
-      const globalConfig$: Observable<SharedGlobalConfig> = this.initializerContext.config.legacy
-        .globalConfig$;
+      const globalConfig$: Observable<SharedGlobalConfig> =
+        this.initializerContext.config.legacy.globalConfig$;
       const globalConfig: SharedGlobalConfig = await globalConfig$.pipe(first()).toPromise();
       const opensearchDashboardsIndex = globalConfig.opensearchDashboards.index;
       const typeRegistry: ISavedObjectTypeRegistry = core.savedObjects.getTypeRegistry();
