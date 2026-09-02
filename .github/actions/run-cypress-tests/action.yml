@@ -18,7 +18,7 @@ inputs:
   resource_sharing_enabled:
     description: 'Resource sharing feature flag'
     required: false
-    default: "false"
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -111,5 +111,7 @@ runs:
         attempt_delay: 2000
         command: |
           cd ./OpenSearch-Dashboards/plugins/security-dashboards-plugin
-          yarn add cypress --save-dev
+          # Wazuh: pin Cypress. 16.0.0 removed `Cypress.env()`, which the specs
+          # in test/cypress use, so an unpinned install breaks every E2E job.
+          yarn add cypress@15.21.1 --save-dev
           eval ${{ inputs.yarn_command }}
