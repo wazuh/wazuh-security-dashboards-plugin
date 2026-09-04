@@ -183,5 +183,7 @@ jobs:
           attempt_delay: 2000
           command: |
             cd ./OpenSearch-Dashboards/plugins/security-dashboards-plugin
-            yarn add cypress --save-dev
+            # Wazuh: pin Cypress. 16.0.0 removed `Cypress.env()`, which the specs
+            # in test/cypress use, so an unpinned install breaks every E2E job.
+            yarn add cypress@15.21.1 --save-dev
             eval 'CYPRESS_VERIFY_TIMEOUT=60000 yarn cypress:run --browser chrome --headless --env LOGIN_AS_ADMIN=true --spec "test/cypress/e2e/resource-sharing/resource_access_management.spec.ts"'
