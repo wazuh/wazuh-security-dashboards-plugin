@@ -1,16 +1,16 @@
 ## [v5.0.0]
 
-### Fixed
-
-| Issue                                                         | Comment                                                          |
-| ------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [#1520](https://github.com/wazuh/wazuh-dashboard/issues/1520) | Derive the session cookie `Secure` flag from the server protocol |
-
 ### Added
 
 | Issue                                                                      | Comment                 |
 | -------------------------------------------------------------------------- | ----------------------- |
 | [#37](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/37) | Support for Wazuh 5.0.0 |
+
+### Fixed
+
+| Issue                                                                        | Comment                                                          |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
+| [wazuh-dashboard#1520](https://github.com/wazuh/wazuh-dashboard/issues/1520) | Derive the session cookie `Secure` flag from the server protocol |
 
 ## Prior versions
 
