@@ -153,10 +153,9 @@ export class SecurityPlugin implements Plugin<SecurityPluginSetup, SecurityPlugi
     // storage factory and before any auth type reads the flag.
     setDerivedCookieSecure(core.http.getServerInfo().protocol === 'https');
 
-    const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> =
-      await core.http.createCookieSessionStorageFactory<SecuritySessionCookie>(
-        getSecurityCookieOptions(config)
-      );
+    const securitySessionStorageFactory: SessionStorageFactory<SecuritySessionCookie> = await core.http.createCookieSessionStorageFactory<
+      SecuritySessionCookie
+    >(getSecurityCookieOptions(config));
 
     registerLoginPageRoute(core, config, securitySessionStorageFactory);
 
