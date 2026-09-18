@@ -6,6 +6,12 @@
 | -------------------------------------------------------------------------- | ----------------------- |
 | [#37](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/37) | Support for Wazuh 5.0.0 |
 
+### Changed
+
+| Issue                                                                        | Comment                                                                                       |
+| ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [wazuh-dashboard#1605](https://github.com/wazuh/wazuh-dashboard/issues/1605) | Changed the Prettier check to skip the files that were already unformatted on the base branch |
+
 ### Fixed
 
 | Issue                                                                        | Comment                                                          |
