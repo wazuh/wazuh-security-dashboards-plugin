@@ -47,6 +47,34 @@ import {
 } from '../common';
 import { APP_ID_CUSTOMERROR } from '../common';
 import { setupTopNavButton } from './apps/account/account-app';
+
+const securityAppTitle = i18n.translate('security.app.securityTitle', {
+  defaultMessage: 'Security',
+});
+const getStartedTitle = i18n.translate('security.app.getStartedTitle', {
+  defaultMessage: 'Get started with access control',
+});
+const authTitle = i18n.translate('security.app.authenticationAndAuthorizationTitle', {
+  defaultMessage: 'Authentication and authorization',
+});
+const rolesTitle = i18n.translate('security.app.rolesTitle', {
+  defaultMessage: 'Roles',
+});
+const internalUsersTitle = i18n.translate('security.app.internalUsersTitle', {
+  defaultMessage: 'Internal users',
+});
+const permissionsTitle = i18n.translate('security.app.permissionsTitle', {
+  defaultMessage: 'Permissions',
+});
+const tenantsTitle = i18n.translate('security.app.tenantsTitle', {
+  defaultMessage: 'Tenants',
+});
+const auditLogsTitle = i18n.translate('security.app.auditLogsTitle', {
+  defaultMessage: 'Audit logs',
+});
+const resourceAccessTitle = i18n.translate('security.app.resourceAccessManagementTitle', {
+  defaultMessage: 'Resource Access Management',
+});
 import { fetchAccountInfoSafe } from './apps/account/utils';
 import {
   API_ENDPOINT_PERMISSIONS_INFO,
@@ -94,7 +122,9 @@ const APP_LIST_FOR_READONLY_ROLE = [APP_ID_HOME, APP_ID_DASHBOARDS, APP_ID_OPENS
 
 const dataAccessUsersCategory: AppCategory & { group?: AppCategory } = {
   id: 'dataAccessAndUsers',
-  label: 'Data access and users',
+  label: i18n.translate('security.app.dataAccessAndUsersCategory', {
+    defaultMessage: 'Data access and users',
+  }),
   order: 9000,
   euiIconType: 'managementApp',
 };
@@ -160,7 +190,7 @@ export class SecurityPlugin
     if (mdsEnabled || apiPermission) {
       core.application.register({
         id: PLUGIN_NAME,
-        title: 'Security',
+        title: securityAppTitle,
         order: 9030,
         workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
         navLinkStatus: core.chrome.navGroup.getNavGroupEnabled()
@@ -192,7 +222,7 @@ export class SecurityPlugin
       if (core.chrome.navGroup.getNavGroupEnabled()) {
         core.application.register({
           id: PLUGIN_GET_STARTED_APP_ID,
-          title: 'Get started with access control',
+          title: getStartedTitle,
           order: 8040,
           workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
           updater$: this.appStateUpdater,
@@ -202,7 +232,7 @@ export class SecurityPlugin
         });
         core.application.register({
           id: PLUGIN_AUTH_APP_ID,
-          title: 'Authentication and authorization',
+          title: authTitle,
           order: 8040,
           description: i18n.translate('security.authenticationAndAuthorization.description', {
             defaultMessage: 'Set up authentication and authorization sequences.',
@@ -215,7 +245,7 @@ export class SecurityPlugin
         });
         core.application.register({
           id: PLUGIN_ROLES_APP_ID,
-          title: 'Roles',
+          title: rolesTitle,
           order: 8040,
           description: i18n.translate('security.roles.description', {
             defaultMessage: 'Create a set of permissions with specific privileges.',
@@ -228,7 +258,7 @@ export class SecurityPlugin
         });
         core.application.register({
           id: PLUGIN_USERS_APP_ID,
-          title: 'Internal users',
+          title: internalUsersTitle,
           order: 8040,
           description: i18n.translate('security.internalUsers.description', {
             defaultMessage: 'Define users to control access to your data.',
@@ -241,7 +271,7 @@ export class SecurityPlugin
         });
         core.application.register({
           id: PLUGIN_PERMISSIONS_APP_ID,
-          title: 'Permissions',
+          title: permissionsTitle,
           order: 8040,
           description: i18n.translate('security.permissions.description', {
             defaultMessage: 'Controls access to individual actions and action groups.',
@@ -255,7 +285,7 @@ export class SecurityPlugin
         if (config.multitenancy.enabled) {
           core.application.register({
             id: PLUGIN_TENANTS_APP_ID,
-            title: 'Tenants',
+            title: tenantsTitle,
             order: 8040,
             workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
             updater$: this.appStateUpdater,
@@ -266,7 +296,7 @@ export class SecurityPlugin
         }
         core.application.register({
           id: PLUGIN_AUDITLOG_APP_ID,
-          title: 'Audit logs',
+          title: auditLogsTitle,
           order: 8040,
           description: i18n.translate('security.auditLogs.description', {
             defaultMessage: 'Configure audit logging for system access activities.',
@@ -282,7 +312,7 @@ export class SecurityPlugin
         if (resourceSharingEnabled) {
           core.application.register({
             id: PLUGIN_RESOURCE_ACCESS_MANAGEMENT_APP_ID,
-            title: 'Resource Access Management',
+            title: resourceAccessTitle,
             order: 8040,
             description: i18n.translate('security.resourceAccessManagement.description', {
               defaultMessage:
@@ -348,7 +378,7 @@ export class SecurityPlugin
       if (deps.managementOverview) {
         deps.managementOverview.register({
           id: PLUGIN_NAME,
-          title: 'Security',
+          title: securityAppTitle,
           order: 9030,
           description: i18n.translate('security.securityDescription', {
             defaultMessage:
@@ -358,7 +388,7 @@ export class SecurityPlugin
         if (resourceSharingEnabled) {
           deps.managementOverview.register({
             id: PLUGIN_RESOURCE_ACCESS_MANAGEMENT_APP_ID,
-            title: 'Resource Access Management',
+            title: resourceAccessTitle,
             order: 10050,
             description: i18n.translate('security.resourceAccessManagement.description', {
               defaultMessage:
@@ -377,7 +407,7 @@ export class SecurityPlugin
 
     core.application.register({
       id: APP_ID_LOGIN,
-      title: 'Security',
+      title: securityAppTitle,
       chromeless: true,
       appRoute: LOGIN_PAGE_URI,
       mount: async (params: AppMountParameters) => {
@@ -390,7 +420,7 @@ export class SecurityPlugin
 
     core.application.register({
       id: APP_ID_CUSTOMERROR,
-      title: 'Security',
+      title: securityAppTitle,
       chromeless: true,
       appRoute: CUSTOM_ERROR_PAGE_URI,
       mount: async (params: AppMountParameters) => {
@@ -403,7 +433,7 @@ export class SecurityPlugin
     if (resourceSharingEnabled) {
       core.application.register({
         id: APP_ID_RESOURCE_ACCESS_MANAGEMENT,
-        title: 'Resource Access Management',
+        title: resourceAccessTitle,
         workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
         // If nav groups are enabled, hide the legacy nav link (we’ll add it via navGroup below);
         // otherwise, make the classic left-nav link visible.

@@ -29,6 +29,8 @@ import {
   EuiSpacer,
   EuiText,
 } from '@elastic/eui';
+import { i18n } from '@osd/i18n';
+import { FormattedMessage } from '@osd/i18n/react';
 import { CoreStart } from 'opensearch-dashboards/public';
 import { FormRow } from '../configuration/utils/form-row';
 import { logout, updateNewPassword } from './utils';
@@ -88,7 +90,12 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
       await validateCurrentPassword(http, props.username, currentPassword);
     } catch (e) {
       setIsCurrentPasswordInvalid(true);
-      setCurrentPasswordError([`Invalid current password. ${e.message}`]);
+      setCurrentPasswordError([
+        i18n.translate('security.account.reset.invalidCurrentPassword', {
+          defaultMessage: 'Invalid current password. {detail}',
+          values: { detail: e.message },
+        }),
+      ]);
       return;
     }
 
@@ -98,7 +105,14 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
 
       await logout(http, props.logoutUrl);
     } catch (e) {
-      setErrorCallOut(constructErrorMessageAndLog(e, 'Failed to reset password.'));
+      setErrorCallOut(
+        constructErrorMessageAndLog(
+          e,
+          i18n.translate('security.account.reset.failed', {
+            defaultMessage: 'Failed to reset password.',
+          })
+        )
+      );
     }
   };
 
@@ -109,14 +123,24 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
         <EuiSpacer />
         <EuiModalBody>
           <EuiText size="s">
-            <h2>Reset password for &quot;{props.username}&quot;</h2>
+            <h2>
+              <FormattedMessage
+                id="security.account.reset.title"
+                defaultMessage='Reset password for "{username}"'
+                values={{ username: props.username }}
+              />
+            </h2>
           </EuiText>
 
           <EuiSpacer />
 
           <FormRow
-            headerText="Current password"
-            helpText="Verify your account by entering your current password."
+            headerText={i18n.translate('security.account.reset.currentPassword', {
+              defaultMessage: 'Current password',
+            })}
+            helpText={i18n.translate('security.account.reset.currentPasswordHelp', {
+              defaultMessage: 'Verify your account by entering your current password.',
+            })}
             isInvalid={isCurrentPasswordInvalid}
             error={currentPasswordError}
           >
@@ -135,7 +159,9 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
           <EuiFlexGroup direction="row">
             <EuiFlexItem grow={false}>
               <FormRow
-                headerText="New password"
+                headerText={i18n.translate('security.account.reset.newPassword', {
+                  defaultMessage: 'New password',
+                })}
                 helpText={passwordHelpText}
                 isInvalid={isNewPasswordInvalid}
               >
@@ -157,8 +183,12 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
           </EuiFlexGroup>
 
           <FormRow
-            headerText="Re-enter new password"
-            helpText="The password must be identical to what you entered above."
+            headerText={i18n.translate('security.account.reset.reenterPassword', {
+              defaultMessage: 'Re-enter new password',
+            })}
+            helpText={i18n.translate('security.account.reset.reenterPasswordHelp', {
+              defaultMessage: 'The password must be identical to what you entered above.',
+            })}
           >
             <EuiCompressedFieldPassword
               data-test-subj="reenter-new-password"
@@ -182,7 +212,9 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
         </EuiModalBody>
         <EuiModalFooter>
           <EuiSmallButtonEmpty data-test-subj="cancel" onClick={props.handleClose}>
-            Cancel
+            {i18n.translate('security.account.reset.cancel', {
+              defaultMessage: 'Cancel',
+            })}
           </EuiSmallButtonEmpty>
 
           <EuiSmallButton
@@ -195,7 +227,9 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
             )}
             onClick={handleReset}
           >
-            Reset
+            {i18n.translate('security.account.reset.submit', {
+              defaultMessage: 'Reset',
+            })}
           </EuiSmallButton>
         </EuiModalFooter>
       </EuiModal>

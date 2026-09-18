@@ -1,0 +1,166 @@
+{
+  "formats": {
+    "number": {
+      "currency": {
+        "style": "currency"
+      },
+      "percent": {
+        "style": "percent"
+      }
+    },
+    "date": {
+      "short": {
+        "month": "numeric",
+        "day": "numeric",
+        "year": "2-digit"
+      },
+      "medium": {
+        "month": "short",
+        "day": "numeric",
+        "year": "numeric"
+      },
+      "long": {
+        "month": "long",
+        "day": "numeric",
+        "year": "numeric"
+      },
+      "full": {
+        "weekday": "long",
+        "month": "long",
+        "day": "numeric",
+        "year": "numeric"
+      }
+    },
+    "time": {
+      "short": {
+        "hour": "numeric",
+        "minute": "numeric"
+      },
+      "medium": {
+        "hour": "numeric",
+        "minute": "numeric",
+        "second": "numeric"
+      },
+      "long": {
+        "hour": "numeric",
+        "minute": "numeric",
+        "second": "numeric",
+        "timeZoneName": "short"
+      },
+      "full": {
+        "hour": "numeric",
+        "minute": "numeric",
+        "second": "numeric",
+        "timeZoneName": "short"
+      }
+    },
+    "relative": {
+      "years": {
+        "units": "year"
+      },
+      "months": {
+        "units": "month"
+      },
+      "days": {
+        "units": "day"
+      },
+      "hours": {
+        "units": "hour"
+      },
+      "minutes": {
+        "units": "minute"
+      },
+      "seconds": {
+        "units": "second"
+      }
+    }
+  },
+  "messages": {
+    "security.login.invalidCredentials": "Неверное имя пользователя или пароль. Попробуйте ещё раз.",
+    "security.login.passwordPlaceholder": "Пароль",
+    "security.login.submitButton": "Войти",
+    "security.login.unsupportedAuthType": "Тип аутентификации {authType} не поддерживается при нескольких методах входа.",
+    "security.login.usernamePlaceholder": "Имя пользователя",
+    "security.account.logOut": "Выйти",
+    "security.account.resetPassword": "Сменить пароль",
+    "security.account.switchTenants": "Сменить тенант",
+    "security.account.viewRolesAndIdentities": "Роли и идентификаторы",
+    "security.app.securityTitle": "Безопасность",
+    "security.app.getStartedTitle": "Начало работы с контролем доступа",
+    "security.app.authenticationAndAuthorizationTitle": "Аутентификация и авторизация",
+    "security.app.rolesTitle": "Роли",
+    "security.app.internalUsersTitle": "Внутренние пользователи",
+    "security.app.permissionsTitle": "Разрешения",
+    "security.app.tenantsTitle": "Тенанты",
+    "security.app.auditLogsTitle": "Журналы аудита",
+    "security.app.resourceAccessManagementTitle": "Управление доступом к ресурсам",
+    "security.authenticationAndAuthorization.description": "Настройка последовательностей аутентификации и авторизации.",
+    "security.roles.description": "Создание набора разрешений с конкретными привилегиями.",
+    "security.internalUsers.description": "Определение пользователей для контроля доступа к данным.",
+    "security.permissions.description": "Управление доступом к отдельным действиям и группам действий.",
+    "security.auditLogs.description": "Настройка журналирования аудита доступа к системе.",
+    "security.resourceAccessManagement.description": "Совместный доступ и управление доступом к отдельным ресурсам (детекторы, прогнозы и т. д.).",
+    "security.securityDescription": "Настройка доступа пользователей к данным OpenSearch: аутентификация, контроль доступа и аудит.",
+    "security.app.dataAccessAndUsersCategory": "Доступ к данным и пользователи",
+    "security.account.reset.title": "Сменить пароль для «{username}»",
+    "security.account.reset.invalidCurrentPassword": "Неверный текущий пароль. {detail}",
+    "security.account.reset.failed": "Не удалось сменить пароль.",
+    "security.account.reset.currentPassword": "Текущий пароль",
+    "security.account.reset.currentPasswordHelp": "Подтвердите учётную запись, введя текущий пароль.",
+    "security.account.reset.newPassword": "Новый пароль",
+    "security.account.reset.reenterPassword": "Повторите новый пароль",
+    "security.account.reset.reenterPasswordHelp": "Пароль должен совпадать с введённым выше.",
+    "security.account.reset.cancel": "Отмена",
+    "security.account.reset.submit": "Сменить",
+    "security.account.roles.title": "Роли ({count})",
+    "security.account.roles.description": "Роли, назначенные вам администратором.",
+    "security.account.backendRoles.title": "Backend-роли ({count})",
+    "security.account.backendRoles.description": "Backend-роли, назначенные вам администратором.",
+    "security.account.tenant.enableGlobal": "Обратитесь к администратору, чтобы включить глобальный тенант.",
+    "security.account.tenant.accessGlobal": "Обратитесь к администратору, чтобы получить доступ к глобальному тенанту.",
+    "security.account.tenant.enablePrivate": "Обратитесь к администратору, чтобы включить личный тенант.",
+    "security.account.tenant.accessPrivate": "Обратитесь к администратору, чтобы получить доступ к личному тенанту.",
+    "security.account.tenant.privateReadOnly": "У вашей учётной записи только права на чтение, личный тенант недоступен.",
+    "security.account.tenant.global": "Глобальный",
+    "security.account.tenant.globalDescription": "Глобальный тенант общий для всех пользователей OpenSearch Dashboards.",
+    "security.account.tenant.private": "Личный",
+    "security.account.tenant.privateDescription": "Личный тенант принадлежит только вам и не может быть общим. Его можно использовать для пробной работы.",
+    "security.account.tenant.chooseCustom": "Выбрать из пользовательских",
+    "security.account.tenant.noTarget": "Целевой тенант не указан.",
+    "security.account.tenant.switchFailed": "Не удалось сменить тенант.",
+    "security.account.tenant.selectCustom": "Выберите пользовательский тенант",
+    "security.account.tenant.enableMultiTenancy": "Обратитесь к администратору, чтобы включить мультитенантность.",
+    "security.account.tenant.selectTitle": "Выберите тенант",
+    "security.account.tenant.intro": "Тенанты позволяют безопасно делиться работой с другими пользователями OpenSearch Dashboards. Сменить тенант можно в любой момент, нажав на аватар пользователя справа сверху.",
+    "security.account.tenant.cancel": "Отмена",
+    "security.account.tenant.confirm": "Подтвердить",
+    "audit.logs.introduction": "Журналы аудита позволяют отслеживать доступ пользователей к кластеру OpenSearch и полезны для соответствия требованиям.",
+    "audit.logs.storageInstruction": "Настройте место вывода и типы хранения в {opensearchCode}. По умолчанию используется {internalOpenSearchCode} — журналы пишутся в индекс этого кластера.",
+    "security.getStarted.addBackends.title": "Добавить backend-ы",
+    "security.getStarted.addBackends.body": "Добавьте сведения об аутентификации {authc} и авторизации {authz} в {configFile}. Раздел {authc} содержит backend-ы для проверки учётных данных. Раздел {authz} — backend-ы, из которых загружаются backend-роли. Самый частый пример backend-роли — группа LDAP.",
+    "security.getStarted.addBackends.configDocs": "Документация config.yml",
+    "security.getStarted.addBackends.reviewAuth": "Просмотреть аутентификацию и авторизацию",
+    "security.getStarted.createRoles.title": "Создать роли",
+    "security.getStarted.createRoles.body": "Роли — это переиспользуемые наборы разрешений. Роли по умолчанию — хорошая отправная точка, но вам могут понадобиться собственные роли под ваши задачи.",
+    "security.getStarted.createRoles.explore": "Просмотреть существующие роли",
+    "security.getStarted.createRoles.create": "Создать роль",
+    "security.getStarted.mapUsers.title": "Сопоставить пользователей",
+    "security.getStarted.mapUsers.body": "После успешной аутентификации плагин безопасности получает роли пользователя. Роли можно сопоставлять напрямую с пользователями или с backend-ролями.",
+    "security.getStarted.mapUsers.map": "Сопоставить пользователей с ролью",
+    "security.getStarted.mapUsers.createUser": "Создать внутреннего пользователя",
+    "security.getStarted.openInNewWindow": "Открыть в новом окне",
+    "security.getStarted.pageTitle": "Начало работы",
+    "security.getStarted.intro": "Плагин безопасности OpenSearch позволяет задать, какие вызовы API могут делать пользователи и к каким данным они имеют доступ. Базовая настройка состоит из этих шагов.",
+    "security.getStarted.auditLogs.title": "Необязательно: журналы аудита",
+    "security.getStarted.auditLogs.review": "Просмотреть конфигурацию журнала аудита",
+    "security.getStarted.purgeCache.title": "Необязательно: очистить кэш",
+    "security.getStarted.purgeCache.body": "По умолчанию плагин безопасности кэширует аутентифицированных пользователей вместе с их ролями и разрешениями. Эта операция очищает кэш пользователей, ролей и разрешений.",
+    "security.getStarted.purgeCache.success": "Кэш успешно очищен {cluster}",
+    "security.getStarted.purgeCache.failed": "очистка кэша {cluster}",
+    "security.getStarted.purgeCache.button": "Очистить кэш",
+    "security.getStarted.multiTenancy.title": "Необязательно: мультитенантность",
+    "security.getStarted.multiTenancy.body": "По умолчанию тенантность в Dashboards включена. Тенанты в OpenSearch Dashboards — это пространства для шаблонов индексов, визуализаций, панелей мониторинга и других объектов.",
+    "security.getStarted.multiTenancy.manage": "Управление мультитенантностью",
+    "security.getStarted.multiTenancy.configure": "Настройка мультитенантности"
+  }
+}

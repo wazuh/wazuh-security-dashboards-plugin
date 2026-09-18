@@ -27,6 +27,7 @@ import {
   EuiGlobalToastList,
 } from '@elastic/eui';
 import React, { useContext } from 'react';
+import { i18n } from '@osd/i18n';
 import { FormattedMessage } from '@osd/i18n/react';
 import { AppDependencies } from '../../types';
 import { buildHashUrl } from '../utils/url-builder';
@@ -42,16 +43,22 @@ import { getClusterInfo } from '../../../utils/datasource-utils';
 import { PageHeader } from '../header/header-components';
 
 const addBackendStep = {
-  title: 'Add backends',
+  title: i18n.translate('security.getStarted.addBackends.title', {
+    defaultMessage: 'Add backends',
+  }),
   children: (
     <>
       <EuiText size="s" color="subdued">
-        Add authentication<EuiCode>(authc)</EuiCode>and authorization<EuiCode>(authz)</EuiCode>
-        information to<EuiCode>config/opensearch-security/config.yml</EuiCode>. The
-        <EuiCode>authc</EuiCode> section contains the backends to check user credentials against.
-        The <EuiCode>authz</EuiCode>
-        section contains any backends to fetch backend roles from. The most common example of a
-        backend role is an LDAP group. <ExternalLink href={DocLinks.AuthenticationFlowDoc} />
+        <FormattedMessage
+          id="security.getStarted.addBackends.body"
+          defaultMessage="Add authentication {authc} and authorization {authz} information to {configFile}. The {authc} section contains the backends to check user credentials against. The {authz} section contains any backends to fetch backend roles from. The most common example of a backend role is an LDAP group."
+          values={{
+            authc: <EuiCode>(authc)</EuiCode>,
+            authz: <EuiCode>(authz)</EuiCode>,
+            configFile: <EuiCode>config/opensearch-security/config.yml</EuiCode>,
+          }}
+        />{' '}
+        <ExternalLink href={DocLinks.AuthenticationFlowDoc} />
       </EuiText>
 
       <EuiSpacer size="m" />
@@ -61,7 +68,9 @@ const addBackendStep = {
           <ExternalLinkButton
             fill
             href={DocLinks.BackendConfigurationDoc}
-            text="Config.yml documentation"
+            text={i18n.translate('security.getStarted.addBackends.configDocs', {
+              defaultMessage: 'Config.yml documentation',
+            })}
           />
         </EuiFlexItem>
         <EuiFlexItem grow={false}>
@@ -71,7 +80,9 @@ const addBackendStep = {
               window.location.href = buildHashUrl(ResourceType.auth);
             }}
           >
-            Review authentication and authorization
+            {i18n.translate('security.getStarted.addBackends.reviewAuth', {
+              defaultMessage: 'Review authentication and authorization',
+            })}
           </EuiSmallButton>
         </EuiFlexItem>
       </EuiFlexGroup>
@@ -83,12 +94,16 @@ const addBackendStep = {
 
 const setOfSteps = [
   {
-    title: 'Create roles',
+    title: i18n.translate('security.getStarted.createRoles.title', {
+      defaultMessage: 'Create roles',
+    }),
     children: (
       <>
         <EuiText size="s" color="subdued">
-          Roles are reusable collections of permissions. The default roles are a great starting
-          point, but you might need to create custom roles that meet your exact needs.{' '}
+          {i18n.translate('security.getStarted.createRoles.body', {
+            defaultMessage:
+              'Roles are reusable collections of permissions. The default roles are a great starting point, but you might need to create custom roles that meet your exact needs.',
+          })}{' '}
           <ExternalLink href={DocLinks.CreateRolesDoc} />
         </EuiText>
 
@@ -102,7 +117,9 @@ const setOfSteps = [
                 window.location.href = buildHashUrl(ResourceType.roles);
               }}
             >
-              Explore existing roles
+              {i18n.translate('security.getStarted.createRoles.explore', {
+                defaultMessage: 'Explore existing roles',
+              })}
             </EuiSmallButton>
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
@@ -112,7 +129,9 @@ const setOfSteps = [
                 window.location.href = buildHashUrl(ResourceType.roles, Action.create);
               }}
             >
-              Create new role
+              {i18n.translate('security.getStarted.createRoles.create', {
+                defaultMessage: 'Create new role',
+              })}
             </EuiSmallButton>
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -122,12 +141,16 @@ const setOfSteps = [
     ),
   },
   {
-    title: 'Map users',
+    title: i18n.translate('security.getStarted.mapUsers.title', {
+      defaultMessage: 'Map users',
+    }),
     children: (
       <>
         <EuiText size="s" color="subdued">
-          After a user successfully authenticates, the security plugin retrieves that user’s roles.
-          You can map roles directly to users, but you can also map them to backend roles.{' '}
+          {i18n.translate('security.getStarted.mapUsers.body', {
+            defaultMessage:
+              "After a user successfully authenticates, the security plugin retrieves that user's roles. You can map roles directly to users, but you can also map them to backend roles.",
+          })}{' '}
           <ExternalLink href={DocLinks.MapUsersToRolesDoc} />
         </EuiText>
 
@@ -141,7 +164,9 @@ const setOfSteps = [
                 window.location.href = buildHashUrl(ResourceType.users);
               }}
             >
-              Map users to a role
+              {i18n.translate('security.getStarted.mapUsers.map', {
+                defaultMessage: 'Map users to a role',
+              })}
             </EuiSmallButton>
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
@@ -151,7 +176,9 @@ const setOfSteps = [
                 window.location.href = buildHashUrl(ResourceType.users, Action.create);
               }}
             >
-              Create internal user
+              {i18n.translate('security.getStarted.mapUsers.createUser', {
+                defaultMessage: 'Create internal user',
+              })}
             </EuiSmallButton>
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -174,7 +201,9 @@ export function GetStarted(props: AppDependencies) {
 
   const buttonData = [
     {
-      label: 'Open in new window',
+      label: i18n.translate('security.getStarted.openInNewWindow', {
+        defaultMessage: 'Open in new window',
+      }),
       isLoading: false,
       href: buildHashUrl(),
       iconType: 'popout',
@@ -199,19 +228,30 @@ export function GetStarted(props: AppDependencies) {
           fallBackComponent={
             <EuiPageHeader>
               <EuiText size="s">
-                <h1>Get started</h1>
+                <h1>
+                  {i18n.translate('security.getStarted.pageTitle', {
+                    defaultMessage: 'Get started',
+                  })}
+                </h1>
               </EuiText>
-              <ExternalLinkButton text="Open in new window" href={buildHashUrl()} />
+              <ExternalLinkButton
+                text={i18n.translate('security.getStarted.openInNewWindow', {
+                  defaultMessage: 'Open in new window',
+                })}
+                href={buildHashUrl()}
+              />
             </EuiPageHeader>
           }
           resourceType={'getStarted'}
         />
         <EuiPanel paddingSize="l">
           <EuiText size="s" color="subdued">
-            <p>
-              The OpenSearch security plugin lets you define the API calls that users can make and
-              the data they can access. The most basic configuration consists of these steps.
-            </p>
+              <p>
+                {i18n.translate('security.getStarted.intro', {
+                  defaultMessage:
+                    'The OpenSearch security plugin lets you define the API calls that users can make and the data they can access. The most basic configuration consists of these steps.',
+                })}
+              </p>
           </EuiText>
 
           <EuiSpacer size="l" />
@@ -226,7 +266,11 @@ export function GetStarted(props: AppDependencies) {
 
         <EuiPanel paddingSize="l">
           <EuiTitle size="s">
-            <h3>Optional: Configure audit logs</h3>
+            <h3>
+              {i18n.translate('security.getStarted.auditLogs.title', {
+                defaultMessage: 'Optional: Configure audit logs',
+              })}
+            </h3>
           </EuiTitle>
           <EuiText size="s" color="subdued">
             <p>
@@ -242,7 +286,9 @@ export function GetStarted(props: AppDependencies) {
                 window.location.href = buildHashUrl(ResourceType.auditLogging);
               }}
             >
-              Review Audit Log Configuration
+              {i18n.translate('security.getStarted.auditLogs.review', {
+                defaultMessage: 'Review Audit Log Configuration',
+              })}
             </EuiSmallButton>
           </EuiText>
         </EuiPanel>
@@ -251,13 +297,19 @@ export function GetStarted(props: AppDependencies) {
 
         <EuiPanel paddingSize="l">
           <EuiTitle size="s">
-            <h3>Optional: Purge cache</h3>
+            <h3>
+              {i18n.translate('security.getStarted.purgeCache.title', {
+                defaultMessage: 'Optional: Purge cache',
+              })}
+            </h3>
           </EuiTitle>
           <EuiText size="s" color="subdued">
-            <p>
-              By default, the security plugin caches authenticated users, along with their roles and
-              permissions. This option will purge cached users, roles and permissions.
-            </p>
+              <p>
+                {i18n.translate('security.getStarted.purgeCache.body', {
+                  defaultMessage:
+                    'By default, the security plugin caches authenticated users, along with their roles and permissions. This option will purge cached users, roles and permissions.',
+                })}
+              </p>
             <EuiSmallButton
               iconType="refresh"
               data-test-subj="purge-cache"
@@ -270,21 +322,32 @@ export function GetStarted(props: AppDependencies) {
                   addToast(
                     createSuccessToast(
                       'cache-flush-success',
-                      `Cache purge successful ${getClusterInfo(dataSourceEnabled, dataSource)}`,
-                      `Cache purge successful ${getClusterInfo(dataSourceEnabled, dataSource)}`
+                      i18n.translate('security.getStarted.purgeCache.success', {
+                        defaultMessage: 'Cache purge successful {cluster}',
+                        values: { cluster: getClusterInfo(dataSourceEnabled, dataSource) },
+                      }),
+                      i18n.translate('security.getStarted.purgeCache.success', {
+                        defaultMessage: 'Cache purge successful {cluster}',
+                        values: { cluster: getClusterInfo(dataSourceEnabled, dataSource) },
+                      })
                     )
                   );
                 } catch (err) {
                   addToast(
                     createUnknownErrorToast(
                       'cache-flush-failed',
-                      `purge cache ${getClusterInfo(dataSourceEnabled, dataSource)}`
+                      i18n.translate('security.getStarted.purgeCache.failed', {
+                        defaultMessage: 'purge cache {cluster}',
+                        values: { cluster: getClusterInfo(dataSourceEnabled, dataSource) },
+                      })
                     )
                   );
                 }
               }}
             >
-              Purge cache
+              {i18n.translate('security.getStarted.purgeCache.button', {
+                defaultMessage: 'Purge cache',
+              })}
             </EuiSmallButton>
           </EuiText>
         </EuiPanel>
@@ -294,13 +357,18 @@ export function GetStarted(props: AppDependencies) {
         {props.config.multitenancy.enabled ? (
           <EuiPanel paddingSize="l">
             <EuiTitle size="s">
-              <h3>Optional: Multi-tenancy</h3>
+              <h3>
+                {i18n.translate('security.getStarted.multiTenancy.title', {
+                  defaultMessage: 'Optional: Multi-tenancy',
+                })}
+              </h3>
             </EuiTitle>
             <EuiText size="s" color="subdued">
               <p>
-                By default tenancy is activated in Dashboards. Tenants in OpenSearch Dashboards are
-                spaces for saving index patterns, visualizations, dashboards, and other OpenSearch
-                Dashboards objects.
+                {i18n.translate('security.getStarted.multiTenancy.body', {
+                  defaultMessage:
+                    'By default tenancy is activated in Dashboards. Tenants in OpenSearch Dashboards are spaces for saving index patterns, visualizations, dashboards, and other OpenSearch Dashboards objects.',
+                })}
               </p>
               <EuiFlexGroup gutterSize="s">
                 <EuiFlexItem grow={false}>
@@ -309,7 +377,9 @@ export function GetStarted(props: AppDependencies) {
                       window.location.href = buildHashUrl(ResourceType.tenants);
                     }}
                   >
-                    Manage Multi-tenancy
+                    {i18n.translate('security.getStarted.multiTenancy.manage', {
+                      defaultMessage: 'Manage Multi-tenancy',
+                    })}
                   </EuiSmallButton>
                 </EuiFlexItem>
                 <EuiFlexItem grow={false}>
@@ -318,7 +388,9 @@ export function GetStarted(props: AppDependencies) {
                       window.location.href = buildHashUrl(ResourceType.tenantsConfigureTab);
                     }}
                   >
-                    Configure Multi-tenancy
+                    {i18n.translate('security.getStarted.multiTenancy.configure', {
+                      defaultMessage: 'Configure Multi-tenancy',
+                    })}
                   </EuiSmallButton>
                 </EuiFlexItem>
               </EuiFlexGroup>

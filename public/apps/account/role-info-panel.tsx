@@ -21,6 +21,7 @@ import {
   EuiSpacer,
 } from '@elastic/eui';
 import React, { useCallback } from 'react';
+import { i18n } from '@osd/i18n';
 import { CoreStart } from 'opensearch-dashboards/public';
 import { fetchAccountInfo } from './utils';
 
@@ -48,10 +49,17 @@ export function RoleInfoPanel(props: { coreStart: CoreStart; handleClose: () => 
         <EuiSpacer />
         <EuiModalBody>
           <EuiText size="s">
-            <h2>Roles ({roles.length})</h2>
+            <h2>
+              {i18n.translate('security.account.roles.title', {
+                defaultMessage: 'Roles ({count})',
+                values: { count: roles.length },
+              })}
+            </h2>
           </EuiText>
           <EuiText color="subdued" size="s">
-            Roles you are currently mapped to by your administrator.
+            {i18n.translate('security.account.roles.description', {
+              defaultMessage: 'Roles you are currently mapped to by your administrator.',
+            })}
           </EuiText>
           <EuiSpacer />
           {roles.map((item) => (
@@ -62,10 +70,18 @@ export function RoleInfoPanel(props: { coreStart: CoreStart; handleClose: () => 
           ))}
           <EuiHorizontalRule />
           <EuiText size="s">
-            <h2>Backend roles ({backendRoles.length})</h2>
+            <h2>
+              {i18n.translate('security.account.backendRoles.title', {
+                defaultMessage: 'Backend roles ({count})',
+                values: { count: backendRoles.length },
+              })}
+            </h2>
           </EuiText>
           <EuiText color="subdued" size="s">
-            Backend roles you are currently mapped to by your administrator.
+            {i18n.translate('security.account.backendRoles.description', {
+              defaultMessage:
+                'Backend roles you are currently mapped to by your administrator.',
+            })}
           </EuiText>
           <EuiSpacer />
           {backendRoles.map((item) => (
