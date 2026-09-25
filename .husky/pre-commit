@@ -1,4 +1,15 @@
 #!/usr/bin/env sh
+
+# Git runs this hook when a maintainer commits a conflict resolution during a
+# merge, cherry-pick, revert or rebase. Those lines were written on another
+# branch, so this check does not apply to them, and failing here blocks the
+# scheduled upward merges between version branches.
+for state in MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD; do
+  if [ -f "$(git rev-parse --git-path "$state")" ]; then exit 0; fi
+done
+for dir in rebase-merge rebase-apply; do
+  if [ -d "$(git rev-parse --git-path "$dir")" ]; then exit 0; fi
+done
 . "$(dirname -- "$0")/_/husky.sh"
 
 yarn lint-staged

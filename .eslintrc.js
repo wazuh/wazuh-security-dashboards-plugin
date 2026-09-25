@@ -15,6 +15,14 @@ const LICENSE_HEADER = `
  */
 `
 
+
+const WAZUH_LICENSE_HEADER = `
+/*
+ * Copyright Wazuh
+ * SPDX-License-Identifier: Apache-2.0
+ */
+`;
+
 module.exports = {
   root: true,
   extends: ['@elastic/eslint-config-kibana', 'plugin:@elastic/eui/recommended'],
@@ -56,7 +64,7 @@ module.exports = {
         '@osd/eslint/require-license-header': [
           'error',
           {
-            licenses: [ LICENSE_HEADER ],
+            licenses: [LICENSE_HEADER, WAZUH_LICENSE_HEADER],
           },
         ],
         'no-console': 0,
