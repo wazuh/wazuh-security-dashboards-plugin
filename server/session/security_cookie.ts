@@ -44,6 +44,21 @@ export interface SecuritySessionCookie {
   };
 }
 
+// Wazuh: resolved once during plugin setup from the actual listener protocol.
+// See the `secure` setting in server/index.ts for why the default is derived.
+let derivedCookieSecure = false;
+
+// Wazuh: called from the plugin setup, before any request is served.
+export function setDerivedCookieSecure(isTlsListener: boolean): void {
+  derivedCookieSecure = isTlsListener;
+}
+
+// Wazuh: single source of truth for the cookie Secure flag. An explicit
+// `opensearch_security.cookie.secure` wins; otherwise the listener decides.
+export function isCookieSecure(config: SecurityPluginConfigType): boolean {
+  return config.cookie.secure ?? derivedCookieSecure;
+}
+
 export function getSecurityCookieOptions(
   config: SecurityPluginConfigType
 ): SessionStorageCookieOptions<SecuritySessionCookie> {
@@ -73,13 +88,14 @@ export function getSecurityCookieOptions(
       }
       return { isValid: true, path: '/' };
     },
-    isSecure: config.cookie.secure,
+    isSecure: isCookieSecure(config), // Wazuh
     sameSite: config.cookie.isSameSite || undefined,
   };
 }
 
 export function clearOldVersionCookieValue(config: SecurityPluginConfigType): string {
-  if (config.cookie.secure) {
+  // Wazuh: isCookieSecure() instead of config.cookie.secure
+  if (isCookieSecure(config)) {
     return 'security_authentication=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; Secure; HttpOnly; Path=/';
   } else {
     return 'security_authentication=; Max-Age=0; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Path=/';

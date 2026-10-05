@@ -1,8 +1,19 @@
-# CHANGELOG
+## [v5.1.0]
 
-As of the 3.6 release [the CHANGELOG is no longer used](https://github.com/opensearch-project/OpenSearch/issues/21071) to generate release notes.
-[Use this PR search](https://github.com/opensearch-project/security-dashboards-plugin/pulls?q=sort%3Amerged-desc+is%3Apr+-label%3Askip-changelog+is%3Amerged+base%3Amain+) to browse unreleased changes.
+### Added
 
-Release notes are now auto-generated from PR metadata at release time using an LLM-based pipeline in [opensearch-build](https://github.com/opensearch-project/opensearch-build).
-See the [release notes workflow](https://github.com/opensearch-project/opensearch-build/blob/main/src/release_notes_workflow/README.md) for details.
+| Issue | Comment                 |
+| ----- | ----------------------- |
+|       | Support for Wazuh 5.1.0 |
 
+## Prior versions
+
+- [v4.14.6](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.6/CHANGELOG.md)
+- [v4.14.5](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.5/CHANGELOG.md)
+- [v4.14.4](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.4/CHANGELOG.md)
+- [v4.14.3](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.3/CHANGELOG.md)
+- [v4.14.2](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.2/CHANGELOG.md)
+- [v4.14.1](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.1/CHANGELOG.md)
+- [v4.14.0](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.14.0/CHANGELOG.md)
+- [v4.13.1](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.13.1/CHANGELOG.md)
+- [v4.13.0](https://github.com/wazuh/wazuh-security-dashboards-plugin/blob/v4.13.0/CHANGELOG.md)

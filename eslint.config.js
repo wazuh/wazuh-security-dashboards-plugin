@@ -27,6 +27,13 @@ const LICENSE_HEADER = `
  */
 `;
 
+const WAZUH_LICENSE_HEADER = `
+/*
+ * Copyright Wazuh
+ * SPDX-License-Identifier: Apache-2.0
+ */
+`;
+
 module.exports = [
   // Replaces .eslintignore (ESLint 10 no longer reads it). `eslint.config.js`
   // is the flat config itself and is not part of the linted source.
@@ -82,7 +89,10 @@ module.exports = [
   {
     files: ['**/*.{js,ts,tsx}'],
     rules: {
-      '@osd/eslint/require-license-header': ['error', { licenses: [LICENSE_HEADER] }],
+      '@osd/eslint/require-license-header': [
+        'error',
+        { licenses: [LICENSE_HEADER, WAZUH_LICENSE_HEADER] },
+      ],
       'no-console': 0,
     },
   },

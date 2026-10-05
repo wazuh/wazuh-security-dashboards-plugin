@@ -1,6 +1,12 @@
 name: Snapshot based E2E SAML multi-auth tests workflow
 
-on: [ push, pull_request ]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 
 env:
   CI: 1
@@ -15,9 +21,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ ubuntu-latest ]
-        basePath: [ "", "/osd" ]
+        os: [ubuntu-latest]
+        basePath: ['', '/osd']
     runs-on: ${{ matrix.os }}
+    if: github.event.pull_request.draft == false
 
     steps:
       - name: Checkout Branch
@@ -30,7 +37,7 @@ jobs:
           echo "OPENSEARCH_VERSION=$opensearch_version" >> $GITHUB_ENV
           echo "PLUGIN_VERSION=$plugin_version" >> $GITHUB_ENV
         shell: bash
-      
+
       # Add SAML Configuration
       - name: Injecting SAML Configuration for Linux
         if: ${{ runner.os == 'Linux'}}

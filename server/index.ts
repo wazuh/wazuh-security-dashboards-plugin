@@ -59,10 +59,15 @@ export const configSchema = schema.object({
     exclude: schema.arrayOf(schema.string(), { defaultValue: [] }),
   }),
   cookie: schema.object({
-    secure: schema.boolean({ defaultValue: false }),
+    // Wazuh: upstream defaults this to `false`, which ships a session cookie
+    // without the Secure flag even on an HTTPS-only deployment. Leaving it
+    // unset lets `isCookieSecure()` derive the value from the server protocol.
+    // An explicit true/false in opensearch_dashboards.yml still wins, which is
+    // required when a reverse proxy terminates TLS in front of the dashboard.
+    secure: schema.maybe(schema.boolean()),
     name: schema.string({ defaultValue: 'security_authentication' }),
     password: schema.string({ defaultValue: 'security_cookie_default_password', minLength: 32 }),
-    ttl: schema.number({ defaultValue: 60 * 60 * 1000 }),
+    ttl: schema.number({ defaultValue: 15 * 60 * 1000 }),
     domain: schema.nullable(schema.string()),
     isSameSite: schema.oneOf(
       [
@@ -75,7 +80,7 @@ export const configSchema = schema.object({
     ),
   }),
   session: schema.object({
-    ttl: schema.number({ defaultValue: 60 * 60 * 1000 }),
+    ttl: schema.number({ defaultValue: 15 * 60 * 1000 }),
     keepalive: schema.boolean({ defaultValue: true }),
   }),
   auth: schema.object({
@@ -135,11 +140,8 @@ export const configSchema = schema.object({
     }),
     loadbalancer_url: schema.maybe(schema.string()),
     login: schema.object({
-      title: schema.string({ defaultValue: 'Log in to OpenSearch Dashboards' }),
-      subtitle: schema.string({
-        defaultValue:
-          'If you have forgotten your username or password, contact your system administrator.',
-      }),
+      title: schema.string({ defaultValue: '' }),
+      subtitle: schema.string({ defaultValue: '' }),
       showbrandimage: schema.boolean({ defaultValue: true }),
       brandimage: schema.string({ defaultValue: '' }), // TODO: update brand image
       buttonstyle: schema.string({ defaultValue: '' }),
@@ -252,11 +254,8 @@ export const configSchema = schema.object({
       // the login config here is the same as old config `_security.basicauth.login`
       // Since we are now rendering login page to browser app, so move these config to browser side.
       login: schema.object({
-        title: schema.string({ defaultValue: 'Log in to OpenSearch Dashboards' }),
-        subtitle: schema.string({
-          defaultValue:
-            'If you have forgotten your username or password, contact your system administrator.',
-        }),
+        title: schema.string({ defaultValue: '' }),
+        subtitle: schema.string({ defaultValue: '' }),
         showbrandimage: schema.boolean({ defaultValue: true }),
         brandimage: schema.string({ defaultValue: '' }),
         buttonstyle: schema.string({ defaultValue: '' }),
