@@ -27,6 +27,7 @@ import {
   EuiSpacer,
   EuiText,
 } from '@elastic/eui';
+import { i18n } from '@osd/i18n';
 import { CoreStart } from 'opensearch-dashboards/public';
 import { keys } from 'lodash';
 import React, { useState } from 'react';
@@ -136,11 +137,15 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
   const shouldDisableGlobal = !isGlobalEnabled || !tenants.includes(GLOBAL_TENANT_KEY_NAME);
   const getGlobalDisabledInstruction = () => {
     if (!isGlobalEnabled) {
-      return 'Contact the administrator to enable global tenant.';
+      return i18n.translate('security.account.tenant.enableGlobal', {
+        defaultMessage: 'Contact the administrator to enable global tenant.',
+      });
     }
 
     if (!tenants.includes(GLOBAL_TENANT_KEY_NAME)) {
-      return 'Contact the administrator to get access to global tenant.';
+      return i18n.translate('security.account.tenant.accessGlobal', {
+        defaultMessage: 'Contact the administrator to get access to global tenant.',
+      });
     }
   };
 
@@ -148,15 +153,22 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
   const shouldDisablePrivate = !isPrivateEnabled || !tenants.includes(username) || readonly;
   const getPrivateDisabledInstruction = () => {
     if (!isPrivateEnabled) {
-      return 'Contact the administrator to enable private tenant.';
+      return i18n.translate('security.account.tenant.enablePrivate', {
+        defaultMessage: 'Contact the administrator to enable private tenant.',
+      });
     }
 
     if (!tenants.includes(username)) {
-      return 'Contact the administrator to get access to private tenant.';
+      return i18n.translate('security.account.tenant.accessPrivate', {
+        defaultMessage: 'Contact the administrator to get access to private tenant.',
+      });
     }
 
     if (readonly) {
-      return 'Your account has read-only privileges only, using the private tenant is not possible.';
+      return i18n.translate('security.account.tenant.privateReadOnly', {
+        defaultMessage:
+          'Your account has read-only privileges only, using the private tenant is not possible.',
+      });
     }
   };
 
@@ -166,9 +178,14 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
       id: GLOBAL_TENANT_RADIO_ID,
       label: (
         <>
-          Global
+          {i18n.translate('security.account.tenant.global', {
+            defaultMessage: 'Global',
+          })}
           <EuiText size="s">
-            The global tenant is shared between every OpenSearch Dashboards user.
+            {i18n.translate('security.account.tenant.globalDescription', {
+              defaultMessage:
+                'The global tenant is shared between every OpenSearch Dashboards user.',
+            })}
           </EuiText>
           {shouldDisableGlobal && <i>{getGlobalDisabledInstruction()}</i>}
           <EuiSpacer />
@@ -180,10 +197,14 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
       id: PRIVATE_TENANT_RADIO_ID,
       label: (
         <>
-          Private
+          {i18n.translate('security.account.tenant.private', {
+            defaultMessage: 'Private',
+          })}
           <EuiText size="s">
-            The private tenant is exclusive to each user and can&apos;t be shared. You might use the
-            private tenant for exploratory work.
+            {i18n.translate('security.account.tenant.privateDescription', {
+              defaultMessage:
+                "The private tenant is exclusive to each user and can't be shared. You might use the private tenant for exploratory work.",
+            })}
           </EuiText>
           {shouldDisablePrivate && <i>{getPrivateDisabledInstruction()}</i>}
           <EuiSpacer />
@@ -193,7 +214,13 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
     },
     {
       id: CUSTOM_TENANT_RADIO_ID,
-      label: <>Choose from custom</>,
+      label: (
+        <>
+          {i18n.translate('security.account.tenant.chooseCustom', {
+            defaultMessage: 'Choose from custom',
+          })}
+        </>
+      ),
       disabled: customTenantOptions.length === 0,
     },
   ];
@@ -225,7 +252,11 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
 
     // check tenant name before calling backend
     if (tenantName === undefined) {
-      setErrorCallOut('No target tenant is specified!');
+      setErrorCallOut(
+        i18n.translate('security.account.tenant.noTarget', {
+          defaultMessage: 'No target tenant is specified!',
+        })
+      );
     } else {
       try {
         setSavedTenant(tenantName);
@@ -233,7 +264,14 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
         await changeTenant(tenantName);
         props.handleSwitchAndClose();
       } catch (e) {
-        setErrorCallOut(constructErrorMessageAndLog(e, 'Failed to switch tenant.'));
+        setErrorCallOut(
+          constructErrorMessageAndLog(
+            e,
+            i18n.translate('security.account.tenant.switchFailed', {
+              defaultMessage: 'Failed to switch tenant.',
+            })
+          )
+        );
       }
     }
   };
@@ -258,7 +296,9 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
           In current EUI if put into the child of radio option, clicking in the combo box will not
           show the drop down list since the radio option consumes the click event. */}
         <EuiCompressedComboBox
-          placeholder="Select a custom tenant"
+          placeholder={i18n.translate('security.account.tenant.selectCustom', {
+            defaultMessage: 'Select a custom tenant',
+          })}
           options={customTenantOptions}
           singleSelection={{ asPlainText: true }}
           selectedOptions={selectedCustomTenantOption}
@@ -277,7 +317,13 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
       </>
     );
   } else {
-    content = <>Contact the administrator to enable multi tenancy.</>;
+    content = (
+      <>
+        {i18n.translate('security.account.tenant.enableMultiTenancy', {
+          defaultMessage: 'Contact the administrator to enable multi tenancy.',
+        })}
+      </>
+    );
   }
 
   return (
@@ -286,14 +332,20 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
         <EuiSpacer />
         <EuiModalBody>
           <EuiText size="s">
-            <h2>Select your tenant</h2>
+            <h2>
+              {i18n.translate('security.account.tenant.selectTitle', {
+                defaultMessage: 'Select your tenant',
+              })}
+            </h2>
           </EuiText>
 
           <EuiSpacer />
 
           <EuiText size="s" color="subdued">
-            Tenants are useful for safely sharing your work with other OpenSearch Dashboards users.
-            You can switch your tenant anytime by clicking the user avatar on top right.
+            {i18n.translate('security.account.tenant.intro', {
+              defaultMessage:
+                'Tenants are useful for safely sharing your work with other OpenSearch Dashboards users. You can switch your tenant anytime by clicking the user avatar on top right.',
+            })}
           </EuiText>
 
           <EuiSpacer />
@@ -303,7 +355,11 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
           <EuiSpacer />
         </EuiModalBody>
         <EuiModalFooter>
-          <EuiSmallButtonEmpty onClick={props.handleClose}>Cancel</EuiSmallButtonEmpty>
+          <EuiSmallButtonEmpty onClick={props.handleClose}>
+            {i18n.translate('security.account.tenant.cancel', {
+              defaultMessage: 'Cancel',
+            })}
+          </EuiSmallButtonEmpty>
 
           <EuiSmallButton
             data-test-subj="confirm"
@@ -311,7 +367,9 @@ export function TenantSwitchPanel(props: TenantSwitchPanelProps) {
             disabled={!isMultiTenancyEnabled || invalidCustomTenant}
             onClick={handleTenantConfirmation}
           >
-            Confirm
+            {i18n.translate('security.account.tenant.confirm', {
+              defaultMessage: 'Confirm',
+            })}
           </EuiSmallButton>
         </EuiModalFooter>
       </EuiModal>
