@@ -11,6 +11,7 @@
 | Issue                                                                        | Comment                                                          |
 | ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
 | [wazuh-dashboard#1520](https://github.com/wazuh/wazuh-dashboard/issues/1520) | Derive the session cookie `Secure` flag from the server protocol |
+| [#787](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/787) | Use the visible labels as accessible names in the login form     |
 
 ## Prior versions
 
