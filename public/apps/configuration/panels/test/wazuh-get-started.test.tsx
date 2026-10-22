@@ -71,12 +71,12 @@ describe('Wazuh Get started page', () => {
     expect(coreStart.application.navigateToUrl).toHaveBeenCalledWith(wazuhRolesMappingUrl);
   });
 
-  it('marks adding backends as optional and names the Wazuh indexer config.yml path', () => {
+  it('marks adding backends as optional and says why', () => {
     renderPage(true);
 
     expect(screen.getByText('Optional: Add backends (LDAP, SSO)')).toBeInTheDocument();
     expect(
-      screen.getByText('/etc/wazuh-indexer/opensearch-security/config.yml')
+      screen.getByText('Internal users can sign in without this step.', { exact: false })
     ).toBeInTheDocument();
     expect(screen.queryByText('The OpenSearch security plugin', { exact: false })).toBeNull();
   });

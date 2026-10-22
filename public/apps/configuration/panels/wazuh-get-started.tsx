@@ -14,8 +14,8 @@
  */
 
 // Wazuh: Get started page in Wazuh terms, rendered instead of the upstream `get-started.tsx`. It
-// keeps the upstream page and adds the How access works card, Wazuh documentation links, and an
-// optional first step with the Wazuh indexer path.
+// keeps the upstream page and adds the How access works card, Wazuh documentation links, and marks
+// the backends step as optional.
 
 import {
   EuiSmallButton,
@@ -67,10 +67,10 @@ const getAddBackendStep = (docLinks: WazuhDocLinks) => ({
   children: (
     <>
       <EuiText size="s" color="subdued">
-        Add authentication<EuiCode>(authc)</EuiCode>and authorization<EuiCode>(authz)</EuiCode>
-        information to<EuiCode>/etc/wazuh-indexer/opensearch-security/config.yml</EuiCode>. The
-        <EuiCode>authc</EuiCode> section contains the backends to check user credentials against.
-        The <EuiCode>authz</EuiCode>
+        Internal users can sign in without this step. To sign in with LDAP, Active Directory or an
+        SSO provider, add it to <EuiCode>config.yml</EuiCode>, the indexer&apos;s security
+        configuration file. The <EuiCode>authc</EuiCode> section contains the backends to check user
+        credentials against. The <EuiCode>authz</EuiCode>
         section contains any backends to fetch backend roles from. The most common example of a
         backend role is an LDAP group. <ExternalLink href={docLinks.UserAdministration} />
       </EuiText>
