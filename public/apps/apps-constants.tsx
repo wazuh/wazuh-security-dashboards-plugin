@@ -20,3 +20,12 @@ export const GENERIC_ERROR_INSTRUCTION =
 export const PASSWORD_INSTRUCTION =
   'Password should be at least 8 characters long and contain at least one uppercase ' +
   'letter, one lowercase letter, one digit, and one special character.';
+
+export const PASSWORDS_TOOL_DIRECTORY = '/usr/share/wazuh-indexer/tools';
+
+export const getPasswordsToolCommand = (username: string) =>
+  `bash wazuh-passwords-tool.sh -u ${username} -p`;
+
+export const RESERVED_USER_PASSWORD_INSTRUCTION =
+  'This is a reserved user, so its password cannot be changed from the dashboard. ' +
+  `Change it from the Wazuh indexer host by running the passwords tool from ${PASSWORDS_TOOL_DIRECTORY}:`;

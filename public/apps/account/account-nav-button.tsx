@@ -16,6 +16,7 @@
 import {
   EuiAvatar,
   EuiButtonEmpty,
+  EuiCode,
   EuiContextMenuPanel,
   EuiFlexGroup,
   EuiFlexItem,
@@ -34,6 +35,7 @@ import { TenantSwitchPanel } from './tenant-switch-panel';
 import { ClientConfigType } from '../../types';
 import { LogoutButton } from './log-out-button';
 import { resolveTenantName } from '../configuration/utils/tenant-utils';
+import { getPasswordsToolCommand, RESERVED_USER_PASSWORD_INSTRUCTION } from '../apps-constants';
 import { getShouldShowTenantPopup, setShouldShowTenantPopup } from '../../utils/storage-utils';
 import { getDashboardsInfo } from '../../utils/dashboards-info-utils';
 import './account-nav-button.scss';
@@ -41,6 +43,7 @@ import './account-nav-button.scss';
 export function AccountNavButton(props: {
   coreStart: CoreStart;
   isInternalUser: boolean;
+  isReservedUser?: boolean;
   username: string;
   tenant?: string;
   config: ClientConfigType;
@@ -139,7 +142,16 @@ export function AccountNavButton(props: {
           </EuiButtonEmpty>
         </>
       )}
-      {props.isInternalUser && (
+      {props.isInternalUser && props.isReservedUser && (
+        <>
+          {horizontalRule}
+          <EuiText size="xs" color="subdued" data-test-subj="reserved-user-password-note">
+            <p>{RESERVED_USER_PASSWORD_INSTRUCTION}</p>
+            <EuiCode>{getPasswordsToolCommand(username)}</EuiCode>
+          </EuiText>
+        </>
+      )}
+      {props.isInternalUser && !props.isReservedUser && (
         <>
           {horizontalRule}
           <EuiButtonEmpty

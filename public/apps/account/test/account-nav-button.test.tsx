@@ -122,9 +122,31 @@ describe('Account navigation button', () => {
     expect(setState).toBeCalledTimes(1);
   });
 
+  it('should not show the reserved user note for non reserved users', () => {
+    expect(component.find('[data-test-subj="reserved-user-password-note"]').exists()).toBe(false);
+  });
+
   it('should set modal when click on "Reset password" button', () => {
     component.find('[data-test-subj="reset-password"]').simulate('click');
     expect(setState).toBeCalledTimes(1);
+  });
+
+  it('should not offer "Reset password" for reserved users and explain how to change it', () => {
+    const reservedComponent = shallow(
+      <AccountNavButton
+        coreStart={mockCoreStart}
+        isInternalUser={true}
+        isReservedUser={true}
+        username="admin"
+        tenant="tenant1"
+        config={config as any}
+        currAuthType={'dummy'}
+      />
+    );
+    expect(reservedComponent.find('[data-test-subj="reset-password"]').exists()).toBe(false);
+    const note = reservedComponent.find('[data-test-subj="reserved-user-password-note"]');
+    expect(note.exists()).toBe(true);
+    expect(note.html()).toContain('wazuh-passwords-tool.sh -u admin -p');
   });
 
   it('should set isPopoverOpen to true when click on Avatar in header section', () => {
