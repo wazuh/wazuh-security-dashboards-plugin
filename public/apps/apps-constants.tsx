@@ -24,8 +24,12 @@ export const PASSWORD_INSTRUCTION =
 export const PASSWORDS_TOOL_DIRECTORY = '/usr/share/wazuh-indexer/tools';
 
 export const getPasswordsToolCommand = (username: string) =>
-  `bash wazuh-passwords-tool.sh -u ${username} -p`;
+  `cd ${PASSWORDS_TOOL_DIRECTORY} && bash wazuh-passwords-tool.sh -u ${username} -p`;
 
 export const RESERVED_USER_PASSWORD_INSTRUCTION =
   'This is a reserved user, so its password cannot be changed from the dashboard. ' +
-  `Change it from the Wazuh indexer host by running the passwords tool from ${PASSWORDS_TOOL_DIRECTORY}:`;
+  'Change it from the Wazuh indexer host by running:';
+
+export const RESERVED_USER_SERVICES_WARNING =
+  'If this user is used by other services or integrations, update the password in their ' +
+  'configuration as well after changing it. Otherwise they will fail to authenticate.';

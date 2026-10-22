@@ -16,7 +16,6 @@
 import {
   EuiAvatar,
   EuiButtonEmpty,
-  EuiCode,
   EuiContextMenuPanel,
   EuiFlexGroup,
   EuiFlexItem,
@@ -31,11 +30,11 @@ import { CoreStart } from 'opensearch-dashboards/public';
 import React, { useCallback } from 'react';
 import { RoleInfoPanel } from './role-info-panel';
 import { PasswordResetPanel } from './password-reset-panel';
+import { ReservedUserPasswordPanel } from './reserved-user-password-panel';
 import { TenantSwitchPanel } from './tenant-switch-panel';
 import { ClientConfigType } from '../../types';
 import { LogoutButton } from './log-out-button';
 import { resolveTenantName } from '../configuration/utils/tenant-utils';
-import { getPasswordsToolCommand, RESERVED_USER_PASSWORD_INSTRUCTION } from '../apps-constants';
 import { getShouldShowTenantPopup, setShouldShowTenantPopup } from '../../utils/storage-utils';
 import { getDashboardsInfo } from '../../utils/dashboards-info-utils';
 import './account-nav-button.scss';
@@ -54,6 +53,11 @@ export function AccountNavButton(props: {
   const horizontalRule = <EuiHorizontalRule margin="xs" />;
   const username = props.username;
   const [isMultiTenancyEnabled, setIsMultiTenancyEnabled] = React.useState<boolean>(true);
+
+  const openModal = (modalContent: React.ReactNode) => {
+    setPopoverOpen(false);
+    setModal(modalContent);
+  };
 
   const showTenantSwitchPanel = useCallback(
     () =>
@@ -95,7 +99,14 @@ export function AccountNavButton(props: {
   }
 
   const contextMenuPanel = (
-    <div style={{ maxWidth: '256px' }}>
+    // Clicks inside the panel must not reach the popover wrapper, whose onClick toggles the
+    // popover. Otherwise selecting or copying text would close it. Actions that open a modal
+    // close the popover explicitly through openModal.
+    <div
+      role="presentation"
+      style={{ maxWidth: '256px' }}
+      onClick={(event) => event.stopPropagation()}
+    >
       <EuiFlexGroup gutterSize="s">
         <EuiFlexItem grow={null}>
           <EuiAvatar name={username} />
@@ -130,41 +141,46 @@ export function AccountNavButton(props: {
       <EuiButtonEmpty
         data-test-subj="view-roles-and-identities"
         size="xs"
-        onClick={() => setModal(<RoleInfoPanel {...props} handleClose={() => setModal(null)} />)}
+        onClick={() => openModal(<RoleInfoPanel {...props} handleClose={() => setModal(null)} />)}
       >
         View roles and identities
       </EuiButtonEmpty>
       {isMultiTenancyEnabled && props.config.multitenancy.enabled && (
         <>
           {horizontalRule}
-          <EuiButtonEmpty data-test-subj="switch-tenants" size="xs" onClick={showTenantSwitchPanel}>
+          <EuiButtonEmpty
+            data-test-subj="switch-tenants"
+            size="xs"
+            onClick={() => {
+              setPopoverOpen(false);
+              showTenantSwitchPanel();
+            }}
+          >
             Switch tenants
           </EuiButtonEmpty>
         </>
       )}
-      {props.isInternalUser && props.isReservedUser && (
-        <>
-          {horizontalRule}
-          <EuiText size="xs" color="subdued" data-test-subj="reserved-user-password-note">
-            <p>{RESERVED_USER_PASSWORD_INSTRUCTION}</p>
-            <EuiCode>{getPasswordsToolCommand(username)}</EuiCode>
-          </EuiText>
-        </>
-      )}
-      {props.isInternalUser && !props.isReservedUser && (
+      {props.isInternalUser && (
         <>
           {horizontalRule}
           <EuiButtonEmpty
             data-test-subj="reset-password"
             size="xs"
             onClick={() =>
-              setModal(
-                <PasswordResetPanel
-                  coreStart={props.coreStart}
-                  username={props.username}
-                  handleClose={() => setModal(null)}
-                  logoutUrl={props.config.auth.logout_url}
-                />
+              openModal(
+                props.isReservedUser ? (
+                  <ReservedUserPasswordPanel
+                    username={props.username}
+                    handleClose={() => setModal(null)}
+                  />
+                ) : (
+                  <PasswordResetPanel
+                    coreStart={props.coreStart}
+                    username={props.username}
+                    handleClose={() => setModal(null)}
+                    logoutUrl={props.config.auth.logout_url}
+                  />
+                )
               )
             }
           >

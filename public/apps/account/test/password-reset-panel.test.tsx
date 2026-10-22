@@ -113,7 +113,9 @@ describe('Account menu - Password reset panel', () => {
     process.nextTick(() => {
       const message = setState.mock.calls[setState.mock.calls.length - 1][0];
       expect(message).toContain('reserved user');
-      expect(message).toContain('bash wazuh-passwords-tool.sh -u dummy -p');
+      expect(message).toContain(
+        'cd /usr/share/wazuh-indexer/tools && bash wazuh-passwords-tool.sh -u dummy -p'
+      );
       expect(message).not.toContain('Resource');
       done();
     });
