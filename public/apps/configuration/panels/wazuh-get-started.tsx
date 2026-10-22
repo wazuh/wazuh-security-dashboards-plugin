@@ -241,6 +241,7 @@ export function WazuhGetStarted(props: AppDependencies) {
             <h2>How access works</h2>
           </EuiTitle>
           <EuiSpacer size="s" />
+          {/* "Wazuh API access" is `wazuh.security.app.title` in wazuh-dashboard-plugins. */}
           <EuiText size="s">
             <p>
               People sign in to the dashboard through the indexer, with an internal user or an LDAP
