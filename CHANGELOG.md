@@ -9,10 +9,11 @@
 
 ### Fixed
 
-| Issue                                                                        | Comment                                                          |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| [wazuh-dashboard#1520](https://github.com/wazuh/wazuh-dashboard/issues/1520) | Derive the session cookie `Secure` flag from the server protocol |
-| [#787](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/787) | Use the visible labels as accessible names in the login form     |
+| Issue                                                                                        | Comment                                                                           |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| [wazuh-dashboard#1520](https://github.com/wazuh/wazuh-dashboard/issues/1520)                 | Derive the session cookie `Secure` flag from the server protocol                  |
+| [#787](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/787)                 | Use the visible labels as accessible names in the login form                      |
+| [wazuh-dashboard-plugins#9435](https://github.com/wazuh/wazuh-dashboard-plugins/issues/9435) | Explain how to change the password of reserved users in the Reset password dialog |
 
 ## Prior versions
 

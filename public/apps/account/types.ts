@@ -16,6 +16,7 @@ export interface AccountInfo {
   data: {
     user_name: string;
     is_internal_user: boolean;
+    is_reserved?: boolean;
     user_requested_tenant?: string;
     backend_roles: string[];
     roles: string[];
