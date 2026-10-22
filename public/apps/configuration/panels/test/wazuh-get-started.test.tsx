@@ -64,19 +64,21 @@ describe('Wazuh Get started page', () => {
     expect(document.querySelector('[data-test-subj="wazuh-how-access-works"]')).toHaveTextContent(
       'People sign in to the dashboard through the indexer'
     );
+    fireEvent.click(screen.getByText('Wazuh roles mapping'));
     expect(coreStart.application.getUrlForApp).toHaveBeenCalledWith('security', {
       path: '#/security?tab=roleMapping',
     });
-    fireEvent.click(screen.getByText('Wazuh roles mapping'));
     expect(coreStart.application.navigateToUrl).toHaveBeenCalledWith(wazuhRolesMappingUrl);
   });
 
-  it('lists the three steps to give someone access', () => {
+  it('marks adding backends as optional and names the Wazuh indexer config.yml path', () => {
     renderPage(true);
 
-    ['Create an internal user', 'Map an indexer role', 'Map a Wazuh role'].forEach((step) =>
-      expect(screen.getByText(step)).toBeInTheDocument()
-    );
+    expect(screen.getByText('Optional: Add backends (LDAP, SSO)')).toBeInTheDocument();
+    expect(
+      screen.getByText('/etc/wazuh-indexer/opensearch-security/config.yml')
+    ).toBeInTheDocument();
+    expect(screen.queryByText('The OpenSearch security plugin', { exact: false })).toBeNull();
   });
 
   it('links Learn more to the Wazuh documentation, and audit logs to OpenSearch', () => {
@@ -86,15 +88,12 @@ describe('Wazuh Get started page', () => {
     expect(hrefs).toEqual(
       expect.arrayContaining([
         WazuhDocLinks.UserAdministration,
-        WazuhDocLinks.InternalUsers,
+        WazuhDocLinks.IndexerSecurity,
         WazuhDocLinks.IndexerRoles,
-        WazuhDocLinks.WazuhRoleMapping,
-        WazuhDocLinks.Ldap,
-        WazuhDocLinks.SingleSignOn,
+        WazuhDocLinks.IndexerRoleMappings,
       ])
     );
     expect(hrefs.filter((href) => href?.includes('opensearch.org'))).toHaveLength(1);
-    expect(screen.getByText('OpenSearch documentation')).toBeInTheDocument();
   });
 
   it('builds the Wazuh documentation links for the docs version of the dashboard core', () => {
@@ -103,9 +102,10 @@ describe('Wazuh Get started page', () => {
     );
   });
 
-  it('hides the LDAP and SSO section when the backend is not configurable', () => {
+  it('leaves out the backends step when the backend is not configurable', () => {
     renderPage(false);
 
-    expect(screen.queryByText('Optional: Connect LDAP or SSO')).not.toBeInTheDocument();
+    expect(screen.queryByText('Optional: Add backends (LDAP, SSO)')).not.toBeInTheDocument();
+    expect(screen.getByText('Create roles')).toBeInTheDocument();
   });
 });

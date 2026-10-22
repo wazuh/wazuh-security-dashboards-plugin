@@ -13,14 +13,15 @@
  *   permissions and limitations under the License.
  */
 
-// Wazuh: Get started page in Wazuh terms. Replaces the upstream `get-started.tsx` page, which
-// explains the OpenSearch security plugin and links to opensearch.org.
+// Wazuh: Get started page in Wazuh terms, rendered instead of the upstream `get-started.tsx`. It
+// keeps the upstream page and adds the How access works card, Wazuh documentation links, and an
+// optional first step with the Wazuh indexer path.
 
 import {
   EuiSmallButton,
+  EuiCode,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiLink,
   EuiPageHeader,
   EuiPanel,
   EuiSpacer,
@@ -30,146 +31,175 @@ import {
   EuiGlobalToastList,
 } from '@elastic/eui';
 import React, { useContext } from 'react';
+import { FormattedMessage } from '@osd/i18n/react';
 import { AppDependencies } from '../../types';
 import { buildHashUrl } from '../utils/url-builder';
 import { Action } from '../types';
 import { ResourceType } from '../../../../common';
 import { API_ENDPOINT_CACHE, DocLinks } from '../constants';
-import { ExternalLinkButton } from '../utils/display-utils';
+import { ExternalLink, ExternalLinkButton } from '../utils/display-utils';
 import { createRequestContextWithDataSourceId } from '../utils/request-utils';
 import { createSuccessToast, createUnknownErrorToast, useToastState } from '../utils/toast-utils';
 import { SecurityPluginTopNavMenu } from '../top-nav-menu';
 import { DataSourceContext } from '../app-router';
 import { getClusterInfo } from '../../../utils/datasource-utils';
 import { PageHeader } from '../header/header-components';
+
 // Wazuh documentation pages, for the docs version the dashboard core resolves from the Wazuh build.
 export const getWazuhDocLinks = (wazuhDocVersion: string) => {
   const docs = `https://documentation.wazuh.com/${wazuhDocVersion}/user-manual`;
   return {
     UserAdministration: `${docs}/user-administration/index.html`,
-    InternalUsers: `${docs}/wazuh-indexer/security.html#internal-users`,
+    IndexerSecurity: `${docs}/wazuh-indexer/security.html`,
     IndexerRoles: `${docs}/wazuh-indexer/security.html#roles`,
-    WazuhRoleMapping: `${docs}/user-administration/rbac.html`,
-    Ldap: `${docs}/user-administration/ldap.html`,
-    SingleSignOn: `${docs}/user-administration/single-sign-on/index.html`,
+    IndexerRoleMappings: `${docs}/wazuh-indexer/security.html#role-mappings`,
   };
 };
+
+type WazuhDocLinks = ReturnType<typeof getWazuhDocLinks>;
 
 // App id and route of Server management > Wazuh API access, in the Wazuh main plugin.
 const WAZUH_API_ACCESS_APP_ID = 'security';
 const WAZUH_ROLES_MAPPING_PATH = '#/security?tab=roleMapping';
 
-function DocLink(props: { href: string; text?: string }) {
-  return (
-    <EuiLink external href={props.href} target="_blank" className="external-link-inline-block">
-      {props.text ?? 'Learn more'}
-    </EuiLink>
-  );
-}
+const getAddBackendStep = (docLinks: WazuhDocLinks) => ({
+  title: 'Optional: Add backends (LDAP, SSO)',
+  children: (
+    <>
+      <EuiText size="s" color="subdued">
+        Add authentication<EuiCode>(authc)</EuiCode>and authorization<EuiCode>(authz)</EuiCode>
+        information to<EuiCode>/etc/wazuh-indexer/opensearch-security/config.yml</EuiCode>. The
+        <EuiCode>authc</EuiCode> section contains the backends to check user credentials against.
+        The <EuiCode>authz</EuiCode>
+        section contains any backends to fetch backend roles from. The most common example of a
+        backend role is an LDAP group. <ExternalLink href={docLinks.UserAdministration} />
+      </EuiText>
+
+      <EuiSpacer size="m" />
+
+      <EuiFlexGroup gutterSize="s" wrap>
+        <EuiFlexItem grow={false}>
+          <ExternalLinkButton
+            fill
+            href={docLinks.IndexerSecurity}
+            text="Config.yml documentation"
+          />
+        </EuiFlexItem>
+        <EuiFlexItem grow={false}>
+          <EuiSmallButton
+            data-test-subj="review-authentication-and-authorization"
+            onClick={() => {
+              window.location.href = buildHashUrl(ResourceType.auth);
+            }}
+          >
+            Review authentication and authorization
+          </EuiSmallButton>
+        </EuiFlexItem>
+      </EuiFlexGroup>
+
+      <EuiSpacer size="l" />
+    </>
+  ),
+});
+
+const getSetOfSteps = (docLinks: WazuhDocLinks) => [
+  {
+    title: 'Create roles',
+    children: (
+      <>
+        <EuiText size="s" color="subdued">
+          Roles are reusable collections of permissions. The default roles are a great starting
+          point, but you might need to create custom roles that meet your exact needs.{' '}
+          <ExternalLink href={docLinks.IndexerRoles} />
+        </EuiText>
+
+        <EuiSpacer size="m" />
+
+        <EuiFlexGroup gutterSize="s">
+          <EuiFlexItem grow={false}>
+            <EuiSmallButton
+              data-test-subj="explore-existing-roles"
+              onClick={() => {
+                window.location.href = buildHashUrl(ResourceType.roles);
+              }}
+            >
+              Explore existing roles
+            </EuiSmallButton>
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiSmallButton
+              data-test-subj="create-new-role"
+              onClick={() => {
+                window.location.href = buildHashUrl(ResourceType.roles, Action.create);
+              }}
+            >
+              Create new role
+            </EuiSmallButton>
+          </EuiFlexItem>
+        </EuiFlexGroup>
+
+        <EuiSpacer size="l" />
+      </>
+    ),
+  },
+  {
+    title: 'Map users',
+    children: (
+      <>
+        <EuiText size="s" color="subdued">
+          After a user successfully authenticates, the security plugin retrieves that user’s roles.
+          You can map roles directly to users, but you can also map them to backend roles.{' '}
+          <ExternalLink href={docLinks.IndexerRoleMappings} />
+        </EuiText>
+
+        <EuiSpacer size="m" />
+
+        <EuiFlexGroup gutterSize="s">
+          <EuiFlexItem grow={false}>
+            <EuiSmallButton
+              data-test-subj="map-users-to-role"
+              onClick={() => {
+                window.location.href = buildHashUrl(ResourceType.users);
+              }}
+            >
+              Map users to a role
+            </EuiSmallButton>
+          </EuiFlexItem>
+          <EuiFlexItem grow={false}>
+            <EuiSmallButton
+              data-test-subj="create-internal-user"
+              onClick={() => {
+                window.location.href = buildHashUrl(ResourceType.users, Action.create);
+              }}
+            >
+              Create internal user
+            </EuiSmallButton>
+          </EuiFlexItem>
+        </EuiFlexGroup>
+      </>
+    ),
+  },
+];
 
 export function WazuhGetStarted(props: AppDependencies) {
   const dataSourceEnabled = !!props.depsStart.dataSource?.dataSourceEnabled;
   const { dataSource, setDataSource } = useContext(DataSourceContext)!;
-  const [toasts, addToast, removeToast] = useToastState();
+
   const wazuhDocLinks = getWazuhDocLinks(props.coreStart.docLinks.WAZUH_DOC_VERSION);
-
-  const wazuhRolesMappingUrl = props.coreStart.application.getUrlForApp(WAZUH_API_ACCESS_APP_ID, {
-    path: WAZUH_ROLES_MAPPING_PATH,
-  });
   const openWazuhRolesMapping = () =>
-    props.coreStart.application.navigateToUrl(wazuhRolesMappingUrl);
+    props.coreStart.application.navigateToUrl(
+      props.coreStart.application.getUrlForApp(WAZUH_API_ACCESS_APP_ID, {
+        path: WAZUH_ROLES_MAPPING_PATH,
+      })
+    );
 
-  const steps = [
-    {
-      title: 'Create an internal user',
-      children: (
-        <>
-          <EuiText size="s" color="subdued">
-            Create the account the person signs in with. Skip this step for LDAP or SSO users: their
-            accounts live in the provider. <DocLink href={wazuhDocLinks.InternalUsers} />
-          </EuiText>
-          <EuiSpacer size="m" />
-          <EuiFlexGroup gutterSize="s">
-            <EuiFlexItem grow={false}>
-              <EuiSmallButton
-                data-test-subj="create-internal-user"
-                onClick={() => {
-                  window.location.href = buildHashUrl(ResourceType.users, Action.create);
-                }}
-              >
-                Create internal user
-              </EuiSmallButton>
-            </EuiFlexItem>
-            <EuiFlexItem grow={false}>
-              <EuiSmallButton
-                data-test-subj="explore-internal-users"
-                onClick={() => {
-                  window.location.href = buildHashUrl(ResourceType.users);
-                }}
-              >
-                Explore internal users
-              </EuiSmallButton>
-            </EuiFlexItem>
-          </EuiFlexGroup>
-          <EuiSpacer size="l" />
-        </>
-      ),
-    },
-    {
-      title: 'Map an indexer role',
-      children: (
-        <>
-          <EuiText size="s" color="subdued">
-            Indexer roles decide which indices and documents the user can access. Map a role to the
-            user, or to a backend role (a group name such as admin) to cover everyone in that group.{' '}
-            <DocLink href={wazuhDocLinks.IndexerRoles} />
-          </EuiText>
-          <EuiSpacer size="m" />
-          <EuiFlexGroup gutterSize="s">
-            <EuiFlexItem grow={false}>
-              <EuiSmallButton
-                data-test-subj="explore-existing-roles"
-                onClick={() => {
-                  window.location.href = buildHashUrl(ResourceType.roles);
-                }}
-              >
-                Explore existing roles
-              </EuiSmallButton>
-            </EuiFlexItem>
-            <EuiFlexItem grow={false}>
-              <EuiSmallButton
-                data-test-subj="create-new-role"
-                onClick={() => {
-                  window.location.href = buildHashUrl(ResourceType.roles, Action.create);
-                }}
-              >
-                Create new role
-              </EuiSmallButton>
-            </EuiFlexItem>
-          </EuiFlexGroup>
-          <EuiSpacer size="l" />
-        </>
-      ),
-    },
-    {
-      title: 'Map a Wazuh role',
-      children: (
-        <>
-          <EuiText size="s" color="subdued">
-            Wazuh roles decide what the user can do with agents, groups and server management. Map
-            one, for example <strong>administrator</strong> or <strong>readonly</strong>, to the
-            user name or a backend role in Server management &gt; Wazuh API access &gt; Roles
-            mapping. Without it, the user signs in but sees no agents.{' '}
-            <DocLink href={wazuhDocLinks.WazuhRoleMapping} />
-          </EuiText>
-          <EuiSpacer size="m" />
-          <EuiSmallButton data-test-subj="open-wazuh-roles-mapping" onClick={openWazuhRolesMapping}>
-            Open Wazuh roles mapping
-          </EuiSmallButton>
-        </>
-      ),
-    },
-  ];
+  let steps;
+  if (props.config.ui.backend_configurable) {
+    steps = [getAddBackendStep(wazuhDocLinks), ...getSetOfSteps(wazuhDocLinks)];
+  } else {
+    steps = getSetOfSteps(wazuhDocLinks);
+  }
+  const [toasts, addToast, removeToast] = useToastState();
 
   const buttonData = [
     {
@@ -218,7 +248,7 @@ export function WazuhGetStarted(props: AppDependencies) {
               do in Wazuh (agents, groups, server management) comes from a Wazuh role, assigned in
               Server management &gt; Wazuh API access &gt; Roles mapping. Its rules match the user
               name, backend roles (group names) or indexer roles.{' '}
-              <DocLink href={wazuhDocLinks.UserAdministration} />
+              <ExternalLink href={wazuhDocLinks.UserAdministration} />
             </p>
           </EuiText>
           <EuiSpacer size="m" />
@@ -247,52 +277,12 @@ export function WazuhGetStarted(props: AppDependencies) {
         <EuiSpacer size="l" />
 
         <EuiPanel paddingSize="l">
-          <EuiTitle size="s">
-            <h2>Give someone access</h2>
-          </EuiTitle>
-          <EuiSpacer size="l" />
-          <EuiSteps steps={steps} headingElement="h3" />
-        </EuiPanel>
+          {props.config.ui.backend_configurable && <div className={'security-steps-diagram'} />}
 
-        {props.config.ui.backend_configurable && (
-          <>
-            <EuiSpacer size="l" />
-            <EuiPanel paddingSize="l">
-              <EuiTitle size="s">
-                <h3>Optional: Connect LDAP or SSO</h3>
-              </EuiTitle>
-              <EuiText size="s" color="subdued">
-                <p>
-                  To let people sign in with LDAP, Active Directory or a single sign-on provider,
-                  add it to the indexer security configuration. Their backend roles then come from
-                  the provider, for example their LDAP groups.
-                </p>
-              </EuiText>
-              <EuiSpacer size="m" />
-              <EuiFlexGroup gutterSize="s" wrap>
-                <EuiFlexItem grow={false}>
-                  <ExternalLinkButton href={wazuhDocLinks.Ldap} text="LDAP documentation" />
-                </EuiFlexItem>
-                <EuiFlexItem grow={false}>
-                  <ExternalLinkButton
-                    href={wazuhDocLinks.SingleSignOn}
-                    text="Single sign-on documentation"
-                  />
-                </EuiFlexItem>
-                <EuiFlexItem grow={false}>
-                  <EuiSmallButton
-                    data-test-subj="review-authentication-and-authorization"
-                    onClick={() => {
-                      window.location.href = buildHashUrl(ResourceType.auth);
-                    }}
-                  >
-                    Review authentication and authorization
-                  </EuiSmallButton>
-                </EuiFlexItem>
-              </EuiFlexGroup>
-            </EuiPanel>
-          </>
-        )}
+          <EuiSpacer size="l" />
+
+          <EuiSteps steps={steps} />
+        </EuiPanel>
 
         <EuiSpacer size="l" />
 
@@ -302,8 +292,11 @@ export function WazuhGetStarted(props: AppDependencies) {
           </EuiTitle>
           <EuiText size="s" color="subdued">
             <p>
-              Audit logs track who accessed the indexer and are useful for compliance.{' '}
-              <DocLink href={DocLinks.AuditLogsDoc} text="OpenSearch documentation" />
+              <FormattedMessage
+                id="audit.logs.introduction"
+                defaultMessage="Audit logs let you track user access to your OpenSearch cluster and are useful for compliance purposes."
+              />{' '}
+              <ExternalLink href={DocLinks.AuditLogsDoc} />
             </p>
             <EuiSmallButton
               data-test-subj="review-audit-log-configuration"
@@ -324,8 +317,8 @@ export function WazuhGetStarted(props: AppDependencies) {
           </EuiTitle>
           <EuiText size="s" color="subdued">
             <p>
-              The indexer caches signed-in users with their roles and permissions. Purge it when a
-              change, for example in LDAP, does not apply right away.
+              By default, the security plugin caches authenticated users, along with their roles and
+              permissions. This option will purge cached users, roles and permissions.
             </p>
             <EuiSmallButton
               iconType="refresh"
@@ -367,8 +360,9 @@ export function WazuhGetStarted(props: AppDependencies) {
             </EuiTitle>
             <EuiText size="s" color="subdued">
               <p>
-                Tenants are spaces for saving index patterns, visualizations, dashboards and other
-                saved objects.
+                By default tenancy is activated in Dashboards. Tenants in OpenSearch Dashboards are
+                spaces for saving index patterns, visualizations, dashboards, and other OpenSearch
+                Dashboards objects.
               </p>
               <EuiFlexGroup gutterSize="s">
                 <EuiFlexItem grow={false}>
