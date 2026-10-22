@@ -20,7 +20,9 @@ import { RouteItem } from '../types';
 function buildTreeItems(items: RouteItem[]) {
   return [
     {
-      name: 'Security',
+      // Wazuh: Same name as the menu entry.
+      // name: 'Security',
+      name: 'Users and data access',
       id: 'security',
       items: items.map((e: RouteItem) => ({
         id: e.name,

@@ -20,7 +20,7 @@ exports[`Navigation panel renders 1`] = `
             "name": "Item2",
           },
         ],
-        "name": "Security",
+        "name": "Users and data access",
       },
     ]
   }

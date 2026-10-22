@@ -2,7 +2,7 @@
 
 exports[`User editing - backend role panel BackendRolePanel add backend role when one of the previous roles is blank 1`] = `
 <PanelWithHeader
-  headerSubText="Backend roles are used to map users from external authentication systems, such as LDAP or SAML to OpenSearch security roles."
+  headerSubText="Group names for this user, for example admin. A role mapped to a backend role applies to every user who has it: by default, admin gets the all_access indexer role. You can map Wazuh roles the same way, in Server management > Wazuh API access > Roles mapping."
   headerText="Backend roles"
   helpLink="https://opensearch.org/docs/latest/security-plugin/access-control/index/"
   optional={true}
@@ -109,7 +109,7 @@ exports[`User editing - backend role panel BackendRolePanel add backend role whe
 
 exports[`User editing - backend role panel BackendRolePanel add backend role when the previous role is blank 1`] = `
 <PanelWithHeader
-  headerSubText="Backend roles are used to map users from external authentication systems, such as LDAP or SAML to OpenSearch security roles."
+  headerSubText="Group names for this user, for example admin. A role mapped to a backend role applies to every user who has it: by default, admin gets the all_access indexer role. You can map Wazuh roles the same way, in Server management > Wazuh API access > Roles mapping."
   headerText="Backend roles"
   helpLink="https://opensearch.org/docs/latest/security-plugin/access-control/index/"
   optional={true}

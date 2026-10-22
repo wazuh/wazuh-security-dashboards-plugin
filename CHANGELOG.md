@@ -2,9 +2,10 @@
 
 ### Added
 
-| Issue                                                                      | Comment                 |
-| -------------------------------------------------------------------------- | ----------------------- |
-| [#37](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/37) | Support for Wazuh 5.0.0 |
+| Issue                                                                                        | Comment                                                                                                          |
+| -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| [#37](https://github.com/wazuh/wazuh-security-dashboards-plugin/issues/37)                   | Support for Wazuh 5.0.0                                                                                          |
+| [wazuh-dashboard-plugins#9433](https://github.com/wazuh/wazuh-dashboard-plugins/issues/9433) | Rename the Security app to Users and data access, and explain how dashboard access works on its Get started page |
 
 ### Fixed
 

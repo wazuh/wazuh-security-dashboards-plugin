@@ -43,7 +43,9 @@ export function getBreadcrumbs(
   const breadcrumbs: EuiBreadcrumb[] = includeSecurityBase
     ? [
         {
-          text: 'Security',
+          // Wazuh: Same name as the menu entry.
+          // text: 'Security',
+          text: 'Users and data access',
           href: buildHashUrl(),
         },
       ]
