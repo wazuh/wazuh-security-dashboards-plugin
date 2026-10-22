@@ -26,7 +26,9 @@ import {
   SUB_URL_FOR_GENERAL_SETTINGS_EDIT,
 } from './panels/audit-logging/constants';
 import { AuthView } from './panels/auth-view/auth-view';
-import { GetStarted } from './panels/get-started';
+// Wazuh: Get started page in Wazuh terms.
+// import { GetStarted } from './panels/get-started';
+import { WazuhGetStarted } from './panels/wazuh-get-started';
 import { InternalUserEdit } from './panels/internal-user-edit/internal-user-edit';
 import { NavPanel } from './panels/nav-panel';
 import { PermissionList } from './panels/permission-list/permission-list';
@@ -216,7 +218,9 @@ export function AppRouter(props: AppDependencies) {
               <Route
                 path={ROUTE_MAP.getStarted.href}
                 render={() => {
-                  return <GetStarted {...props} />;
+                  // Wazuh: Render the Wazuh Get started page.
+                  // return <GetStarted {...props} />;
+                  return <WazuhGetStarted {...props} />;
                 }}
               />
               {multitenancyEnabled && (

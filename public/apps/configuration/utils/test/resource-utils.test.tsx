@@ -40,7 +40,9 @@ describe('ResourceUtilsTests', () => {
     expect(breadcrumbs).toEqual([
       {
         href: '#/',
-        text: 'Security',
+        // Wazuh: Same name as the menu entry.
+        // text: 'Security',
+        text: 'Users and data access',
       },
     ]);
   });
@@ -58,7 +60,9 @@ describe('ResourceUtilsTests', () => {
   it('getBreadcrumbs with security base should use regular name and have security base', () => {
     const breadcrumbs = getBreadcrumbs(true, ResourceType.auth);
     expect(breadcrumbs).toEqual([
-      { href: '#/', text: 'Security' },
+      // Wazuh: Same name as the menu entry.
+      // { href: '#/', text: 'Security' },
+      { href: '#/', text: 'Users and data access' },
       { href: '#/auth', text: 'Authentication' },
     ]);
   });
@@ -80,7 +84,9 @@ describe('ResourceUtilsTests', () => {
   it('getBreadcrumbs should not show breadcrumb with count when security base is included', () => {
     const breadcrumbs = getBreadcrumbs(true, ResourceType.roles, undefined, undefined, 30);
     expect(breadcrumbs).toEqual([
-      { href: '#/', text: 'Security' },
+      // Wazuh: Same name as the menu entry.
+      // { href: '#/', text: 'Security' },
+      { href: '#/', text: 'Users and data access' },
       { href: '#/roles', text: 'Roles' },
     ]);
   });

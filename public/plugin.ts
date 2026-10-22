@@ -160,7 +160,9 @@ export class SecurityPlugin
     if (mdsEnabled || apiPermission) {
       core.application.register({
         id: PLUGIN_NAME,
-        title: 'Security',
+        // Wazuh: Name the menu entry after what it manages, apart from Server management's.
+        // title: 'Security',
+        title: 'Users and data access',
         order: 9030,
         workspaceAvailability: WorkspaceAvailability.outsideWorkspace,
         navLinkStatus: core.chrome.navGroup.getNavGroupEnabled()
@@ -348,7 +350,9 @@ export class SecurityPlugin
       if (deps.managementOverview) {
         deps.managementOverview.register({
           id: PLUGIN_NAME,
-          title: 'Security',
+          // Wazuh: Same name as the menu entry.
+          // title: 'Security',
+          title: 'Users and data access',
           order: 9030,
           description: i18n.translate('security.securityDescription', {
             defaultMessage:
