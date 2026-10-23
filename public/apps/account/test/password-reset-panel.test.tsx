@@ -102,6 +102,25 @@ describe('Account menu - Password reset panel', () => {
     });
   });
 
+  it('shows an actionable message when the user is reserved', (done) => {
+    (updateNewPassword as jest.Mock).mockImplementationOnce(() => {
+      throw Object.assign(new Error(), { body: { message: "Resource 'dummy' is reserved." } });
+    });
+    jest.spyOn(console, 'error').mockImplementationOnce(() => {});
+
+    component.find('[data-test-subj="reset"]').simulate('click');
+
+    process.nextTick(() => {
+      const message = setState.mock.calls[setState.mock.calls.length - 1][0];
+      expect(message).toContain('reserved user');
+      expect(message).toContain(
+        'cd /usr/share/wazuh-indexer/tools && bash wazuh-passwords-tool.sh -u dummy -p'
+      );
+      expect(message).not.toContain('Resource');
+      done();
+    });
+  });
+
   it('Current password field update', () => {
     const event = {
       target: { value: 'dummy' },

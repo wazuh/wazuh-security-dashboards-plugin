@@ -147,13 +147,11 @@ export function LoginPage(props: LoginPageDeps) {
     loginEndPoint: string,
     buttonConfig: LoginButtonConfig
   ) => {
-    const buttonId = `${authType}_login_button`;
     const loginEndPointWithPath = `${props.http.basePath.serverBasePath}${loginEndPoint}`;
     return (
       <EuiCompressedFormRow>
         <EuiButton
           data-test-subj="submit"
-          aria-label={buttonId}
           size="s"
           type="prime"
           className={buttonConfig.buttonstyle || 'btn-login'}
@@ -194,7 +192,7 @@ export function LoginPage(props: LoginPageDeps) {
             <EuiCompressedFormRow>
               <EuiCompressedFieldText
                 data-test-subj="user-name"
-                aria-label="username_input"
+                aria-label="Username"
                 placeholder="Username"
                 icon="user"
                 onChange={(e) => setUsername(e.target.value)}
@@ -207,7 +205,7 @@ export function LoginPage(props: LoginPageDeps) {
             <EuiCompressedFormRow isInvalid={passwordValidationFailed}>
               <EuiCompressedFieldPassword
                 data-test-subj="password"
-                aria-label="password_input"
+                aria-label="Password"
                 placeholder="Password"
                 type="dual"
                 onChange={(e) => setPassword(e.target.value)}
@@ -216,12 +214,10 @@ export function LoginPage(props: LoginPageDeps) {
               />
             </EuiCompressedFormRow>
           );
-          const buttonId = `${AuthType.BASIC}_login_button`;
           formBody.push(
             <EuiCompressedFormRow>
               <EuiButton
                 data-test-subj="submit"
-                aria-label={buttonId}
                 fill
                 size="s"
                 type="submit"

@@ -117,6 +117,7 @@ export async function setupTopNavButton(coreStart: CoreStart, config: ClientConf
           <AccountNavButton
             coreStart={coreStart}
             isInternalUser={accountInfo.is_internal_user}
+            isReservedUser={Boolean(accountInfo.is_reserved)}
             username={accountInfo.user_name}
             tenant={tenant}
             config={config}

@@ -28,3 +28,7 @@ export function constructErrorMessageAndLog(exception: object, messagePrefix: st
 
   return message;
 }
+
+export function isReservedResourceError(exception: any): boolean {
+  return /is reserved/i.test(exception?.body?.message || '');
+}
