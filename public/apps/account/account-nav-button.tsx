@@ -26,6 +26,7 @@ import {
   EuiPopover,
   EuiText,
 } from '@elastic/eui';
+import { i18n } from '@osd/i18n';
 import { CoreStart } from 'opensearch-dashboards/public';
 import React, { useCallback } from 'react';
 import { RoleInfoPanel } from './role-info-panel';
@@ -129,13 +130,17 @@ export function AccountNavButton(props: {
         size="xs"
         onClick={() => setModal(<RoleInfoPanel {...props} handleClose={() => setModal(null)} />)}
       >
-        View roles and identities
+        {i18n.translate('security.account.viewRolesAndIdentities', {
+          defaultMessage: 'View roles and identities',
+        })}
       </EuiButtonEmpty>
       {isMultiTenancyEnabled && props.config.multitenancy.enabled && (
         <>
           {horizontalRule}
           <EuiButtonEmpty data-test-subj="switch-tenants" size="xs" onClick={showTenantSwitchPanel}>
-            Switch tenants
+            {i18n.translate('security.account.switchTenants', {
+              defaultMessage: 'Switch tenants',
+            })}
           </EuiButtonEmpty>
         </>
       )}
@@ -156,7 +161,9 @@ export function AccountNavButton(props: {
               )
             }
           >
-            Reset password
+            {i18n.translate('security.account.resetPassword', {
+              defaultMessage: 'Reset password',
+            })}
           </EuiButtonEmpty>
         </>
       )}

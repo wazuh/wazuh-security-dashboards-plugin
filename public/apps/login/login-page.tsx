@@ -26,6 +26,7 @@ import {
   EuiHorizontalRule,
   EuiCompressedFieldPassword,
 } from '@elastic/eui';
+import { i18n } from '@osd/i18n';
 import { CoreStart } from '../../../../../src/core/public';
 import { ClientConfigType } from '../../types';
 import defaultBrandImage from '../../assets/ui/wazuh_logo.svg';
@@ -137,7 +138,11 @@ export function LoginPage(props: LoginPageDeps) {
     } catch (error) {
       console.log(error);
       setloginFailed(true);
-      setloginError('Invalid username or password. Please try again.');
+      setloginError(
+        i18n.translate('security.login.invalidCredentials', {
+          defaultMessage: 'Invalid username or password. Please try again.',
+        })
+      );
       return;
     }
   };
@@ -195,7 +200,9 @@ export function LoginPage(props: LoginPageDeps) {
               <EuiCompressedFieldText
                 data-test-subj="user-name"
                 aria-label="username_input"
-                placeholder="Username"
+                placeholder={i18n.translate('security.login.usernamePlaceholder', {
+                  defaultMessage: 'Username',
+                })}
                 icon="user"
                 onChange={(e) => setUsername(e.target.value)}
                 value={username}
@@ -208,7 +215,9 @@ export function LoginPage(props: LoginPageDeps) {
               <EuiCompressedFieldPassword
                 data-test-subj="password"
                 aria-label="password_input"
-                placeholder="Password"
+                placeholder={i18n.translate('security.login.passwordPlaceholder', {
+                  defaultMessage: 'Password',
+                })}
                 type="dual"
                 onChange={(e) => setPassword(e.target.value)}
                 value={password}
@@ -228,7 +237,9 @@ export function LoginPage(props: LoginPageDeps) {
                 className={props.config.ui.basicauth.login.buttonstyle || 'btn-login'}
                 onClick={handleSubmit}
               >
-                Log in
+                {i18n.translate('security.login.submitButton', {
+                  defaultMessage: 'Log in',
+                })}
               </EuiButton>
             </EuiCompressedFormRow>
           );
@@ -265,7 +276,11 @@ export function LoginPage(props: LoginPageDeps) {
         default: {
           setloginFailed(true);
           setloginError(
-            `Authentication Type: ${authOpts[i]} is not supported for multiple authentication.`
+            i18n.translate('security.login.unsupportedAuthType', {
+              defaultMessage:
+                'Authentication Type: {authType} is not supported for multiple authentication.',
+              values: { authType: authOpts[i] },
+            })
           );
           break;
         }
