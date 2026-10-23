@@ -16,6 +16,8 @@
 import { shallow } from 'enzyme';
 import React from 'react';
 import { AccountNavButton, reloadAfterTenantSwitch } from '../account-nav-button';
+import { PasswordResetPanel } from '../password-reset-panel';
+import { ReservedUserPasswordPanel } from '../reserved-user-password-panel';
 import { getShouldShowTenantPopup } from '../../../utils/storage-utils';
 import { getDashboardsInfo } from '../../../utils/dashboards-info-utils';
 import { render, fireEvent } from '@testing-library/react';
@@ -114,17 +116,51 @@ describe('Account navigation button', () => {
 
   it('should set modal when click on "View roles and identities" button', () => {
     component.find('[data-test-subj="view-roles-and-identities"]').simulate('click');
-    expect(setState).toBeCalledTimes(1);
+    expect(setState).toBeCalledWith(false);
+    expect(setState).toBeCalledTimes(2);
   });
 
-  it('should set modal when click on "Switch tenants" button', () => {
+  it('should not propagate clicks inside the menu panel to the popover toggle', () => {
+    const stopPropagation = jest.fn();
+    component
+      .find('[data-test-subj="view-roles-and-identities"]')
+      .parents('div')
+      .last()
+      .simulate('click', { stopPropagation });
+    expect(stopPropagation).toHaveBeenCalledTimes(1);
+  });
+
+  it('should close the popover and set modal when click on "Switch tenants" button', () => {
     component.find('[data-test-subj="switch-tenants"]').simulate('click');
-    expect(setState).toBeCalledTimes(1);
+    expect(setState).toBeCalledWith(false);
+    expect(setState).toBeCalledTimes(2);
   });
 
   it('should set modal when click on "Reset password" button', () => {
     component.find('[data-test-subj="reset-password"]').simulate('click');
-    expect(setState).toBeCalledTimes(1);
+    expect(setState).toBeCalledWith(false);
+    expect(setState).toBeCalledTimes(2);
+    const modal = setState.mock.calls[setState.mock.calls.length - 1][0];
+    expect(modal.type).toBe(PasswordResetPanel);
+  });
+
+  it('should open the reserved user panel instead of the reset form for reserved users', () => {
+    const reservedComponent = shallow(
+      <AccountNavButton
+        coreStart={mockCoreStart}
+        isInternalUser={true}
+        isReservedUser={true}
+        username="admin"
+        tenant="tenant1"
+        config={config as any}
+        currAuthType={'dummy'}
+      />
+    );
+    reservedComponent.find('[data-test-subj="reset-password"]').simulate('click');
+    expect(setState).toBeCalledWith(false);
+    const modal = setState.mock.calls[setState.mock.calls.length - 1][0];
+    expect(modal.type).toBe(ReservedUserPasswordPanel);
+    expect(modal.props.username).toBe('admin');
   });
 
   it('should set isPopoverOpen to true when click on Avatar in header section', () => {
