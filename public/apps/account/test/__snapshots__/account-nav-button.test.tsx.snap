@@ -28,6 +28,8 @@ exports[`Account navigation button renders 1`] = `
       items={Array []}
     >
       <div
+        onClick={[Function]}
+        role="presentation"
         style={
           Object {
             "maxWidth": "256px",
