@@ -261,6 +261,36 @@ describe('Login page', () => {
     });
   });
 
+  describe('accessible names', () => {
+    const config: ClientConfigType = {
+      ui: configUI,
+      auth: {
+        type: [AuthType.BASIC, AuthType.OPEN_ID, AuthType.SAML],
+        logout_url: API_AUTH_LOGOUT,
+        anonymous_auth_enabled: true,
+      },
+    };
+
+    it('uses the visible names for the username and password inputs', () => {
+      const component = shallow(
+        <LoginPage http={mockHttpStart as any} chrome={chrome} config={config as any} />
+      );
+      expect(component.find('[data-test-subj="user-name"]').prop('aria-label')).toEqual('Username');
+      expect(component.find('[data-test-subj="password"]').prop('aria-label')).toEqual('Password');
+    });
+
+    it('does not override the visible text of the login buttons', () => {
+      const component = shallow(
+        <LoginPage http={mockHttpStart as any} chrome={chrome} config={config as any} />
+      );
+      const buttons = component.find('[data-test-subj="submit"]');
+      expect(buttons.length).toBeGreaterThan(0);
+      buttons.forEach((button) => {
+        expect(button.prop('aria-label')).toBeUndefined();
+      });
+    });
+  });
+
   describe('event trigger testing', () => {
     let component;
     const setState = jest.fn();

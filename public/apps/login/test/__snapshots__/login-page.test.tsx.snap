@@ -42,7 +42,7 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -61,7 +61,7 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -79,7 +79,6 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         fill={true}
@@ -109,7 +108,6 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="openid_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/openid/captureUrlFragment"
@@ -129,7 +127,6 @@ exports[`Login page renders renders with config value for multiauth 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="saml_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/saml/captureUrlFragment"
@@ -186,7 +183,7 @@ exports[`Login page renders renders with config value for multiauth with anonymo
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -205,7 +202,7 @@ exports[`Login page renders renders with config value for multiauth with anonymo
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -223,7 +220,6 @@ exports[`Login page renders renders with config value for multiauth with anonymo
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         fill={true}
@@ -243,7 +239,6 @@ exports[`Login page renders renders with config value for multiauth with anonymo
       labelType="label"
     >
       <EuiButton
-        aria-label="anonymous_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/anonymous"
@@ -271,7 +266,6 @@ exports[`Login page renders renders with config value for multiauth with anonymo
       labelType="label"
     >
       <EuiButton
-        aria-label="openid_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/openid/captureUrlFragment"
@@ -291,7 +285,6 @@ exports[`Login page renders renders with config value for multiauth with anonymo
       labelType="label"
     >
       <EuiButton
-        aria-label="saml_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/saml/captureUrlFragment"
@@ -348,7 +341,7 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -367,7 +360,7 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -385,7 +378,6 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         fill={true}
@@ -405,7 +397,6 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiButton
-        aria-label="anonymous_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/anonymous"
@@ -460,7 +451,7 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -479,7 +470,7 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -497,7 +488,6 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         fill={true}
@@ -517,7 +507,6 @@ exports[`Login page renders renders with config value with anonymous auth enable
       labelType="label"
     >
       <EuiButton
-        aria-label="anonymous_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         href="/app/opensearch-dashboards/auth/anonymous"
@@ -572,7 +561,7 @@ exports[`Login page renders renders with config value: string 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -591,7 +580,7 @@ exports[`Login page renders renders with config value: string 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -609,7 +598,6 @@ exports[`Login page renders renders with config value: string 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         fill={true}
@@ -666,7 +654,7 @@ exports[`Login page renders renders with config value: string array 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -685,7 +673,7 @@ exports[`Login page renders renders with config value: string array 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -703,7 +691,6 @@ exports[`Login page renders renders with config value: string array 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="test-btn-style"
         data-test-subj="submit"
         fill={true}
@@ -756,7 +743,7 @@ exports[`Login page renders renders with default value: string 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -775,7 +762,7 @@ exports[`Login page renders renders with default value: string 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -793,7 +780,6 @@ exports[`Login page renders renders with default value: string 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="btn-login"
         data-test-subj="submit"
         fill={true}
@@ -846,7 +832,7 @@ exports[`Login page renders renders with default value: string array 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldText
-        aria-label="username_input"
+        aria-label="Username"
         data-test-subj="user-name"
         icon="user"
         isInvalid={false}
@@ -865,7 +851,7 @@ exports[`Login page renders renders with default value: string array 1`] = `
       labelType="label"
     >
       <EuiCompressedFieldPassword
-        aria-label="password_input"
+        aria-label="Password"
         data-test-subj="password"
         isInvalid={false}
         onChange={[Function]}
@@ -883,7 +869,6 @@ exports[`Login page renders renders with default value: string array 1`] = `
       labelType="label"
     >
       <EuiButton
-        aria-label="basicauth_login_button"
         className="btn-login"
         data-test-subj="submit"
         fill={true}

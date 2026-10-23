@@ -32,8 +32,12 @@ import {
 import { CoreStart } from 'opensearch-dashboards/public';
 import { FormRow } from '../configuration/utils/form-row';
 import { logout, updateNewPassword } from './utils';
-import { PASSWORD_INSTRUCTION } from '../apps-constants';
-import { constructErrorMessageAndLog } from '../error-utils';
+import {
+  getPasswordsToolCommand,
+  PASSWORD_INSTRUCTION,
+  RESERVED_USER_PASSWORD_INSTRUCTION,
+} from '../apps-constants';
+import { constructErrorMessageAndLog, isReservedResourceError } from '../error-utils';
 import {
   isResetButtonDisabled,
   validateCurrentPassword,
@@ -98,7 +102,13 @@ export function PasswordResetPanel(props: PasswordResetPanelProps) {
 
       await logout(http, props.logoutUrl);
     } catch (e) {
-      setErrorCallOut(constructErrorMessageAndLog(e, 'Failed to reset password.'));
+      const message = constructErrorMessageAndLog(e, 'Failed to reset password.');
+      const passwordsToolCommand = getPasswordsToolCommand(props.username);
+      setErrorCallOut(
+        isReservedResourceError(e)
+          ? `Failed to reset password. ${RESERVED_USER_PASSWORD_INSTRUCTION} ${passwordsToolCommand}`
+          : message
+      );
     }
   };
 

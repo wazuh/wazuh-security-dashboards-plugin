@@ -99,7 +99,9 @@ export function ExternalIdentitiesPanel(props: {
   return (
     <PanelWithHeader
       headerText="Backend roles"
-      headerSubText="Use a backend role to directly map to roles through an external authentication system."
+      // Wazuh: Explain backend roles as group names, set on internal users or taken from LDAP or SSO.
+      // headerSubText="Use a backend role to directly map to roles through an external authentication system."
+      headerSubText="Every user with one of these backend roles gets this role. Backend roles are group names set on internal users, or taken from LDAP or SSO groups."
       helpLink={DocLinks.AccessControlDoc}
     >
       {panel}
