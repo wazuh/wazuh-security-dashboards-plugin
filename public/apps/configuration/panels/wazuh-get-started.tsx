@@ -58,8 +58,8 @@ export const getWazuhDocLinks = (wazuhDocVersion: string) => {
 
 type WazuhDocLinks = ReturnType<typeof getWazuhDocLinks>;
 
-// App id and route of Server management > Wazuh API access, in the Wazuh main plugin.
-const WAZUH_API_ACCESS_APP_ID = 'security';
+// App id and route of Server management > API access control, in the Wazuh main plugin.
+const API_ACCESS_CONTROL_APP_ID = 'security';
 const WAZUH_ROLES_MAPPING_PATH = '#/security?tab=roleMapping';
 
 const getAddBackendStep = (docLinks: WazuhDocLinks) => ({
@@ -188,7 +188,7 @@ export function WazuhGetStarted(props: AppDependencies) {
   const wazuhDocLinks = getWazuhDocLinks(props.coreStart.docLinks.WAZUH_DOC_VERSION);
   const openWazuhRolesMapping = () =>
     props.coreStart.application.navigateToUrl(
-      props.coreStart.application.getUrlForApp(WAZUH_API_ACCESS_APP_ID, {
+      props.coreStart.application.getUrlForApp(API_ACCESS_CONTROL_APP_ID, {
         path: WAZUH_ROLES_MAPPING_PATH,
       })
     );
@@ -241,13 +241,13 @@ export function WazuhGetStarted(props: AppDependencies) {
             <h2>How access works</h2>
           </EuiTitle>
           <EuiSpacer size="s" />
-          {/* "Wazuh API access" is `wazuh.security.app.title` in wazuh-dashboard-plugins. */}
+          {/* "API access control" is `wazuh.security.app.title` in wazuh-dashboard-plugins. */}
           <EuiText size="s">
             <p>
               People sign in to the dashboard through the indexer, with an internal user or an LDAP
               or SSO account. Indexer roles decide which indexed data they can access. What they can
               do in Wazuh (agents, groups, server management) comes from a Wazuh role, assigned in
-              Server management &gt; Wazuh API access &gt; Roles mapping. Its rules match the user
+              Server management &gt; API access control &gt; Roles mapping. Its rules match the user
               name, backend roles (group names) or indexer roles.{' '}
               <ExternalLink href={wazuhDocLinks.UserAdministration} />
             </p>
