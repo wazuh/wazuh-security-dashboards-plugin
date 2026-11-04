@@ -400,7 +400,7 @@ export class SecurityPlugin
       mount: async (params: AppMountParameters) => {
         const { renderPage } = await import('./apps/customerror/custom-error');
         const [coreStart] = await core.getStartServices();
-        return renderPage(coreStart, params);
+        return renderPage(coreStart, params, config);
       },
     });
 

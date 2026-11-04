@@ -14,12 +14,15 @@
  */
 import { shallow } from 'enzyme';
 import React from 'react';
-import { createMemoryHistory } from 'history';
-import { CustomErrorPage, renderPage } from '../custom-error';
-import { cleanup, fireEvent, within } from '@testing-library/react';
+import { CustomErrorPage } from '../custom-error';
+import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EuiSmallButton } from '../custom-error';
 import { logout } from '../../account/utils';
+// Wazuh: imports for the single sign-on error page test.
+import { createMemoryHistory } from 'history';
+import { fireEvent, within } from '@testing-library/react';
+import { renderPage } from '../custom-error';
 import { ERROR_SIGN_IN_PATH } from '../../../../common';
 
 afterEach(() => {
@@ -39,7 +42,19 @@ describe('Custom error page test', () => {
 
   it('renders and clicks the button on the error page', () => {
     const wrapper = shallow(
-      <CustomErrorPage title="Title" subtitle="Sub Title" http={undefined} />
+      <CustomErrorPage
+        title="Title"
+        subtitle="Sub Title"
+        http={undefined}
+        chrome={undefined}
+        config={{
+          title: '',
+          subtitle: '',
+          showbrandimage: false,
+          brandimage: '',
+          buttonstyle: '',
+        }}
+      />
     );
 
     expect(wrapper).toMatchSnapshot();
@@ -50,6 +65,7 @@ describe('Custom error page test', () => {
   });
 });
 
+// Wazuh: covers the page shown when single sign-on fails.
 describe('Sign-in error page test', () => {
   it('renders the single sign-on error and goes back to login', async () => {
     const originalLocation = window.location;
@@ -57,8 +73,9 @@ describe('Sign-in error page test', () => {
     window.location = { href: '' };
     const element = document.body.appendChild(document.createElement('div'));
     const unmount = await renderPage(
-      { http: { basePath: { serverBasePath: '/basepath' } } },
-      { history: createMemoryHistory({ initialEntries: [ERROR_SIGN_IN_PATH] }), element }
+      { http: { basePath: { serverBasePath: '/basepath' } }, chrome: {} },
+      { history: createMemoryHistory({ initialEntries: [ERROR_SIGN_IN_PATH] }), element },
+      { ui: { basicauth: { login: { showbrandimage: false } } } }
     );
     const page = within(element);
 

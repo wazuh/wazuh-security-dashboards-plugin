@@ -166,6 +166,7 @@ describe('test capabilities request authinfo', () => {
   });
 });
 
+// Wazuh: covers the single sign-on error page served without a session.
 describe('test routes that do not require authentication', () => {
   const config = { auth: { unauthenticated_routes: [] as string[] } } as SecurityPluginConfigType;
   const authType = new DummyAuthType(config, {}, jest.fn(), {}, jest.fn(), {});
