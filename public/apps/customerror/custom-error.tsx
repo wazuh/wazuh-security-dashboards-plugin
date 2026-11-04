@@ -31,7 +31,7 @@ import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
 import { ERROR_MISSING_ROLE_PATH } from '../../../common';
 // Wazuh: page shown when single sign-on fails.
-import { ERROR_SIGN_IN_PATH } from '../../../common';
+import { ERROR_SSO_SIGN_IN_PATH } from '../../../common';
 import { ClientConfigType } from '../../types';
 import { AuthType } from '../../../common';
 import './_index.scss';
@@ -129,7 +129,7 @@ export async function renderPage(
         {/* , */}
       </Route>
       {/* Wazuh: page shown when single sign-on fails. */}
-      <Route path={ERROR_SIGN_IN_PATH}>
+      <Route path={ERROR_SSO_SIGN_IN_PATH}>
         <CustomErrorPage
           http={coreStart.http}
           chrome={coreStart.chrome}

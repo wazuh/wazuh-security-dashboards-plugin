@@ -15,7 +15,7 @@
 
 import { SamlAuthRoutes } from './routes';
 
-const SIGN_IN_ERROR_LOCATION = '/basepath/app/customerror/sign-in-error';
+const SIGN_IN_ERROR_LOCATION = '/basepath/app/customerror/sso-sign-in-error';
 
 describe('SAML routes sign-in failures', () => {
   const handlers: Record<string, Function> = {};
@@ -77,7 +77,7 @@ describe('SAML routes sign-in failures', () => {
   });
 
   it('serves the sign-in error page without a session', async () => {
-    const path = '/app/customerror/sign-in-error';
+    const path = '/app/customerror/sso-sign-in-error';
     const resourceResponse = { renderAnonymousCoreApp: jest.fn().mockResolvedValue('page') };
 
     const result = await handlers[path](context, {}, resourceResponse);

@@ -52,7 +52,7 @@ export const ANONYMOUS_AUTH_LOGOUT = '/auth/anonymous/logout';
 
 export const ERROR_MISSING_ROLE_PATH = '/missing-role';
 // Wazuh: page shown when single sign-on fails.
-export const ERROR_SIGN_IN_PATH = '/sign-in-error';
+export const ERROR_SSO_SIGN_IN_PATH = '/sso-sign-in-error';
 export const AUTH_HEADER_NAME = 'authorization';
 export const AUTH_GRANT_TYPE = 'authorization_code';
 export const AUTH_RESPONSE_TYPE = 'code';

@@ -23,7 +23,7 @@ import { logout } from '../../account/utils';
 import { createMemoryHistory } from 'history';
 import { fireEvent, within } from '@testing-library/react';
 import { renderPage } from '../custom-error';
-import { ERROR_SIGN_IN_PATH } from '../../../../common';
+import { ERROR_SSO_SIGN_IN_PATH } from '../../../../common';
 
 afterEach(() => {
   cleanup();
@@ -74,7 +74,7 @@ describe('Sign-in error page test', () => {
     const element = document.body.appendChild(document.createElement('div'));
     const unmount = await renderPage(
       { http: { basePath: { serverBasePath: '/basepath' } }, chrome: {} },
-      { history: createMemoryHistory({ initialEntries: [ERROR_SIGN_IN_PATH] }), element },
+      { history: createMemoryHistory({ initialEntries: [ERROR_SSO_SIGN_IN_PATH] }), element },
       { ui: { basicauth: { login: { showbrandimage: false } } } }
     );
     const page = within(element);

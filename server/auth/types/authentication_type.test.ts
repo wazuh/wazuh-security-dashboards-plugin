@@ -177,7 +177,7 @@ describe('test routes that do not require authentication', () => {
     );
 
   it('serves the sign-in error page without a session', () => {
-    expect(authNotRequired('/app/customerror/sign-in-error')).toBe(true);
+    expect(authNotRequired('/app/customerror/sso-sign-in-error')).toBe(true);
   });
 
   it('still requires a session for the missing role page', () => {

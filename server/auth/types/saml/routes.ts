@@ -24,7 +24,7 @@ import { CoreSetup } from '../../../../../../src/core/server';
 import { validateNextUrl } from '../../../utils/next_url';
 import { AuthType, SAML_AUTH_LOGIN, SAML_AUTH_LOGOUT } from '../../../../common';
 // Wazuh: path of the single sign-on error page.
-import { CUSTOM_ERROR_PAGE_URI, ERROR_SIGN_IN_PATH } from '../../../../common';
+import { CUSTOM_ERROR_PAGE_URI, ERROR_SSO_SIGN_IN_PATH } from '../../../../common';
 
 import {
   clearSplitCookies,
@@ -61,7 +61,7 @@ export class SamlAuthRoutes {
   private redirectToSignInError(response: OpenSearchDashboardsResponseFactory) {
     return response.redirected({
       headers: {
-        location: `${this.coreSetup.http.basePath.serverBasePath}${CUSTOM_ERROR_PAGE_URI}${ERROR_SIGN_IN_PATH}`,
+        location: `${this.coreSetup.http.basePath.serverBasePath}${CUSTOM_ERROR_PAGE_URI}${ERROR_SSO_SIGN_IN_PATH}`,
       },
     });
   }
@@ -128,7 +128,7 @@ export class SamlAuthRoutes {
     // without reading their UI settings.
     this.coreSetup.http.resources.register(
       {
-        path: `${CUSTOM_ERROR_PAGE_URI}${ERROR_SIGN_IN_PATH}`,
+        path: `${CUSTOM_ERROR_PAGE_URI}${ERROR_SSO_SIGN_IN_PATH}`,
         validate: false,
         options: {
           authRequired: false,
