@@ -51,6 +51,7 @@ export const SAML_AUTH_LOGOUT = '/auth/saml/logout';
 export const ANONYMOUS_AUTH_LOGOUT = '/auth/anonymous/logout';
 
 export const ERROR_MISSING_ROLE_PATH = '/missing-role';
+export const ERROR_SIGN_IN_PATH = '/sign-in-error';
 export const AUTH_HEADER_NAME = 'authorization';
 export const AUTH_GRANT_TYPE = 'authorization_code';
 export const AUTH_RESPONSE_TYPE = 'code';

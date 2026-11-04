@@ -14,19 +14,34 @@
  */
 
 import { schema } from '@osd/config-schema';
-import { IRouter, SessionStorageFactory, Logger } from '../../../../../../src/core/server';
+import {
+  IRouter,
+  SessionStorageFactory,
+  Logger,
+  OpenSearchDashboardsResponseFactory,
+} from '../../../../../../src/core/server';
 import { SecuritySessionCookie } from '../../../session/security_cookie';
 import { SecurityPluginConfigType } from '../../..';
 import { SecurityClient } from '../../../backend/opensearch_security_client';
 import { CoreSetup } from '../../../../../../src/core/server';
 import { validateNextUrl } from '../../../utils/next_url';
-import { AuthType, SAML_AUTH_LOGIN, SAML_AUTH_LOGOUT } from '../../../../common';
+import {
+  AuthType,
+  CUSTOM_ERROR_PAGE_URI,
+  ERROR_SIGN_IN_PATH,
+  SAML_AUTH_LOGIN,
+  SAML_AUTH_LOGOUT,
+} from '../../../../common';
 
 import {
   clearSplitCookies,
   ExtraAuthStorageOptions,
   setExtraAuthStorage,
 } from '../../../session/cookie_splitter';
+
+const SIGN_IN_FAILURE_HINT =
+  'Check the SAML settings of the indexer security configuration ' +
+  '(idp.metadata_url, idp.entity_id, sp.entity_id, kibana_url) and the indexer log.';
 
 export class SamlAuthRoutes {
   constructor(
@@ -45,6 +60,15 @@ export class SamlAuthRoutes {
       additionalCookies: this.config.saml.extra_storage.additional_cookies,
       logger,
     };
+  }
+
+  // Send the browser to the sign-in error page. The error details stay in the server log.
+  private redirectToSignInError(response: OpenSearchDashboardsResponseFactory) {
+    return response.redirected({
+      headers: {
+        location: `${this.coreSetup.http.basePath.serverBasePath}${CUSTOM_ERROR_PAGE_URI}${ERROR_SIGN_IN_PATH}`,
+      },
+    });
   }
 
   public setupRoutes() {
@@ -93,9 +117,26 @@ export class SamlAuthRoutes {
             },
           });
         } catch (error) {
-          context.security_plugin.logger.error(`Failed to get saml header: ${error}`);
-          return response.internalError(); // TODO: redirect to error page?
+          context.security_plugin.logger.error(
+            `Failed to get saml header: ${error}. ${SIGN_IN_FAILURE_HINT}`
+          );
+          return this.redirectToSignInError(response);
         }
+      }
+    );
+
+    // The sign-in error page is shown to users without a session, so it is rendered without
+    // reading their UI settings.
+    this.coreSetup.http.resources.register(
+      {
+        path: `${CUSTOM_ERROR_PAGE_URI}${ERROR_SIGN_IN_PATH}`,
+        validate: false,
+        options: {
+          authRequired: false,
+        },
+      },
+      async (context, request, response) => {
+        return response.renderAnonymousCoreApp();
       }
     );
 
@@ -189,11 +230,11 @@ export class SamlAuthRoutes {
           }
         } catch (error) {
           context.security_plugin.logger.error(
-            `SAML SP initiated authentication workflow failed: ${error}`
+            `SAML SP initiated authentication workflow failed: ${error}. ${SIGN_IN_FAILURE_HINT}`
           );
         }
 
-        return response.internalError();
+        return this.redirectToSignInError(response);
       }
     );
 
@@ -255,10 +296,10 @@ export class SamlAuthRoutes {
           });
         } catch (error) {
           context.security_plugin.logger.error(
-            `SAML IDP initiated authentication workflow failed: ${error}`
+            `SAML IDP initiated authentication workflow failed: ${error}. ${SIGN_IN_FAILURE_HINT}`
           );
         }
-        return response.internalError();
+        return this.redirectToSignInError(response);
       }
     );
 

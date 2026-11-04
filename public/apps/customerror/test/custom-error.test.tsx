@@ -14,11 +14,13 @@
  */
 import { shallow } from 'enzyme';
 import React from 'react';
-import { CustomErrorPage } from '../custom-error';
-import { cleanup } from '@testing-library/react';
+import { createMemoryHistory } from 'history';
+import { CustomErrorPage, renderPage } from '../custom-error';
+import { cleanup, fireEvent, within } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EuiSmallButton } from '../custom-error';
 import { logout } from '../../account/utils';
+import { ERROR_SIGN_IN_PATH } from '../../../../common';
 
 afterEach(() => {
   cleanup();
@@ -57,5 +59,33 @@ describe('Custom error page test', () => {
     component.find('[data-test-subj="error-logout-button"]').simulate('onClick', {
       preventDefault: () => {},
     });
+  });
+});
+
+describe('Sign-in error page test', () => {
+  it('renders the single sign-on error and goes back to login', async () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { href: '' };
+    const element = document.body.appendChild(document.createElement('div'));
+    const unmount = await renderPage(
+      { http: { basePath: { serverBasePath: '/basepath' } }, chrome: {} },
+      { history: createMemoryHistory({ initialEntries: [ERROR_SIGN_IN_PATH] }), element },
+      { ui: { basicauth: { login: { showbrandimage: false } } } }
+    );
+    const page = within(element);
+
+    expect(page.getByText('Single sign-on failed')).toBeInTheDocument();
+    expect(
+      page.getByText(
+        'The identity provider configuration was rejected by the indexer. Contact your administrator.'
+      )
+    ).toBeInTheDocument();
+    fireEvent.click(page.getByText('Back to login'));
+    expect(window.location.href).toBe('/basepath/');
+
+    unmount();
+    element.remove();
+    window.location = originalLocation;
   });
 });

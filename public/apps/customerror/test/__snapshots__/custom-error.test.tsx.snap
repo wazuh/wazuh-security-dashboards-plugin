@@ -19,6 +19,7 @@ exports[`Custom error page test renders and clicks the button on the error page 
     size="s"
   />
   <EuiText
+    color="subdued"
     size="s"
     textAlign="center"
   >

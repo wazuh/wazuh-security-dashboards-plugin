@@ -18,7 +18,7 @@ import { AppMountParameters, CoreStart } from 'opensearch-dashboards/public';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
-import { ERROR_MISSING_ROLE_PATH } from '../../../common';
+import { ERROR_MISSING_ROLE_PATH, ERROR_SIGN_IN_PATH } from '../../../common';
 import { ClientConfigType } from '../../types';
 import { AuthType } from '../../../common';
 import './_index.scss';
@@ -30,6 +30,8 @@ interface CustomErrorDeps {
   http: CoreStart['http'];
   chrome: CoreStart['chrome'];
   config: ClientConfigType['ui'][AuthType.BASIC]['login'];
+  buttonLabel?: string;
+  onButtonClick?: () => void;
 }
 
 export function CustomErrorPage(props: CustomErrorDeps) {
@@ -43,17 +45,17 @@ export function CustomErrorPage(props: CustomErrorDeps) {
         <h3>{props.title}</h3>
       </EuiText>
       <EuiSpacer size="s" />
-      <EuiText size="s" textAlign="center">
+      <EuiText size="s" textAlign="center" color="subdued">
         {props.subtitle}
       </EuiText>
       <EuiSpacer size="s" />
       <EuiSmallButton
         fill
-        onClick={() => logout(props.http, '')}
+        onClick={props.onButtonClick ?? (() => logout(props.http, ''))}
         data-test-subj="error-logout-button"
         fullWidth
       >
-        Logout
+        {props.buttonLabel ?? 'Logout'}
       </EuiSmallButton>
     </EuiListGroup>
   );
@@ -74,7 +76,19 @@ export async function renderPage(
           title="Missing Role"
           subtitle="No roles available for this user, please contact your system administrator."
         />
-        ,
+      </Route>
+      <Route path={ERROR_SIGN_IN_PATH}>
+        <CustomErrorPage
+          http={coreStart.http}
+          chrome={coreStart.chrome}
+          config={config.ui.basicauth.login}
+          title="Single sign-on failed"
+          subtitle="The identity provider configuration was rejected by the indexer. Contact your administrator."
+          buttonLabel="Back to login"
+          onButtonClick={() => {
+            window.location.href = `${coreStart.http.basePath.serverBasePath}/`;
+          }}
+        />
       </Route>
     </Router>,
     params.element
