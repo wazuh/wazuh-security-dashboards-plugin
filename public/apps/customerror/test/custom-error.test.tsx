@@ -39,19 +39,7 @@ describe('Custom error page test', () => {
 
   it('renders and clicks the button on the error page', () => {
     const wrapper = shallow(
-      <CustomErrorPage
-        title="Title"
-        subtitle="Sub Title"
-        http={undefined}
-        chrome={undefined}
-        config={{
-          title: '',
-          subtitle: '',
-          showbrandimage: false,
-          brandimage: '',
-          buttonstyle: '',
-        }}
-      />
+      <CustomErrorPage title="Title" subtitle="Sub Title" http={undefined} />
     );
 
     expect(wrapper).toMatchSnapshot();
@@ -69,9 +57,8 @@ describe('Sign-in error page test', () => {
     window.location = { href: '' };
     const element = document.body.appendChild(document.createElement('div'));
     const unmount = await renderPage(
-      { http: { basePath: { serverBasePath: '/basepath' } }, chrome: {} },
-      { history: createMemoryHistory({ initialEntries: [ERROR_SIGN_IN_PATH] }), element },
-      { ui: { basicauth: { login: { showbrandimage: false } } } }
+      { http: { basePath: { serverBasePath: '/basepath' } } },
+      { history: createMemoryHistory({ initialEntries: [ERROR_SIGN_IN_PATH] }), element }
     );
     const page = within(element);
 

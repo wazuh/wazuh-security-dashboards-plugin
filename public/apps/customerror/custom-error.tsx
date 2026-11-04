@@ -13,66 +13,71 @@
  *   permissions and limitations under the License.
  */
 
-import { EuiSmallButton, EuiImage, EuiListGroup, EuiSpacer, EuiText } from '@elastic/eui';
+import {
+  EuiButton,
+  EuiEmptyPrompt,
+  EuiPage,
+  EuiPageBody,
+  EuiPageContent,
+  EuiSmallButton,
+  EuiText,
+} from '@elastic/eui';
 import { AppMountParameters, CoreStart } from 'opensearch-dashboards/public';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route } from 'react-router-dom';
 import { ERROR_MISSING_ROLE_PATH, ERROR_SIGN_IN_PATH } from '../../../common';
-import { ClientConfigType } from '../../types';
-import { AuthType } from '../../../common';
-import './_index.scss';
 import { logout } from '../account/utils';
 
 interface CustomErrorDeps {
   title: string;
   subtitle: string;
   http: CoreStart['http'];
-  chrome: CoreStart['chrome'];
-  config: ClientConfigType['ui'][AuthType.BASIC]['login'];
+  iconType?: string;
+  iconColor?: string;
   buttonLabel?: string;
   onButtonClick?: () => void;
 }
 
+// Same layout as the platform's own error screens (for example, "Application Not Found").
 export function CustomErrorPage(props: CustomErrorDeps) {
   return (
-    <EuiListGroup className="custom-error-wrapper">
-      {props.config.showbrandimage && (
-        <EuiImage alt="" url={props.config.brandimage || props.chrome.logos.OpenSearch.url} />
-      )}
-      <EuiSpacer size="s" />
-      <EuiText size="m" textAlign="center">
-        <h3>{props.title}</h3>
-      </EuiText>
-      <EuiSpacer size="s" />
-      <EuiText size="s" textAlign="center" color="subdued">
-        {props.subtitle}
-      </EuiText>
-      <EuiSpacer size="s" />
-      <EuiSmallButton
-        fill
-        onClick={props.onButtonClick ?? (() => logout(props.http, ''))}
-        data-test-subj="error-logout-button"
-        fullWidth
-      >
-        {props.buttonLabel ?? 'Logout'}
-      </EuiSmallButton>
-    </EuiListGroup>
+    <EuiPage style={{ minHeight: '100vh' }}>
+      <EuiPageBody component="main">
+        <EuiPageContent verticalPosition="center" horizontalPosition="center">
+          <EuiEmptyPrompt
+            iconType={props.iconType ?? 'alert'}
+            iconColor={props.iconColor ?? 'danger'}
+            title={<h2>{props.title}</h2>}
+            body={
+              <EuiText size="s" color="subdued">
+                <p>{props.subtitle}</p>
+              </EuiText>
+            }
+            actions={
+              <EuiButton
+                fill
+                onClick={props.onButtonClick ?? (() => logout(props.http, ''))}
+                data-test-subj="error-logout-button"
+              >
+                {props.buttonLabel ?? 'Logout'}
+              </EuiButton>
+            }
+          />
+        </EuiPageContent>
+      </EuiPageBody>
+    </EuiPage>
   );
 }
 
-export async function renderPage(
-  coreStart: CoreStart,
-  params: AppMountParameters,
-  config: ClientConfigType
-) {
+export async function renderPage(coreStart: CoreStart, params: AppMountParameters) {
   ReactDOM.render(
     <Router history={params.history}>
       <Route path={ERROR_MISSING_ROLE_PATH}>
         <CustomErrorPage
           http={coreStart.http}
-          chrome={coreStart.chrome}
-          config={config.ui.basicauth.login}
+          iconType="lock"
+          iconColor="subdued"
           title="Missing Role"
           subtitle="No roles available for this user, please contact your system administrator."
         />
@@ -80,8 +85,6 @@ export async function renderPage(
       <Route path={ERROR_SIGN_IN_PATH}>
         <CustomErrorPage
           http={coreStart.http}
-          chrome={coreStart.chrome}
-          config={config.ui.basicauth.login}
           title="Single sign-on failed"
           subtitle="The identity provider configuration was rejected by the indexer. Contact your administrator."
           buttonLabel="Back to login"
