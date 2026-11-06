@@ -94,9 +94,9 @@ export function BackendRolePanel(props: {
     <PanelWithHeader
       headerText="Backend roles"
       // Wazuh: Explain backend roles as group names; Wazuh roles can map to them too.
-      // "Wazuh API access" is `wazuh.security.app.title` in wazuh-dashboard-plugins.
+      // "API access control" is `wazuh.security.app.title` in wazuh-dashboard-plugins.
       // headerSubText="Backend roles are used to map users from external authentication systems, such as LDAP or SAML to OpenSearch security roles."
-      headerSubText="Group names for this user, for example admin. A role mapped to a backend role applies to every user who has it: by default, admin gets the all_access indexer role. You can map Wazuh roles the same way, in Server management > Wazuh API access > Roles mapping."
+      headerSubText="Group names for this user, for example admin. A role mapped to a backend role applies to every user who has it: by default, admin gets the all_access indexer role. You can map Wazuh roles the same way, in Server management > API access control > Roles mapping."
       helpLink={DocLinks.AccessControlDoc}
       optional
     >
