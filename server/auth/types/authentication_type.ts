@@ -32,6 +32,8 @@ import { SecurityClient } from '../../backend/opensearch_security_client';
 import { resolveTenant, isValidTenant } from '../../multitenancy/tenant_resolver';
 import { UnauthenticatedError } from '../../errors';
 import { GLOBAL_TENANT_SYMBOL } from '../../../common';
+// Wazuh: the single sign-on error page is served without a session.
+import { CUSTOM_ERROR_PAGE_URI, ERROR_SSO_SIGN_IN_PATH } from '../../../common';
 
 export interface IAuthenticationType {
   type: string;
@@ -73,7 +75,13 @@ export interface OpenSearchDashboardsAuthState {
 }
 
 export abstract class AuthenticationType implements IAuthenticationType {
-  protected static readonly ROUTES_TO_IGNORE: string[] = ['/app/login'];
+  // Wazuh: commented out to add the single sign-on error page.
+  // protected static readonly ROUTES_TO_IGNORE: string[] = ['/app/login'];
+  protected static readonly ROUTES_TO_IGNORE: string[] = [
+    '/app/login',
+    // Wazuh: without a session, SAML-only setups would loop back into the failing login.
+    CUSTOM_ERROR_PAGE_URI + ERROR_SSO_SIGN_IN_PATH,
+  ];
   protected static readonly ROUTES_AUTH_OPTIONAL: string[] = ['/api/core/capabilities'];
 
   protected static readonly REST_API_CALL_HEADER = 'osd-xsrf';

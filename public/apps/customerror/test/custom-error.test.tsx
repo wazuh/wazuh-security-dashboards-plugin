@@ -19,6 +19,11 @@ import { cleanup } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { EuiSmallButton } from '../custom-error';
 import { logout } from '../../account/utils';
+// Wazuh: imports for the single sign-on error page test.
+import { createMemoryHistory } from 'history';
+import { fireEvent, within } from '@testing-library/react';
+import { renderPage } from '../custom-error';
+import { ERROR_SSO_SIGN_IN_PATH } from '../../../../common';
 
 afterEach(() => {
   cleanup();
@@ -57,5 +62,34 @@ describe('Custom error page test', () => {
     component.find('[data-test-subj="error-logout-button"]').simulate('onClick', {
       preventDefault: () => {},
     });
+  });
+});
+
+// Wazuh: covers the page shown when single sign-on fails.
+describe('Sign-in error page test', () => {
+  it('renders the single sign-on error and goes back to login', async () => {
+    const originalLocation = window.location;
+    delete window.location;
+    window.location = { href: '' };
+    const element = document.body.appendChild(document.createElement('div'));
+    const unmount = await renderPage(
+      { http: { basePath: { serverBasePath: '/basepath' } }, chrome: {} },
+      { history: createMemoryHistory({ initialEntries: [ERROR_SSO_SIGN_IN_PATH] }), element },
+      { ui: { basicauth: { login: { showbrandimage: false } } } }
+    );
+    const page = within(element);
+
+    expect(page.getByText('Single sign-on failed')).toBeInTheDocument();
+    expect(
+      page.getByText(
+        'The identity provider configuration was rejected by the indexer. Contact your administrator.'
+      )
+    ).toBeInTheDocument();
+    fireEvent.click(page.getByText('Back to login'));
+    expect(window.location.href).toBe('/basepath/');
+
+    unmount();
+    element.remove();
+    window.location = originalLocation;
   });
 });
