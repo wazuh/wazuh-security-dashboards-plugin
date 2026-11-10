@@ -1,6 +1,8 @@
 name: 'Install Dashboards with Plugin via Binary'
 
-on: [push, pull_request]
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
 env:
   YARN_IGNORE_ENGINES: true
   OPENSEARCH_VERSION: '3.0.0'
@@ -13,6 +15,7 @@ env:
 jobs:
   verify-binary-installation:
     name: Run binary installation
+    if: github.event.pull_request.draft == false
     strategy:
       fail-fast: false
       matrix:
