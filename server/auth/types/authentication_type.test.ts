@@ -165,3 +165,22 @@ describe('test capabilities request authinfo', () => {
     expect(result.state.authInfo.username).toEqual('capabilities-username');
   });
 });
+
+// Wazuh: covers the single sign-on error page served without a session.
+describe('test routes that do not require authentication', () => {
+  const config = { auth: { unauthenticated_routes: [] as string[] } } as SecurityPluginConfigType;
+  const authType = new DummyAuthType(config, {}, jest.fn(), {}, jest.fn(), {});
+  const authNotRequired = (path: string) =>
+    AuthenticationType.prototype.authNotRequired.call(
+      authType,
+      httpServerMock.createOpenSearchDashboardsRequest({ path })
+    );
+
+  it('serves the sign-in error page without a session', () => {
+    expect(authNotRequired('/app/customerror/sso-sign-in-error')).toBe(true);
+  });
+
+  it('still requires a session for the missing role page', () => {
+    expect(authNotRequired('/app/customerror/missing-role')).toBe(false);
+  });
+});
