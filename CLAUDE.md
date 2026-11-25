@@ -22,7 +22,7 @@ external `./plugins/` directory (alongside the plugins from
   Wazuh version in `VERSION.json` and `package.json` → `wazuh` (e.g. `5.0.0`,
   revision `04`).
 - Node/Yarn: this plugin has **no own `.nvmrc`** — it uses the toolchain of the
-  `wazuh-dashboard` checkout it lives in (Node `22.22.0`, Yarn v1). Its scripts
+  `wazuh-dashboard` checkout it lives in (Node `22.23.4`, Yarn v1). Its scripts
   reference the parent checkout (`../../scripts/*`, `../../node_modules/.bin/*`),
   so it is developed **from inside `wazuh-dashboard/plugins/`**, not standalone.
 - Default branch `main`; work happens on version branches (`5.0.0`, `6.0.0`, …).
