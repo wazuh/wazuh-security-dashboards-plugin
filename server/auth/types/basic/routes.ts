@@ -64,6 +64,20 @@ export class BasicAuthRoutes {
         },
       },
       async (context, request, response) => {
+        // Wazuh: a GET can come from a navigation started by another site, so it must not
+        // end a valid session. A logged-in user is sent to the app instead.
+        const cookie = await this.sessionStorageFactory
+          .asScoped(request)
+          .get()
+          .catch(() => null);
+        if (cookie?.username && !cookie.isAnonymousAuth) {
+          return response.redirected({
+            headers: {
+              location: request.query.nextUrl || this.coreSetup.http.basePath.serverBasePath || '/',
+            },
+          });
+        }
+
         this.sessionStorageFactory.asScoped(request).clear();
         const clearOldVersionCookie = clearOldVersionCookieValue(this.config);
         return response.renderAnonymousCoreApp({
