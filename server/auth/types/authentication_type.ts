@@ -167,7 +167,11 @@ export abstract class AuthenticationType implements IAuthenticationType {
       }
 
       // If the cookie is still valid, update the cookie with a new expiry time.
-      if (this.config.session.keepalive) {
+      // Wazuh: requests the UI sends on its own (polls, timers) are flagged as
+      // system requests (`osd-system-request: true`, set by `asSystemRequest`
+      // on the client) and must not count as user activity, otherwise an
+      // unattended tab keeps its session alive past `session.ttl`.
+      if (this.config.session.keepalive && !request.isSystemRequest) {
         cookie!.expiryTime = this.getKeepAliveExpiry(cookie!, request);
         this.sessionStorageFactory.asScoped(request).set(cookie!);
       }
