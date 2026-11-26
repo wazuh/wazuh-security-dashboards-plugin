@@ -65,12 +65,23 @@ export class BasicAuthRoutes {
       },
       async (context, request, response) => {
         // Wazuh: a GET can come from a navigation started by another site, so it must not
-        // end a valid session. A logged-in user is sent to the app instead.
+        // end a valid session. A logged-in user is sent to the app instead. The credentials
+        // are checked, so a session whose password changed can still reach the login page.
         const cookie = await this.sessionStorageFactory
           .asScoped(request)
           .get()
           .catch(() => null);
-        if (cookie?.username && !cookie.isAnonymousAuth) {
+        const authHeaderValue =
+          cookie?.authType === AuthType.BASIC && !cookie.isAnonymousAuth
+            ? cookie.credentials?.authHeaderValue
+            : undefined;
+        const isValidSession =
+          !!authHeaderValue &&
+          (await this.securityClient.authinfo(request, { authorization: authHeaderValue }).then(
+            () => true,
+            () => false
+          ));
+        if (isValidSession) {
           return response.redirected({
             headers: {
               location: request.query.nextUrl || this.coreSetup.http.basePath.serverBasePath || '/',

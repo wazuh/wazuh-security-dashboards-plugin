@@ -23,6 +23,13 @@ describe('Basic auth login page', () => {
     }
   };
   const session = { get: jest.fn(), clear: jest.fn() };
+  const securityClient = { authinfo: jest.fn() };
+  const basicSession = {
+    username: 'admin',
+    authType: 'basicauth',
+    credentials: { authHeaderValue: 'Basic YWRtaW46YWRtaW4=' },
+    expiryTime: Date.now() + 1000,
+  };
   const response = {
     redirected: jest.fn((value) => ({ redirected: value })),
     renderAnonymousCoreApp: jest.fn(() => 'login page'),
@@ -32,7 +39,7 @@ describe('Basic auth login page', () => {
     { get: jest.fn(register), post: jest.fn(register) } as any,
     { cookie: { secure: true } } as any,
     { asScoped: () => session } as any,
-    {} as any,
+    securityClient as any,
     { http: { basePath: { serverBasePath: '' }, resources: { register } } } as any
   ).setupRoutes();
 
@@ -44,11 +51,15 @@ describe('Basic auth login page', () => {
   ])(
     'sends a logged-in user (query %j) to %s without clearing the session',
     async (query, location) => {
-      session.get.mockResolvedValue({ username: 'admin', expiryTime: Date.now() + 1000 });
+      session.get.mockResolvedValue(basicSession);
+      securityClient.authinfo.mockResolvedValue({ user_name: 'admin' });
 
       const result = await handler({}, { query }, response);
 
       expect(result).toEqual({ redirected: { headers: { location } } });
+      expect(securityClient.authinfo).toHaveBeenCalledWith(expect.anything(), {
+        authorization: 'Basic YWRtaW46YWRtaW4=',
+      });
       expect(session.clear).not.toHaveBeenCalled();
     }
   );
@@ -57,8 +68,18 @@ describe('Basic auth login page', () => {
     ['no session', null],
     ['an anonymous session', { username: 'opendistro_security_anonymous', isAnonymousAuth: true }],
     ['a SAML request in progress', { saml: { requestId: 'id' } }],
+    ['an OpenID session', { ...basicSession, authType: 'openid' }],
+    ['a session without credentials', { ...basicSession, credentials: undefined }],
   ])('renders the login page with %s', async (_, cookie) => {
     session.get.mockResolvedValue(cookie);
+
+    expect(await handler({}, { query: {} }, response)).toBe('login page');
+    expect(session.clear).toHaveBeenCalled();
+  });
+
+  it('renders the login page when the credentials of the session are rejected', async () => {
+    session.get.mockResolvedValue(basicSession);
+    securityClient.authinfo.mockRejectedValue(new Error('Unauthorized'));
 
     expect(await handler({}, { query: {} }, response)).toBe('login page');
     expect(session.clear).toHaveBeenCalled();
