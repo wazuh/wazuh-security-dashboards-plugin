@@ -184,3 +184,66 @@ describe('test routes that do not require authentication', () => {
     expect(authNotRequired('/app/customerror/missing-role')).toBe(false);
   });
 });
+
+// Wazuh: requests the UI sends on its own must not extend the session.
+describe('test session keepalive', () => {
+  const ttl = 15 * 60 * 1000;
+  const config = {
+    auth: {
+      unauthenticated_routes: [] as string[],
+    },
+    session: {
+      keepalive: true,
+      ttl,
+    },
+  } as SecurityPluginConfigType;
+  const set = jest.fn();
+  const sessionStorageFactory = {
+    asScoped: jest.fn(() => ({
+      clear: jest.fn(),
+      get: jest.fn().mockResolvedValue({ username: 'dummy-username', expiryTime: 1 }),
+      set,
+    })),
+  };
+  const esClient = {
+    asScoped: jest.fn(() => ({
+      callAsCurrentUser: jest.fn().mockResolvedValue({ username: 'dummy-username' }),
+    })),
+  };
+  const dummyAuthType = new DummyAuthType(
+    config,
+    sessionStorageFactory,
+    jest.fn(),
+    esClient,
+    jest.fn(),
+    { error: jest.fn() }
+  );
+  const toolkit = {
+    authenticated: jest.fn((value) => value),
+  };
+
+  beforeEach(() => {
+    set.mockClear();
+  });
+
+  it('renews the session expiry on a request made by the user', async () => {
+    const request = httpServerMock.createOpenSearchDashboardsRequest({ path: '/api/v1' });
+    const before = Date.now();
+    await dummyAuthType.authHandler(request, jest.fn(), toolkit);
+    expect(set).toHaveBeenCalledTimes(1);
+    expect(set.mock.calls[0][0].expiryTime).toBeGreaterThanOrEqual(before + ttl);
+  });
+
+  it('does not renew the session expiry on a system request', async () => {
+    const request = httpServerMock.createOpenSearchDashboardsRequest({
+      path: '/api/v1',
+      headers: { 'osd-system-request': 'true' },
+    });
+    expect(request.isSystemRequest).toBe(true);
+    const result = await dummyAuthType.authHandler(request, jest.fn(), toolkit);
+    expect(set).not.toHaveBeenCalled();
+    // The request is still authenticated with the existing session.
+    expect(toolkit.authenticated).toHaveBeenCalled();
+    expect(result).toBeDefined();
+  });
+});
