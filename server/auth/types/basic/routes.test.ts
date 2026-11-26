@@ -54,7 +54,7 @@ describe('Basic auth login page', () => {
       session.get.mockResolvedValue(basicSession);
       securityClient.authinfo.mockResolvedValue({ user_name: 'admin' });
 
-      const result = await handler({}, { query }, response);
+      const result = await handler({}, { query, headers: {} }, response);
 
       expect(result).toEqual({ redirected: { headers: { location } } });
       expect(securityClient.authinfo).toHaveBeenCalledWith(expect.anything(), {
@@ -73,7 +73,7 @@ describe('Basic auth login page', () => {
   ])('renders the login page with %s', async (_, cookie) => {
     session.get.mockResolvedValue(cookie);
 
-    expect(await handler({}, { query: {} }, response)).toBe('login page');
+    expect(await handler({}, { query: {}, headers: {} }, response)).toBe('login page');
     expect(session.clear).toHaveBeenCalled();
   });
 
@@ -81,14 +81,50 @@ describe('Basic auth login page', () => {
     session.get.mockResolvedValue(basicSession);
     securityClient.authinfo.mockRejectedValue(new Error('Unauthorized'));
 
-    expect(await handler({}, { query: {} }, response)).toBe('login page');
+    expect(await handler({}, { query: {}, headers: {} }, response)).toBe('login page');
     expect(session.clear).toHaveBeenCalled();
   });
 
   it('renders the login page when the session cookie cannot be read', async () => {
     session.get.mockRejectedValue(new Error('bad cookie'));
 
-    expect(await handler({}, { query: {} }, response)).toBe('login page');
+    expect(await handler({}, { query: {}, headers: {} }, response)).toBe('login page');
     expect(session.clear).toHaveBeenCalled();
   });
+
+  it.each([
+    ['an OpenID session', { ...basicSession, authType: 'openid' }],
+    ['a SAML session', { ...basicSession, authType: 'saml' }],
+    ['a JWT session', { ...basicSession, authType: 'jwt' }],
+    ['rejected credentials', basicSession],
+  ])(
+    'renders the login page without clearing %s on a navigation from another site',
+    async (_, cookie) => {
+      session.get.mockResolvedValue(cookie);
+      securityClient.authinfo.mockRejectedValue(new Error('Unauthorized'));
+
+      for (const fetchSite of ['cross-site', 'same-site']) {
+        const request = { query: {}, headers: { 'sec-fetch-site': fetchSite } };
+
+        expect(await handler({}, request, response)).toBe('login page');
+        expect(response.renderAnonymousCoreApp).toHaveBeenLastCalledWith();
+      }
+      expect(session.clear).not.toHaveBeenCalled();
+    }
+  );
+
+  it.each(['same-origin', 'none'])(
+    'clears the session of a request with sec-fetch-site %s',
+    async (fetchSite) => {
+      session.get.mockResolvedValue({ ...basicSession, authType: 'openid' });
+
+      const request = { query: {}, headers: { 'sec-fetch-site': fetchSite } };
+
+      expect(await handler({}, request, response)).toBe('login page');
+      expect(session.clear).toHaveBeenCalled();
+      expect(response.renderAnonymousCoreApp).toHaveBeenLastCalledWith({
+        headers: { 'set-cookie': expect.stringContaining('security_authentication=;') },
+      });
+    }
+  );
 });

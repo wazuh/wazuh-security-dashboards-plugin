@@ -89,6 +89,16 @@ export class BasicAuthRoutes {
           });
         }
 
+        // Wazuh: with multiple authentication types, this route also receives OpenID, SAML and
+        // JWT sessions. A navigation started by another site renders the login page without
+        // clearing any of them. The cookie of the previous version has the same name and path,
+        // so it is not cleared either. Requests of the same origin, typed URLs and clients
+        // without fetch metadata clear the session as before.
+        const fetchSite = request.headers['sec-fetch-site'];
+        if (fetchSite && fetchSite !== 'same-origin' && fetchSite !== 'none') {
+          return response.renderAnonymousCoreApp();
+        }
+
         this.sessionStorageFactory.asScoped(request).clear();
         const clearOldVersionCookie = clearOldVersionCookieValue(this.config);
         return response.renderAnonymousCoreApp({
