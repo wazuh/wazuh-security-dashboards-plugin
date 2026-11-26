@@ -13,6 +13,7 @@
  *   permissions and limitations under the License.
  */
 
+// Wazuh: covers the empty default of auth.unauthenticated_routes.
 import { configSchema } from '.';
 
 describe('security plugin config', () => {

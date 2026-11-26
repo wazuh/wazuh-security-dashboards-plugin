@@ -118,6 +118,7 @@ export const configSchema = schema.object({
       { defaultValue: '' }
     ),
     anonymous_auth_enabled: schema.boolean({ defaultValue: false }),
+    // Wazuh: empty, so /api/reporting/stats (open upstream) needs a session like other routes.
     unauthenticated_routes: schema.arrayOf(schema.string(), { defaultValue: [] }),
     forbidden_usernames: schema.arrayOf(schema.string(), { defaultValue: [] }),
     logout_url: schema.string({ defaultValue: '' }),
