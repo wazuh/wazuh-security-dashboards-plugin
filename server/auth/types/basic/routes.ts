@@ -64,6 +64,41 @@ export class BasicAuthRoutes {
         },
       },
       async (context, request, response) => {
+        // Wazuh: a GET can come from a navigation started by another site, so it must not
+        // end a valid session. A logged-in user is sent to the app instead. The credentials
+        // are checked, so a session whose password changed can still reach the login page.
+        const cookie = await this.sessionStorageFactory
+          .asScoped(request)
+          .get()
+          .catch(() => null);
+        const authHeaderValue =
+          cookie?.authType === AuthType.BASIC && !cookie.isAnonymousAuth
+            ? cookie.credentials?.authHeaderValue
+            : undefined;
+        const isValidSession =
+          !!authHeaderValue &&
+          (await this.securityClient.authinfo(request, { authorization: authHeaderValue }).then(
+            () => true,
+            () => false
+          ));
+        if (isValidSession) {
+          return response.redirected({
+            headers: {
+              location: request.query.nextUrl || this.coreSetup.http.basePath.serverBasePath || '/',
+            },
+          });
+        }
+
+        // Wazuh: with multiple authentication types, this route also receives OpenID, SAML and
+        // JWT sessions. A navigation started by another site renders the login page without
+        // clearing any of them. The cookie of the previous version has the same name and path,
+        // so it is not cleared either. Requests of the same origin, typed URLs and clients
+        // without fetch metadata clear the session as before.
+        const fetchSite = request.headers['sec-fetch-site'];
+        if (fetchSite && fetchSite !== 'same-origin' && fetchSite !== 'none') {
+          return response.renderAnonymousCoreApp();
+        }
+
         this.sessionStorageFactory.asScoped(request).clear();
         const clearOldVersionCookie = clearOldVersionCookieValue(this.config);
         return response.renderAnonymousCoreApp({
